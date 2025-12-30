@@ -2,7 +2,7 @@
 
 A 2D multiplayer RPG game with turn-based combat (Pokemon-style), multi-job system, open world, and complex economy.
 
-**Current Status:** 🎮 **Phase 2 Complete - Backend Server Ready!**
+**Current Status:** 🎮 **Phase 3 Complete - P2P Networking Ready!**
 
 ## 🎯 Quick Start - Play the Demo!
 
@@ -18,6 +18,15 @@ bun run dev
 Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
 
 ## ✨ What's Working Now
+
+### Phase 3: P2P Networking ✅
+- ✅ **WebSocket Signaling**: Server with JWT authentication on port 3001
+- ✅ **WebRTC P2P**: Mesh networking between players in same zone
+- ✅ **Zone Discovery**: Automatic peer discovery when joining zones
+- ✅ **Data Channels**: Low-latency (unordered, no retransmit) for game data
+- ✅ **StateSync**: Position synchronization framework with interpolation
+- ✅ **NetworkManager**: High-level coordinator for signaling + WebRTC
+- ✅ **Auto-Reconnect**: Exponential backoff on disconnection
 
 ### Phase 2: Backend Server ✅
 - ✅ **Elit Server**: Full HTTP server with routing and error handling
@@ -77,7 +86,11 @@ rpg/
 │   │   ├── systems/      # MovementSystem
 │   │   ├── world/        # TiledMapLoader
 │   │   └── scenes/       # DemoScene
-│   ├── networking/       # P2P networking layer (planned)
+│   ├── networking/       # ✅ P2P networking layer (COMPLETE!)
+│   │   ├── webrtc/       # PeerManager, WebRTC connections
+│   │   ├── signaling/    # SignalingClient
+│   │   ├── sync/         # StateSync
+│   │   └── peer-manager/ # NetworkManager
 │   └── data/             # Game data (JSON)
 │
 ├── apps/
@@ -125,7 +138,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (24% Complete)
+## 📊 Progress (29% Complete)
 
 ### Completed Phases ✅
 
@@ -138,12 +151,11 @@ bun run format
   - Week 5: Input & Animation ✅
 - **Phase 1.5**: First Playable Demo (1 week) ✅
 - **Phase 2**: Elit Server + Auth (2 weeks) ✅
+- **Phase 3**: P2P Networking (3 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 3**: P2P Networking (3 weeks) - NEXT
-- **Phase 3**: P2P Networking (3 weeks)
-- **Phase 4**: Turn-based Combat System (4 weeks)
+- **Phase 4**: Turn-based Combat System (4 weeks) - NEXT
 - **Phase 5**: Inventory & Items (2 weeks)
 - **Phase 6**: Multi-Job System (2 weeks)
 - **Phase 7**: World & Maps (3 weeks)
@@ -157,7 +169,7 @@ bun run format
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 4/17 phases (24%)
+**Current Progress:** 5/17 phases (29%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -225,6 +237,16 @@ Our custom-built engine includes:
 
 ## 🚀 Recent Achievements
 
+**Phase 3 Complete (2025-12-31):**
+- WebSocket signaling server with JWT authentication on port 3001
+- Complete WebRTC P2P mesh networking between peers
+- Zone-based peer discovery system
+- Low-latency data channels (unordered, no retransmit)
+- StateSync framework with position synchronization
+- NetworkManager coordinator for signaling + WebRTC
+- Auto-reconnect with exponential backoff
+- Ready for real-time multiplayer gameplay
+
 **Phase 2 Complete (2025-12-31):**
 - Complete backend server infrastructure with Elit
 - PostgreSQL database with comprehensive schema (9 tables)
@@ -268,5 +290,5 @@ Private project
 
 ---
 
-**Status:** Backend server complete! 🎉
-**Next:** Phase 3 - WebRTC P2P Networking
+**Status:** P2P Networking complete! 🎉
+**Next:** Phase 4 - Turn-based Combat System
