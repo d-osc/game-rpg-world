@@ -4,10 +4,12 @@
  */
 
 import { Elit } from 'elit';
+import { createWebSocketServer } from 'elit/ws';
 import { testConnection } from './database/index.ts';
 import { AuthService } from './auth/index.ts';
 import { authMiddleware } from './auth/middleware.ts';
 import { SaveService } from './save/index.ts';
+import { SignalingServer } from './signaling/index.ts';
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const HOST = process.env.HOST || 'localhost';
@@ -135,10 +137,53 @@ app.use((ctx) => {
 	});
 });
 
-// Start server
-app.listen(PORT, () => {
+// Start HTTP server
+const httpServer = app.listen(PORT, () => {
 	console.log('🎮 RPG Game Server');
 	console.log(`✓ Server running on http://${HOST}:${PORT}`);
 	console.log(`✓ Health check: http://${HOST}:${PORT}/health`);
 	console.log(`✓ API test: http://${HOST}:${PORT}/api/test`);
+});
+
+// Setup WebSocket server for signaling
+const WS_PORT = parseInt(process.env.WS_PORT || '3001', 10);
+const signalingServer = new SignalingServer();
+
+const wss = createWebSocketServer({ port: WS_PORT }, () => {
+	console.log(`✓ WebSocket server running on ws://${HOST}:${WS_PORT}`);
+	console.log(`✓ Signaling server ready for P2P connections`);
+});
+
+// Handle WebSocket connections
+wss.on('connection', async (ws, request) => {
+	// Extract token from query string
+	const url = new URL(request.url || '', `http://${request.headers.host}`);
+	const token = url.searchParams.get('token');
+
+	if (!token) {
+		ws.close(1008, 'No authentication token provided');
+		return;
+	}
+
+	// Verify JWT token
+	const payload = await AuthService.verifyToken(token);
+	if (!payload) {
+		ws.close(1008, 'Invalid authentication token');
+		return;
+	}
+
+	// Get username from database or payload
+	const username = payload.username;
+	const playerId = payload.playerId;
+
+	// Register connection with signaling server
+	signalingServer.handleConnection(ws, playerId, username);
+});
+
+// Stats endpoint
+app.get('/api/stats', (ctx) => {
+	ctx.json({
+		connections: signalingServer.getConnectionCount(),
+		zones: signalingServer.getZoneCount(),
+	});
 });
