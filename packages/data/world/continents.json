@@ -1,0 +1,130 @@
+{
+	"continents": [
+		{
+			"id": "verdant_lands",
+			"name": "Verdant Lands",
+			"description": "A lush continent filled with forests, plains, and crystal caves. Home to the capital city and starter areas.",
+			"level_range": [1, 20],
+			"climate": "temperate",
+			"towns": [
+				{
+					"id": "capital_city",
+					"name": "Capital City",
+					"description": "The bustling heart of the Verdant Lands. A safe haven for adventurers.",
+					"position": { "x": 100, "y": 100 },
+					"services": ["shop", "inn", "job_trainer", "blacksmith", "storage"],
+					"npcs": ["shop_keeper", "inn_keeper", "warrior_trainer", "mage_trainer", "healer_trainer", "thief_trainer"]
+				},
+				{
+					"id": "mining_village",
+					"name": "Mining Village",
+					"description": "A small village near the Crystal Caves, known for its mining operations.",
+					"position": { "x": 300, "y": 150 },
+					"services": ["shop", "inn", "blacksmith"],
+					"npcs": ["shop_keeper", "inn_keeper", "blacksmith_trainer"]
+				}
+			],
+			"zones": [
+				{
+					"id": "green_forest",
+					"name": "Green Forest",
+					"description": "A peaceful forest perfect for beginners.",
+					"type": "hunting",
+					"level_range": [1, 5],
+					"position": { "x": 150, "y": 120 },
+					"size": { "width": 800, "height": 600 },
+					"map_file": "green_forest.json",
+					"monsters": ["slime", "forest_wolf"],
+					"spawn_points": 10,
+					"respawn_time": 30000,
+					"max_capacity": 20
+				},
+				{
+					"id": "deep_forest",
+					"name": "Deep Forest",
+					"description": "A darker, more dangerous part of the forest.",
+					"type": "hunting",
+					"level_range": [6, 10],
+					"position": { "x": 200, "y": 180 },
+					"size": { "width": 1000, "height": 800 },
+					"map_file": "deep_forest.json",
+					"monsters": ["forest_wolf", "alpha_wolf"],
+					"spawn_points": 15,
+					"respawn_time": 45000,
+					"max_capacity": 20
+				},
+				{
+					"id": "crystal_caves",
+					"name": "Crystal Caves",
+					"description": "Mysterious caves filled with glowing crystals and magical creatures.",
+					"type": "hunting",
+					"level_range": [11, 20],
+					"position": { "x": 320, "y": 200 },
+					"size": { "width": 1200, "height": 900 },
+					"map_file": "crystal_caves.json",
+					"monsters": ["crystal_golem", "magic_eye"],
+					"spawn_points": 20,
+					"respawn_time": 60000,
+					"max_capacity": 15
+				}
+			]
+		},
+		{
+			"id": "scorching_sands",
+			"name": "Scorching Sands",
+			"description": "A vast desert continent with extreme temperatures and deadly creatures.",
+			"level_range": [21, 40],
+			"climate": "desert",
+			"towns": [
+				{
+					"id": "oasis_bazaar",
+					"name": "Oasis Bazaar",
+					"description": "A thriving trade hub built around a desert oasis.",
+					"position": { "x": 500, "y": 300 },
+					"services": ["shop", "inn", "auction_house", "merchant_guild"],
+					"npcs": ["shop_keeper", "inn_keeper", "merchant_trainer", "auctioneer"]
+				}
+			],
+			"zones": [
+				{
+					"id": "dune_sea",
+					"name": "Dune Sea",
+					"description": "Endless sand dunes stretching to the horizon.",
+					"type": "hunting",
+					"level_range": [21, 30],
+					"position": { "x": 450, "y": 350 },
+					"size": { "width": 1500, "height": 1200 },
+					"map_file": "dune_sea.json",
+					"monsters": ["sand_serpent", "desert_scorpion"],
+					"spawn_points": 25,
+					"respawn_time": 60000,
+					"max_capacity": 15
+				},
+				{
+					"id": "fire_temple",
+					"name": "Fire Temple",
+					"description": "An ancient temple inhabited by fire elementals.",
+					"type": "hunting",
+					"level_range": [31, 40],
+					"position": { "x": 550, "y": 400 },
+					"size": { "width": 1000, "height": 1000 },
+					"map_file": "fire_temple.json",
+					"monsters": ["fire_elemental", "flame_guardian"],
+					"spawn_points": 15,
+					"respawn_time": 90000,
+					"max_capacity": 10
+				}
+			]
+		}
+	],
+	"starting_location": {
+		"continent": "verdant_lands",
+		"town": "capital_city",
+		"position": { "x": 400, "y": 300 }
+	},
+	"fast_travel": {
+		"enabled": true,
+		"cost_per_continent": 100,
+		"unlocked_towns_only": true
+	}
+}

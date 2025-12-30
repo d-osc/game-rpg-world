@@ -1,0 +1,159 @@
+[
+	{
+		"id": "shop_keeper",
+		"name": "Shop Keeper",
+		"type": "merchant",
+		"sprite": "npc_shopkeeper",
+		"dialogue": {
+			"greeting": "Welcome to my shop! What can I get for you?",
+			"buy": "That'll be {price} gold.",
+			"sell": "I'll give you {price} gold for that.",
+			"farewell": "Come back anytime!"
+		},
+		"services": ["buy", "sell"],
+		"inventory": ["potion", "hi_potion", "ether", "antidote"]
+	},
+	{
+		"id": "inn_keeper",
+		"name": "Inn Keeper",
+		"type": "service",
+		"sprite": "npc_innkeeper",
+		"dialogue": {
+			"greeting": "Tired from your travels? Rest here for 50 gold.",
+			"rest": "Sleep well! Your HP and MP have been restored.",
+			"farewell": "Safe travels!"
+		},
+		"services": ["rest", "save"],
+		"rest_cost": 50
+	},
+	{
+		"id": "warrior_trainer",
+		"name": "Warrior Trainer",
+		"type": "job_trainer",
+		"sprite": "npc_warrior",
+		"dialogue": {
+			"greeting": "Do you seek the path of the warrior?",
+			"train": "Here, take this Warrior's Certificate. Train hard!",
+			"already_learned": "You've already learned the ways of the warrior.",
+			"farewell": "May your blade stay sharp!"
+		},
+		"services": ["job_training"],
+		"job": "warrior",
+		"certificate": "warrior_certificate",
+		"quest_required": "prove_your_strength"
+	},
+	{
+		"id": "mage_trainer",
+		"name": "Mage Trainer",
+		"type": "job_trainer",
+		"sprite": "npc_mage",
+		"dialogue": {
+			"greeting": "The arcane arts call to you, don't they?",
+			"train": "Take this Mage's Certificate. Study the elements well.",
+			"already_learned": "You already understand the arcane.",
+			"farewell": "May your spells be true!"
+		},
+		"services": ["job_training"],
+		"job": "mage",
+		"certificate": "mage_certificate",
+		"quest_required": "prove_your_magic"
+	},
+	{
+		"id": "healer_trainer",
+		"name": "Healer Trainer",
+		"type": "job_trainer",
+		"sprite": "npc_healer",
+		"dialogue": {
+			"greeting": "You have a kind heart. Will you help others?",
+			"train": "Here is your Healer's Certificate. Use it wisely.",
+			"already_learned": "Your healing powers are already awakened.",
+			"farewell": "May the light guide you!"
+		},
+		"services": ["job_training"],
+		"job": "healer",
+		"certificate": "healer_certificate",
+		"quest_required": "prove_your_compassion"
+	},
+	{
+		"id": "thief_trainer",
+		"name": "Thief Trainer",
+		"type": "job_trainer",
+		"sprite": "npc_thief",
+		"dialogue": {
+			"greeting": "Quick fingers and quicker feet, eh?",
+			"train": "You've got the skills. Take this Thief's Certificate.",
+			"already_learned": "You're already one of us.",
+			"farewell": "Stay in the shadows!"
+		},
+		"services": ["job_training"],
+		"job": "thief",
+		"certificate": "thief_certificate",
+		"quest_required": "prove_your_stealth"
+	},
+	{
+		"id": "blacksmith_trainer",
+		"name": "Master Blacksmith",
+		"type": "job_trainer",
+		"sprite": "npc_blacksmith",
+		"dialogue": {
+			"greeting": "You want to learn the forge? Show me your warrior skills first!",
+			"train": "Impressive! Here's your Blacksmith's Certificate.",
+			"already_learned": "You're already a master of the forge.",
+			"no_prereq": "Come back when you've proven yourself as a warrior.",
+			"farewell": "Keep your hammer swinging!"
+		},
+		"services": ["job_training", "repair", "craft"],
+		"job": "blacksmith",
+		"certificate": "blacksmith_certificate",
+		"prerequisites": {
+			"jobs": ["warrior"],
+			"level": 5
+		}
+	},
+	{
+		"id": "merchant_trainer",
+		"name": "Merchant Guildmaster",
+		"type": "job_trainer",
+		"sprite": "npc_merchant",
+		"dialogue": {
+			"greeting": "Want to join the Merchant's Guild? Prove you have what it takes!",
+			"train": "Excellent! Here's your Merchant's Certificate.",
+			"already_learned": "You're already a guild member.",
+			"no_prereq": "Only experienced thieves understand the trade. Come back later.",
+			"farewell": "Profit and prosperity to you!"
+		},
+		"services": ["job_training", "appraisal"],
+		"job": "merchant",
+		"certificate": "merchant_certificate",
+		"prerequisites": {
+			"jobs": ["thief"],
+			"level": 10
+		}
+	},
+	{
+		"id": "auctioneer",
+		"name": "Auctioneer",
+		"type": "service",
+		"sprite": "npc_auctioneer",
+		"dialogue": {
+			"greeting": "Welcome to the Auction House! Buy and sell with adventurers worldwide!",
+			"farewell": "Happy trading!"
+		},
+		"services": ["auction_house"]
+	},
+	{
+		"id": "quest_giver",
+		"name": "Village Elder",
+		"type": "quest",
+		"sprite": "npc_elder",
+		"dialogue": {
+			"greeting": "Adventurer! I need your help!",
+			"quest_available": "Can you help us with {quest_name}?",
+			"quest_active": "How goes the {quest_name}?",
+			"quest_complete": "Thank you! Here's your reward.",
+			"farewell": "Be safe out there!"
+		},
+		"services": ["quests"],
+		"quests": ["slime_invasion", "wolf_problem", "missing_crystals"]
+	}
+]
