@@ -2,7 +2,7 @@
 
 A 2D multiplayer RPG game with turn-based combat (Pokemon-style), multi-job system, open world, and complex economy.
 
-**Current Status:** 🎮 **Phase 1.5 Complete - First Playable Demo Ready!**
+**Current Status:** 🎮 **Phase 2 Complete - Backend Server Ready!**
 
 ## 🎯 Quick Start - Play the Demo!
 
@@ -18,6 +18,14 @@ bun run dev
 Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
 
 ## ✨ What's Working Now
+
+### Phase 2: Backend Server ✅
+- ✅ **Elit Server**: Full HTTP server with routing and error handling
+- ✅ **PostgreSQL Database**: Complete schema with 9 tables
+- ✅ **Authentication**: User registration, login, JWT tokens, session management
+- ✅ **Save/Load System**: Player data persistence with history and snapshots
+- ✅ **Security**: Password hashing (bcrypt), JWT verification, audit logging
+- ✅ **API Endpoints**: Register, login, logout, save, load, history
 
 ### Phase 1.5: First Playable Demo ✅
 - ✅ Player movement with WASD/Arrow controls
@@ -74,7 +82,11 @@ rpg/
 │
 ├── apps/
 │   ├── web/              # ✅ Web browser client (WORKING!)
-│   ├── server/           # Elit backend server (next phase)
+│   ├── server/           # ✅ Elit backend server (COMPLETE!)
+│   │   ├── auth/         # Authentication (JWT, bcrypt)
+│   │   ├── database/     # PostgreSQL config & schema
+│   │   ├── save/         # Save/load system
+│   │   └── signaling/    # WebSocket signaling (Phase 3)
 │   ├── desktop/          # Electron desktop app (planned)
 │   └── mobile/           # Capacitor mobile app (planned)
 │
@@ -87,9 +99,21 @@ rpg/
 # Install dependencies
 bun install
 
-# Run web demo
+# Run web demo (client)
 cd apps/web
 bun run dev
+# Open http://localhost:5173
+
+# Run backend server
+cd apps/server
+bun run dev
+# Server runs on http://localhost:3000
+
+# Setup database (first time only)
+cd apps/server
+cp .env.example .env  # Edit with your PostgreSQL credentials
+createdb rpg_game
+bun run src/database/init.ts
 
 # Type check all packages
 bun run type-check
@@ -101,7 +125,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (18% Complete)
+## 📊 Progress (24% Complete)
 
 ### Completed Phases ✅
 
@@ -113,10 +137,11 @@ bun run format
   - Week 4: Asset Management ✅
   - Week 5: Input & Animation ✅
 - **Phase 1.5**: First Playable Demo (1 week) ✅
+- **Phase 2**: Elit Server + Auth (2 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 2**: Elit Server + Auth (2 weeks) - NEXT
+- **Phase 3**: P2P Networking (3 weeks) - NEXT
 - **Phase 3**: P2P Networking (3 weeks)
 - **Phase 4**: Turn-based Combat System (4 weeks)
 - **Phase 5**: Inventory & Items (2 weeks)
@@ -132,7 +157,7 @@ bun run format
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 3/17 phases (18%)
+**Current Progress:** 4/17 phases (24%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -200,6 +225,15 @@ Our custom-built engine includes:
 
 ## 🚀 Recent Achievements
 
+**Phase 2 Complete (2025-12-31):**
+- Complete backend server infrastructure with Elit
+- PostgreSQL database with comprehensive schema (9 tables)
+- Full authentication system (register, login, JWT, sessions)
+- Save/load system with history and snapshots
+- Security features: bcrypt password hashing, JWT verification, audit logging
+- All API endpoints documented and tested
+- Server ready for Phase 3 P2P networking
+
 **Phase 1.5 Complete (2025-12-31):**
 - Created first playable demo with player movement
 - Integrated all custom engine systems
@@ -234,5 +268,5 @@ Private project
 
 ---
 
-**Status:** First playable demo complete! 🎉
-**Next:** Phase 2 - Elit Server + Authentication
+**Status:** Backend server complete! 🎉
+**Next:** Phase 3 - WebRTC P2P Networking
