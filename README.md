@@ -151,7 +151,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (53% Complete)
+## 📊 Progress (59% Complete)
 
 ### Completed Phases ✅
 
@@ -169,11 +169,11 @@ bun run format
 - **Phase 5**: Inventory & Items (2 weeks) ✅
 - **Phase 6**: Multi-Job System (2 weeks) ✅
 - **Phase 7**: World & Maps (3 weeks) ✅
+- **Phase 8**: Economy - Crafting & Trading (3 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 8**: Economy - Crafting & Trading (3 weeks) - NEXT
-- **Phase 9**: Auction House (2 weeks)
+- **Phase 9**: Auction House (2 weeks) - NEXT
 - **Phase 10**: Player Shops (2 weeks)
 - **Phase 11**: PvP Arena (2 weeks)
 - **Phase 12**: Desktop App (2 weeks)
@@ -182,7 +182,7 @@ bun run format
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 9/17 phases (53%)
+**Current Progress:** 10/17 phases (59%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -249,6 +249,23 @@ Our custom-built engine includes:
 - [Web Demo README](./apps/web/README.md) - How to run the playable demo
 
 ## 🚀 Recent Achievements
+
+**Phase 8 Complete (2025-12-31):**
+- Complete economy system with crafting and P2P trading
+- CurrencyService with PostgreSQL validation (~570 lines)
+- Transaction logging, audit trails, anti-cheat heuristics
+- 12 crafting recipes across 5 categories
+- 15 crafting materials (iron ore, wood, leather, herbs, etc.)
+- CraftingManager with job/skill requirements (~440 lines)
+- Success rate system and real-time progress tracking
+- TradingManager for face-to-face P2P trading (~480 lines)
+- Trade request/accept/confirm flow with 5-min timeout
+- TradeValidationService with rate limiting (~420 lines)
+- CraftingUI with recipe browser and filtering (~480 lines)
+- TradingUI with dual offer panels (~450 lines)
+- Server-side validation prevents item duplication
+- Suspicious trading pattern detection
+- ~3,500 lines of code across 12 files
 
 **Phase 7 Complete (2025-12-31):**
 - Complete world management system with 2 continents (Verdant Lands, Scorching Sands)
@@ -358,5 +375,5 @@ Private project
 
 ---
 
-**Status:** World & Maps System complete! 🎉
-**Next:** Phase 8 - Economy: Crafting & Trading
+**Status:** Economy System complete! 🎉
+**Next:** Phase 9 - Auction House
