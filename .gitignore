@@ -1,0 +1,54 @@
+# Dependencies
+node_modules
+bun.lockb
+
+# Build output
+out
+dist
+build
+*.tgz
+
+# Code coverage
+coverage
+*.lcov
+
+# Logs
+logs
+*.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Environment variables
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IDEs
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Development
+.temp
+.tmp
+
+# Electron
+apps/desktop/dist
+apps/desktop/out
+
+# Mobile
+apps/mobile/android
+apps/mobile/ios
+apps/mobile/dist

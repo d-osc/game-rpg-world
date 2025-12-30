@@ -1,0 +1,13 @@
+{
+  "name": "@rpg/web",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@rpg/shared": "workspace:*",
+    "@rpg/game-engine": "workspace:*",
+    "@rpg/game-core": "workspace:*",
+    "@rpg/networking": "workspace:*",
+    "elit": "^3.0.9"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "rpg",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "bun run --watch apps/web/src/index.ts",
+    "dev:server": "bun run --watch apps/server/src/index.ts",
+    "build": "bun run build:packages && bun run build:apps",
+    "build:packages": "echo 'Building packages...'",
+    "build:apps": "echo 'Building apps...'",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "elit": "^3.0.9",
+    "bitecs": "^0.3.40"
+  }
+}
