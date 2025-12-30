@@ -8,3 +8,4 @@ export { CombatExample } from './CombatExample.ts';
 export { InventoryExample } from './InventoryExample.ts';
 export { JobExample } from './JobExample.ts';
 export { EconomyExample } from './EconomyExample.ts';
+export { AuctionHouseExample } from './AuctionHouseExample.ts';

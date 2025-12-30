@@ -19,3 +19,11 @@ export type {
 	Trade,
 	TradingManagerEvents,
 } from './TradingManager.ts';
+
+export { AuctionHouseClient } from './AuctionHouseClient.ts';
+export type {
+	AuctionOrder,
+	CreateOrderRequest,
+	SearchRequest,
+	AuctionHouseClientEvents,
+} from './AuctionHouseClient.ts';
