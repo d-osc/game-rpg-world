@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPG Game - First Playable Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .game-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2em;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    #game-canvas {
+      display: block;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      background: #87CEEB;
+    }
+
+    .info {
+      color: white;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+
+    .info p {
+      margin: 5px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin: 4px;
+      font-size: 0.85em;
+    }
+
+    .loading {
+      color: white;
+      text-align: center;
+      font-size: 1.2em;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>🎮 RPG Game - Phase 1.5 Demo</h1>
+
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+
+    <div class="info">
+      <p><strong>Controls:</strong></p>
+      <p>
+        <span class="badge">WASD</span>
+        <span class="badge">Arrow Keys</span>
+        Move Player
+      </p>
+      <p>
+        <span class="badge">F3</span>
+        Toggle Debug Info
+      </p>
+      <p style="margin-top: 15px; font-size: 0.8em; opacity: 0.8;">
+        Phase 1.5: First Playable Demo ✅<br>
+        Custom Game Engine | Player Movement | Map System
+      </p>
+    </div>
+  </div>
+
+  <!-- Module script -->
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
