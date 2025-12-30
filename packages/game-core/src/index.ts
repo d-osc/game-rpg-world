@@ -15,4 +15,10 @@ export * from './entities/index.ts';
 // Scenes
 export * from './scenes/index.ts';
 
+// UI
+export * from './ui/index.ts';
+
+// Examples
+export * from './examples/index.ts';
+
 console.log('[@rpg/game-core] Loaded');

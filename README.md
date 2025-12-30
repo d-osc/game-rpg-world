@@ -27,6 +27,8 @@ Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
 - ✅ **StateSync**: Position synchronization framework with interpolation
 - ✅ **NetworkManager**: High-level coordinator for signaling + WebRTC
 - ✅ **Auto-Reconnect**: Exponential backoff on disconnection
+- ✅ **Chat System**: P2P text chat with ChatManager and ChatUI
+- ✅ **RemotePlayerRenderer**: Render remote players with name tags and interpolation
 
 ### Phase 2: Backend Server ✅
 - ✅ **Elit Server**: Full HTTP server with routing and error handling
@@ -245,6 +247,9 @@ Our custom-built engine includes:
 - StateSync framework with position synchronization
 - NetworkManager coordinator for signaling + WebRTC
 - Auto-reconnect with exponential backoff
+- P2P chat system with ChatManager and ChatUI
+- RemotePlayerRenderer with interpolation and name tags
+- Integration example with NetworkingExample.ts
 - Ready for real-time multiplayer gameplay
 
 **Phase 2 Complete (2025-12-31):**

@@ -5,11 +5,13 @@
 
 import { SignalingClient } from '../signaling/SignalingClient.ts';
 import { PeerManager } from '../webrtc/PeerManager.ts';
+import { ChatManager } from '../chat/ChatManager.ts';
 
 export interface NetworkManagerConfig {
 	signalingUrl: string;
 	token: string;
 	playerId: string;
+	playerName: string;
 }
 
 export type NetworkManagerEvents = {
@@ -23,6 +25,7 @@ export type NetworkManagerEvents = {
 export class NetworkManager {
 	private signalingClient: SignalingClient;
 	private peerManager: PeerManager;
+	private chatManager: ChatManager;
 	private config: NetworkManagerConfig;
 	private eventListeners: Map<keyof NetworkManagerEvents, Set<Function>> = new Map();
 	private currentZone: string | null = null;
@@ -31,8 +34,10 @@ export class NetworkManager {
 		this.config = config;
 		this.signalingClient = new SignalingClient(config.signalingUrl, config.token);
 		this.peerManager = new PeerManager(config.playerId);
+		this.chatManager = new ChatManager(config.playerId, config.playerName);
 
 		this.setupEventHandlers();
+		this.setupChatManager();
 	}
 
 	/**
@@ -109,8 +114,24 @@ export class NetworkManager {
 		});
 
 		this.peerManager.on('peer-data', (playerId, data) => {
-			this.emit('peer-data', playerId, data);
+			// Handle chat messages
+			if (data.type === 'chat-message') {
+				this.chatManager.handleReceivedMessage(data.data);
+			} else {
+				this.emit('peer-data', playerId, data);
+			}
 		});
+	}
+
+	/**
+	 * Setup chat manager
+	 */
+	private setupChatManager(): void {
+		// Set callbacks for sending messages
+		this.chatManager.setSendCallbacks(
+			(peerId, data) => this.sendToPeer(peerId, data),
+			(data) => this.broadcast(data),
+		);
 	}
 
 	/**
@@ -201,11 +222,19 @@ export class NetworkManager {
 	}
 
 	/**
+	 * Get chat manager
+	 */
+	getChatManager(): ChatManager {
+		return this.chatManager;
+	}
+
+	/**
 	 * Disconnect from everything
 	 */
 	disconnect(): void {
 		this.leaveZone();
 		this.signalingClient.disconnect();
+		this.chatManager.destroy();
 	}
 
 	/**

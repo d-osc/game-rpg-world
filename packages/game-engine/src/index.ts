@@ -8,6 +8,7 @@ export * from './core/Scene.ts';
 // Renderer
 export * from './renderer/Canvas2DRenderer.ts';
 export * from './renderer/Camera.ts';
+export * from './renderer/RemotePlayerRenderer.ts';
 
 // Physics
 export * from './physics/index.ts';
