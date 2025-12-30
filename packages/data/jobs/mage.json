@@ -1,0 +1,74 @@
+{
+	"id": "mage",
+	"name": "Mage",
+	"description": "A wielder of arcane magic, capable of devastating elemental spells.",
+	"icon": "🔮",
+	"baseStats": {
+		"hp": 12,
+		"mp": 25,
+		"atk": 8,
+		"def": 6,
+		"spd": 10,
+		"luck": 12
+	},
+	"statGrowth": {
+		"hp": 2,
+		"mp": 5,
+		"atk": 1,
+		"def": 1,
+		"spd": 2,
+		"luck": 2
+	},
+	"skills": [
+		{
+			"skillId": "fireball",
+			"learnLevel": 1,
+			"description": "Basic fire spell"
+		},
+		{
+			"skillId": "flame_burst",
+			"learnLevel": 5,
+			"description": "Powerful fire explosion"
+		},
+		{
+			"skillId": "earthquake",
+			"learnLevel": 10,
+			"description": "Devastating earth magic"
+		},
+		{
+			"skillId": "crystal_barrier",
+			"learnLevel": 8,
+			"description": "Protective magic shield"
+		}
+	],
+	"passiveAbilities": [
+		{
+			"id": "arcane_knowledge",
+			"name": "Arcane Knowledge",
+			"description": "Increases magic damage by 15%",
+			"effect": {
+				"type": "damage_bonus",
+				"category": "magic",
+				"value": 0.15
+			}
+		},
+		{
+			"id": "mana_efficiency",
+			"name": "Mana Efficiency",
+			"description": "Reduces MP cost of spells by 10%",
+			"effect": {
+				"type": "mp_cost_reduction",
+				"value": 0.1
+			}
+		}
+	],
+	"equipmentRestrictions": {
+		"weapons": ["staff", "wand", "tome"],
+		"armor": ["light", "cloth"]
+	},
+	"requirements": {
+		"baseJob": true,
+		"level": 1,
+		"certificateId": "mage_certificate"
+	}
+}

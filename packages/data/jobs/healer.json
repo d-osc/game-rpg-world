@@ -1,0 +1,69 @@
+{
+	"id": "healer",
+	"name": "Healer",
+	"description": "A divine practitioner who restores health and provides support to allies.",
+	"icon": "✨",
+	"baseStats": {
+		"hp": 15,
+		"mp": 20,
+		"atk": 6,
+		"def": 8,
+		"spd": 12,
+		"luck": 15
+	},
+	"statGrowth": {
+		"hp": 3,
+		"mp": 4,
+		"atk": 1,
+		"def": 2,
+		"spd": 2,
+		"luck": 3
+	},
+	"skills": [
+		{
+			"skillId": "heal",
+			"learnLevel": 1,
+			"description": "Restore HP to ally"
+		},
+		{
+			"skillId": "crystal_barrier",
+			"learnLevel": 5,
+			"description": "Protective barrier"
+		},
+		{
+			"skillId": "howl",
+			"learnLevel": 8,
+			"description": "Boost party stats"
+		}
+	],
+	"passiveAbilities": [
+		{
+			"id": "healing_mastery",
+			"name": "Healing Mastery",
+			"description": "Increases healing effectiveness by 20%",
+			"effect": {
+				"type": "healing_bonus",
+				"value": 0.2
+			}
+		},
+		{
+			"id": "divine_protection",
+			"name": "Divine Protection",
+			"description": "Increases party defense by 5%",
+			"effect": {
+				"type": "party_stat_bonus",
+				"stat": "def",
+				"value": 0.05
+			}
+		}
+	],
+	"equipmentRestrictions": {
+		"weapons": ["staff", "wand", "mace"],
+		"armor": ["light", "cloth", "medium"]
+	},
+	"requirements": {
+		"baseJob": true,
+		"level": 1,
+		"certificateId": "healer_certificate"
+	}
+}

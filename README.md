@@ -151,7 +151,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (41% Complete)
+## 📊 Progress (47% Complete)
 
 ### Completed Phases ✅
 
@@ -167,10 +167,11 @@ bun run format
 - **Phase 3**: P2P Networking (3 weeks) ✅
 - **Phase 4**: Combat System (4 weeks) ✅
 - **Phase 5**: Inventory & Items (2 weeks) ✅
+- **Phase 6**: Multi-Job System (2 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 6**: Multi-Job System (2 weeks) - NEXT
+- **Phase 7**: World & Maps (3 weeks) - NEXT
 - **Phase 8**: Economy - Crafting & Trading (3 weeks)
 - **Phase 9**: Auction House (2 weeks)
 - **Phase 10**: Player Shops (2 weeks)
@@ -181,7 +182,7 @@ bun run format
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 7/17 phases (41%)
+**Current Progress:** 8/17 phases (47%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -248,6 +249,19 @@ Our custom-built engine includes:
 - [Web Demo README](./apps/web/README.md) - How to run the playable demo
 
 ## 🚀 Recent Achievements
+
+**Phase 6 Complete (2025-12-31):**
+- Multi-job system allowing unlimited job combinations
+- 6 unique jobs: Warrior, Mage, Healer, Thief, Blacksmith, Merchant
+- No job switching required - use all skills from learned jobs
+- Job certificates for unlocking (integrated with inventory)
+- Per-job level and experience system
+- 25+ skills unlock based on job level
+- 20+ passive abilities with various effects
+- Cumulative stat bonuses from all jobs
+- Advanced jobs with prerequisites (Blacksmith needs Warrior, Merchant needs Thief)
+- Complete job UI with learned/available jobs, skills, and passive abilities
+- ~2,000 lines of code across 13 files
 
 **Phase 5 Complete (2025-12-31):**
 - Complete inventory system with dual limits (slot-based + weight-based)
@@ -330,5 +344,5 @@ Private project
 
 ---
 
-**Status:** Inventory & Items complete! 🎉
-**Next:** Phase 6 - Multi-Job System
+**Status:** Multi-Job System complete! 🎉
+**Next:** Phase 7 - World & Maps

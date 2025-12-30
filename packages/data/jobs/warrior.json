@@ -1,0 +1,75 @@
+{
+	"id": "warrior",
+	"name": "Warrior",
+	"description": "A master of physical combat, excelling in melee weapons and defensive techniques.",
+	"icon": "⚔️",
+	"baseStats": {
+		"hp": 20,
+		"mp": 5,
+		"atk": 15,
+		"def": 12,
+		"spd": 8,
+		"luck": 5
+	},
+	"statGrowth": {
+		"hp": 4,
+		"mp": 1,
+		"atk": 3,
+		"def": 2,
+		"spd": 1,
+		"luck": 1
+	},
+	"skills": [
+		{
+			"skillId": "slash",
+			"learnLevel": 1,
+			"description": "Basic slashing attack"
+		},
+		{
+			"skillId": "tackle",
+			"learnLevel": 1,
+			"description": "Charge at enemy"
+		},
+		{
+			"skillId": "quick_stab",
+			"learnLevel": 5,
+			"description": "Fast stabbing attack"
+		},
+		{
+			"skillId": "howl",
+			"learnLevel": 10,
+			"description": "Boost attack power"
+		}
+	],
+	"passiveAbilities": [
+		{
+			"id": "physical_mastery",
+			"name": "Physical Mastery",
+			"description": "Increases physical attack damage by 10%",
+			"effect": {
+				"type": "damage_bonus",
+				"category": "physical",
+				"value": 0.1
+			}
+		},
+		{
+			"id": "iron_body",
+			"name": "Iron Body",
+			"description": "Reduces physical damage taken by 5%",
+			"effect": {
+				"type": "damage_reduction",
+				"category": "physical",
+				"value": 0.05
+			}
+		}
+	],
+	"equipmentRestrictions": {
+		"weapons": ["sword", "axe", "spear", "hammer"],
+		"armor": ["heavy", "medium", "light"]
+	},
+	"requirements": {
+		"baseJob": true,
+		"level": 1,
+		"certificateId": "warrior_certificate"
+	}
+}

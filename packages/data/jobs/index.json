@@ -1,0 +1,28 @@
+{
+	"jobFiles": [
+		"./warrior.json",
+		"./mage.json",
+		"./healer.json",
+		"./thief.json",
+		"./blacksmith.json",
+		"./merchant.json"
+	],
+	"categories": {
+		"combat": ["warrior", "mage", "thief"],
+		"support": ["healer"],
+		"crafting": ["blacksmith"],
+		"economy": ["merchant"]
+	},
+	"baseJobs": ["warrior", "mage", "healer", "thief"],
+	"advancedJobs": ["blacksmith", "merchant"],
+	"jobProgression": {
+		"warrior": {
+			"branches": ["blacksmith"],
+			"description": "Warriors can advance to Blacksmith to craft powerful equipment"
+		},
+		"thief": {
+			"branches": ["merchant"],
+			"description": "Thieves can advance to Merchant to master trade and commerce"
+		}
+	}
+}

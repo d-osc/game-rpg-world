@@ -1,0 +1,92 @@
+[
+	{
+		"id": "warrior_certificate",
+		"name": "Warrior's Certificate",
+		"description": "A certificate that allows you to learn the Warrior job. Grants mastery of physical combat and melee weapons.",
+		"type": "quest",
+		"rarity": "common",
+		"value": 100,
+		"weight": 0.1,
+		"stackable": true,
+		"maxStack": 1,
+		"effect": {
+			"type": "job_unlock",
+			"jobId": "warrior"
+		}
+	},
+	{
+		"id": "mage_certificate",
+		"name": "Mage's Certificate",
+		"description": "A certificate that allows you to learn the Mage job. Grants mastery of arcane magic and elemental spells.",
+		"type": "quest",
+		"rarity": "common",
+		"value": 100,
+		"weight": 0.1,
+		"stackable": true,
+		"maxStack": 1,
+		"effect": {
+			"type": "job_unlock",
+			"jobId": "mage"
+		}
+	},
+	{
+		"id": "healer_certificate",
+		"name": "Healer's Certificate",
+		"description": "A certificate that allows you to learn the Healer job. Grants mastery of divine magic and restoration spells.",
+		"type": "quest",
+		"rarity": "common",
+		"value": 100,
+		"weight": 0.1,
+		"stackable": true,
+		"maxStack": 1,
+		"effect": {
+			"type": "job_unlock",
+			"jobId": "healer"
+		}
+	},
+	{
+		"id": "thief_certificate",
+		"name": "Thief's Certificate",
+		"description": "A certificate that allows you to learn the Thief job. Grants mastery of stealth, speed, and thievery.",
+		"type": "quest",
+		"rarity": "common",
+		"value": 100,
+		"weight": 0.1,
+		"stackable": true,
+		"maxStack": 1,
+		"effect": {
+			"type": "job_unlock",
+			"jobId": "thief"
+		}
+	},
+	{
+		"id": "blacksmith_certificate",
+		"name": "Blacksmith's Certificate",
+		"description": "A certificate that allows you to learn the Blacksmith job. Grants mastery of weapon and armor crafting. Requires Warrior job.",
+		"type": "quest",
+		"rarity": "uncommon",
+		"value": 500,
+		"weight": 0.1,
+		"stackable": true,
+		"maxStack": 1,
+		"effect": {
+			"type": "job_unlock",
+			"jobId": "blacksmith"
+		}
+	},
+	{
+		"id": "merchant_certificate",
+		"name": "Merchant's Certificate",
+		"description": "A certificate that allows you to learn the Merchant job. Grants mastery of trade, commerce, and shop management. Requires Thief job.",
+		"type": "quest",
+		"rarity": "uncommon",
+		"value": 1000,
+		"weight": 0.1,
+		"stackable": true,
+		"maxStack": 1,
+		"effect": {
+			"type": "job_unlock",
+			"jobId": "merchant"
+		}
+	}
+]

@@ -11,3 +11,6 @@ export type { CombatUIConfig } from './CombatUI.ts';
 
 export { InventoryUI } from './InventoryUI.ts';
 export type { InventoryUIConfig } from './InventoryUI.ts';
+
+export { JobUI } from './JobUI.ts';
+export type { JobUIConfig } from './JobUI.ts';

@@ -1,0 +1,86 @@
+{
+	"id": "merchant",
+	"name": "Merchant",
+	"description": "A savvy trader who can operate shops, negotiate better prices, and identify rare items.",
+	"icon": "💰",
+	"baseStats": {
+		"hp": 13,
+		"mp": 12,
+		"atk": 7,
+		"def": 7,
+		"spd": 10,
+		"luck": 25
+	},
+	"statGrowth": {
+		"hp": 2,
+		"mp": 2,
+		"atk": 1,
+		"def": 1,
+		"spd": 2,
+		"luck": 5
+	},
+	"skills": [
+		{
+			"skillId": "steal",
+			"learnLevel": 5,
+			"description": "Acquire items from enemies"
+		}
+	],
+	"passiveAbilities": [
+		{
+			"id": "merchant_discount",
+			"name": "Merchant's Discount",
+			"description": "Buy items for 15% less from NPCs",
+			"effect": {
+				"type": "buy_price_reduction",
+				"value": 0.15
+			}
+		},
+		{
+			"id": "merchant_premium",
+			"name": "Merchant's Premium",
+			"description": "Sell items for 20% more to NPCs",
+			"effect": {
+				"type": "sell_price_increase",
+				"value": 0.2
+			}
+		},
+		{
+			"id": "shop_owner",
+			"name": "Shop Owner",
+			"description": "Can open player shops",
+			"effect": {
+				"type": "feature_unlock",
+				"feature": "player_shop"
+			}
+		},
+		{
+			"id": "appraisal",
+			"name": "Appraisal",
+			"description": "Can identify item quality and value accurately",
+			"effect": {
+				"type": "feature_unlock",
+				"feature": "item_appraisal"
+			}
+		},
+		{
+			"id": "treasure_sense",
+			"name": "Treasure Sense",
+			"description": "Increases rare item drop rate by 10%",
+			"effect": {
+				"type": "rare_drop_bonus",
+				"value": 0.1
+			}
+		}
+	],
+	"equipmentRestrictions": {
+		"weapons": ["dagger", "staff", "bow"],
+		"armor": ["light", "cloth", "medium"]
+	},
+	"requirements": {
+		"baseJob": false,
+		"level": 10,
+		"prerequisiteJobs": ["thief"],
+		"certificateId": "merchant_certificate"
+	}
+}

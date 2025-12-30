@@ -3,17 +3,19 @@
 		"./weapons.json",
 		"./armor.json",
 		"./consumables.json",
-		"./materials.json"
+		"./materials.json",
+		"./job_certificates.json"
 	],
 	"categories": {
 		"weapon": ["rusty_sword", "iron_sword", "steel_sword", "flame_blade", "crystal_staff"],
 		"armor": ["cloth_hat", "leather_armor", "iron_armor", "dragon_scale_armor"],
 		"consumable": ["potion", "hi_potion", "ether", "elixir", "antidote"],
-		"material": ["slime_gel", "wolf_fang", "wolf_pelt", "magic_crystal", "crystal_core", "fire_essence", "dragon_scale"]
+		"material": ["slime_gel", "wolf_fang", "wolf_pelt", "magic_crystal", "crystal_core", "fire_essence", "dragon_scale"],
+		"quest": ["warrior_certificate", "mage_certificate", "healer_certificate", "thief_certificate", "blacksmith_certificate", "merchant_certificate"]
 	},
 	"rarities": {
-		"common": ["rusty_sword", "iron_sword", "cloth_hat", "leather_armor", "potion", "ether", "antidote", "slime_gel", "wolf_fang", "wolf_pelt"],
-		"uncommon": ["steel_sword", "iron_armor", "hi_potion", "magic_crystal", "fire_essence"],
+		"common": ["rusty_sword", "iron_sword", "cloth_hat", "leather_armor", "potion", "ether", "antidote", "slime_gel", "wolf_fang", "wolf_pelt", "warrior_certificate", "mage_certificate", "healer_certificate", "thief_certificate"],
+		"uncommon": ["steel_sword", "iron_armor", "hi_potion", "magic_crystal", "fire_essence", "blacksmith_certificate", "merchant_certificate"],
 		"rare": ["flame_blade", "elixir", "crystal_core"],
 		"epic": ["crystal_staff"],
 		"legendary": ["dragon_scale_armor", "dragon_scale"]

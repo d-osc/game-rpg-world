@@ -1,0 +1,91 @@
+{
+	"id": "blacksmith",
+	"name": "Blacksmith",
+	"description": "A master craftsman who can forge weapons, armor, and repair equipment.",
+	"icon": "🔨",
+	"baseStats": {
+		"hp": 18,
+		"mp": 8,
+		"atk": 14,
+		"def": 10,
+		"spd": 7,
+		"luck": 8
+	},
+	"statGrowth": {
+		"hp": 3,
+		"mp": 1,
+		"atk": 2,
+		"def": 2,
+		"spd": 1,
+		"luck": 1
+	},
+	"skills": [
+		{
+			"skillId": "rock_smash",
+			"learnLevel": 1,
+			"description": "Powerful hammer strike"
+		},
+		{
+			"skillId": "tackle",
+			"learnLevel": 1,
+			"description": "Heavy charge attack"
+		}
+	],
+	"passiveAbilities": [
+		{
+			"id": "weapon_smithing",
+			"name": "Weapon Smithing",
+			"description": "Can craft weapons with 20% material efficiency",
+			"effect": {
+				"type": "crafting_bonus",
+				"category": "weapon",
+				"value": 0.2
+			}
+		},
+		{
+			"id": "armor_smithing",
+			"name": "Armor Smithing",
+			"description": "Can craft armor with 20% material efficiency",
+			"effect": {
+				"type": "crafting_bonus",
+				"category": "armor",
+				"value": 0.2
+			}
+		},
+		{
+			"id": "repair_mastery",
+			"name": "Repair Mastery",
+			"description": "Can repair equipment at 50% normal cost",
+			"effect": {
+				"type": "repair_cost_reduction",
+				"value": 0.5
+			}
+		},
+		{
+			"id": "metal_affinity",
+			"name": "Metal Affinity",
+			"description": "Increases damage with metal weapons by 10%",
+			"effect": {
+				"type": "weapon_damage_bonus",
+				"weaponType": "metal",
+				"value": 0.1
+			}
+		}
+	],
+	"equipmentRestrictions": {
+		"weapons": ["hammer", "axe", "sword"],
+		"armor": ["heavy", "medium"]
+	},
+	"craftingRecipes": [
+		"iron_sword",
+		"steel_sword",
+		"iron_armor",
+		"leather_armor"
+	],
+	"requirements": {
+		"baseJob": false,
+		"level": 5,
+		"prerequisiteJobs": ["warrior"],
+		"certificateId": "blacksmith_certificate"
+	}
+}

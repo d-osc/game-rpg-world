@@ -1,0 +1,77 @@
+{
+	"id": "thief",
+	"name": "Thief",
+	"description": "A nimble rogue who excels at speed, evasion, and stealing from enemies.",
+	"icon": "🗡️",
+	"baseStats": {
+		"hp": 14,
+		"mp": 10,
+		"atk": 12,
+		"def": 7,
+		"spd": 18,
+		"luck": 20
+	},
+	"statGrowth": {
+		"hp": 2,
+		"mp": 2,
+		"atk": 2,
+		"def": 1,
+		"spd": 4,
+		"luck": 4
+	},
+	"skills": [
+		{
+			"skillId": "quick_stab",
+			"learnLevel": 1,
+			"description": "Fast dagger attack"
+		},
+		{
+			"skillId": "steal",
+			"learnLevel": 3,
+			"description": "Steal items from enemies"
+		},
+		{
+			"skillId": "sand_veil",
+			"learnLevel": 7,
+			"description": "Increase evasion"
+		}
+	],
+	"passiveAbilities": [
+		{
+			"id": "swift_strikes",
+			"name": "Swift Strikes",
+			"description": "Increases critical hit chance by 10%",
+			"effect": {
+				"type": "critical_bonus",
+				"value": 0.1
+			}
+		},
+		{
+			"id": "treasure_hunter",
+			"name": "Treasure Hunter",
+			"description": "Increases item drop rate by 15%",
+			"effect": {
+				"type": "drop_rate_bonus",
+				"value": 0.15
+			}
+		},
+		{
+			"id": "evasion_mastery",
+			"name": "Evasion Mastery",
+			"description": "Increases evasion chance by 10%",
+			"effect": {
+				"type": "evasion_bonus",
+				"value": 0.1
+			}
+		}
+	],
+	"equipmentRestrictions": {
+		"weapons": ["dagger", "short_sword", "bow"],
+		"armor": ["light", "cloth"]
+	},
+	"requirements": {
+		"baseJob": true,
+		"level": 1,
+		"certificateId": "thief_certificate"
+	}
+}
