@@ -4,7 +4,8 @@
 		"./armor.json",
 		"./consumables.json",
 		"./materials.json",
-		"./job_certificates.json"
+		"./job_certificates.json",
+		"./crafting_materials.json"
 	],
 	"categories": {
 		"weapon": ["rusty_sword", "iron_sword", "steel_sword", "flame_blade", "crystal_staff"],

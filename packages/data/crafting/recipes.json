@@ -1,0 +1,286 @@
+[
+	{
+		"id": "iron_sword",
+		"name": "Iron Sword",
+		"category": "weapon",
+		"result_item_id": "iron_sword",
+		"result_quantity": 1,
+		"required_job": "blacksmith",
+		"required_job_level": 1,
+		"crafting_time": 5000,
+		"materials": [
+			{
+				"item_id": "iron_ore",
+				"quantity": 3
+			},
+			{
+				"item_id": "wood",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 50,
+		"experience_gained": 100,
+		"success_rate": 95,
+		"skill_required": null
+	},
+	{
+		"id": "steel_sword",
+		"name": "Steel Sword",
+		"category": "weapon",
+		"result_item_id": "steel_sword",
+		"result_quantity": 1,
+		"required_job": "blacksmith",
+		"required_job_level": 5,
+		"crafting_time": 8000,
+		"materials": [
+			{
+				"item_id": "steel_ingot",
+				"quantity": 2
+			},
+			{
+				"item_id": "leather",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 200,
+		"experience_gained": 250,
+		"success_rate": 85,
+		"skill_required": "advanced_smithing"
+	},
+	{
+		"id": "iron_armor",
+		"name": "Iron Armor",
+		"category": "armor",
+		"result_item_id": "iron_armor",
+		"result_quantity": 1,
+		"required_job": "blacksmith",
+		"required_job_level": 3,
+		"crafting_time": 10000,
+		"materials": [
+			{
+				"item_id": "iron_ore",
+				"quantity": 5
+			},
+			{
+				"item_id": "leather",
+				"quantity": 2
+			}
+		],
+		"currency_cost": 150,
+		"experience_gained": 200,
+		"success_rate": 90,
+		"skill_required": null
+	},
+	{
+		"id": "health_potion",
+		"name": "Health Potion",
+		"category": "consumable",
+		"result_item_id": "health_potion",
+		"result_quantity": 3,
+		"required_job": null,
+		"required_job_level": 0,
+		"crafting_time": 2000,
+		"materials": [
+			{
+				"item_id": "herb",
+				"quantity": 2
+			},
+			{
+				"item_id": "water",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 10,
+		"experience_gained": 25,
+		"success_rate": 100,
+		"skill_required": null
+	},
+	{
+		"id": "mana_potion",
+		"name": "Mana Potion",
+		"category": "consumable",
+		"result_item_id": "mana_potion",
+		"result_quantity": 3,
+		"required_job": null,
+		"required_job_level": 0,
+		"crafting_time": 2000,
+		"materials": [
+			{
+				"item_id": "magic_herb",
+				"quantity": 2
+			},
+			{
+				"item_id": "water",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 15,
+		"experience_gained": 30,
+		"success_rate": 100,
+		"skill_required": null
+	},
+	{
+		"id": "leather_armor",
+		"name": "Leather Armor",
+		"category": "armor",
+		"result_item_id": "leather_armor",
+		"result_quantity": 1,
+		"required_job": null,
+		"required_job_level": 0,
+		"crafting_time": 4000,
+		"materials": [
+			{
+				"item_id": "leather",
+				"quantity": 4
+			},
+			{
+				"item_id": "thread",
+				"quantity": 2
+			}
+		],
+		"currency_cost": 30,
+		"experience_gained": 50,
+		"success_rate": 95,
+		"skill_required": null
+	},
+	{
+		"id": "wooden_bow",
+		"name": "Wooden Bow",
+		"category": "weapon",
+		"result_item_id": "wooden_bow",
+		"result_quantity": 1,
+		"required_job": null,
+		"required_job_level": 0,
+		"crafting_time": 3000,
+		"materials": [
+			{
+				"item_id": "wood",
+				"quantity": 3
+			},
+			{
+				"item_id": "string",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 20,
+		"experience_gained": 40,
+		"success_rate": 90,
+		"skill_required": null
+	},
+	{
+		"id": "steel_ingot",
+		"name": "Steel Ingot",
+		"category": "material",
+		"result_item_id": "steel_ingot",
+		"result_quantity": 1,
+		"required_job": "blacksmith",
+		"required_job_level": 2,
+		"crafting_time": 6000,
+		"materials": [
+			{
+				"item_id": "iron_ore",
+				"quantity": 2
+			},
+			{
+				"item_id": "coal",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 30,
+		"experience_gained": 80,
+		"success_rate": 100,
+		"skill_required": null
+	},
+	{
+		"id": "magic_staff",
+		"name": "Magic Staff",
+		"category": "weapon",
+		"result_item_id": "magic_staff",
+		"result_quantity": 1,
+		"required_job": null,
+		"required_job_level": 0,
+		"crafting_time": 7000,
+		"materials": [
+			{
+				"item_id": "wood",
+				"quantity": 2
+			},
+			{
+				"item_id": "magic_crystal",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 100,
+		"experience_gained": 150,
+		"success_rate": 85,
+		"skill_required": null
+	},
+	{
+		"id": "healing_salve",
+		"name": "Healing Salve",
+		"category": "consumable",
+		"result_item_id": "healing_salve",
+		"result_quantity": 5,
+		"required_job": null,
+		"required_job_level": 0,
+		"crafting_time": 1500,
+		"materials": [
+			{
+				"item_id": "herb",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 5,
+		"experience_gained": 15,
+		"success_rate": 100,
+		"skill_required": null
+	},
+	{
+		"id": "enchanted_ring",
+		"name": "Enchanted Ring",
+		"category": "accessory",
+		"result_item_id": "enchanted_ring",
+		"result_quantity": 1,
+		"required_job": "merchant",
+		"required_job_level": 3,
+		"crafting_time": 12000,
+		"materials": [
+			{
+				"item_id": "gold_ore",
+				"quantity": 1
+			},
+			{
+				"item_id": "magic_crystal",
+				"quantity": 2
+			}
+		],
+		"currency_cost": 500,
+		"experience_gained": 400,
+		"success_rate": 70,
+		"skill_required": "enchanting"
+	},
+	{
+		"id": "poison_dagger",
+		"name": "Poison Dagger",
+		"category": "weapon",
+		"result_item_id": "poison_dagger",
+		"result_quantity": 1,
+		"required_job": "thief",
+		"required_job_level": 4,
+		"crafting_time": 5000,
+		"materials": [
+			{
+				"item_id": "iron_ore",
+				"quantity": 2
+			},
+			{
+				"item_id": "poison_extract",
+				"quantity": 1
+			}
+		],
+		"currency_cost": 80,
+		"experience_gained": 120,
+		"success_rate": 80,
+		"skill_required": "poison_crafting"
+	}
+]

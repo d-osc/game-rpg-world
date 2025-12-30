@@ -7,3 +7,4 @@ export { NetworkingExample } from './NetworkingExample.ts';
 export { CombatExample } from './CombatExample.ts';
 export { InventoryExample } from './InventoryExample.ts';
 export { JobExample } from './JobExample.ts';
+export { EconomyExample } from './EconomyExample.ts';
