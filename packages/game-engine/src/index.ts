@@ -13,11 +13,13 @@ export * from './renderer/Camera.ts';
 export * from './physics/index.ts';
 
 // Input
-export * from './input/Keyboard.ts';
-export * from './input/Mouse.ts';
+export * from './input/index.ts';
 
 // Assets
 export * from './assets/index.ts';
+
+// Animation
+export * from './animation/index.ts';
 
 // Math
 export * from './math/Vector2.ts';
