@@ -17,7 +17,7 @@ export * from './input/Keyboard.ts';
 export * from './input/Mouse.ts';
 
 // Assets
-export * from './assets/AssetLoader.ts';
+export * from './assets/index.ts';
 
 // Math
 export * from './math/Vector2.ts';
