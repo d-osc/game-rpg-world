@@ -1,0 +1,43 @@
+{
+	"id": "wolf",
+	"name": "Forest Wolf",
+	"description": "A fierce predator that hunts in packs.",
+	"level": 5,
+	"stats": {
+		"hp": 120,
+		"mp": 20,
+		"atk": 22,
+		"def": 12,
+		"spd": 25,
+		"luck": 12
+	},
+	"element": "neutral",
+	"skills": ["bite", "howl", "pack_tactics"],
+	"drops": [
+		{
+			"itemId": "wolf_fang",
+			"chance": 0.5,
+			"quantity": { "min": 1, "max": 2 }
+		},
+		{
+			"itemId": "wolf_pelt",
+			"chance": 0.4,
+			"quantity": { "min": 1, "max": 1 }
+		},
+		{
+			"itemId": "meat",
+			"chance": 0.7,
+			"quantity": { "min": 2, "max": 4 }
+		}
+	],
+	"exp": 60,
+	"gold": 40,
+	"sprite": {
+		"idle": "wolf_idle.png",
+		"attack": "wolf_attack.png",
+		"hurt": "wolf_hurt.png",
+		"dead": "wolf_dead.png"
+	},
+	"aiPattern": "tactical",
+	"zone": "forest"
+}

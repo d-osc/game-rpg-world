@@ -1,0 +1,20 @@
+{
+	"skillFiles": [
+		"./basic_skills.json",
+		"./magic_skills.json",
+		"./support_skills.json"
+	],
+	"categories": {
+		"physical": ["tackle", "slash", "quick_stab", "bite", "rock_smash", "poison_fang", "constrict"],
+		"magic": ["fireball", "flame_burst", "acid_spit", "earthquake", "heal"],
+		"support": ["howl", "crystal_barrier", "sand_veil", "burning_aura", "pack_tactics"],
+		"special": ["steal"]
+	},
+	"elements": {
+		"neutral": ["tackle", "slash", "quick_stab", "bite", "howl", "poison_fang", "steal", "pack_tactics", "constrict"],
+		"fire": ["fireball", "flame_burst", "burning_aura"],
+		"water": ["acid_spit"],
+		"earth": ["rock_smash", "earthquake", "crystal_barrier", "sand_veil"],
+		"holy": ["heal"]
+	}
+}

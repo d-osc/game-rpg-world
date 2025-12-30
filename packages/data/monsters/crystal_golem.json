@@ -1,0 +1,43 @@
+{
+	"id": "crystal_golem",
+	"name": "Crystal Golem",
+	"description": "A hulking construct made of enchanted crystals. Slow but powerful.",
+	"level": 8,
+	"stats": {
+		"hp": 200,
+		"mp": 30,
+		"atk": 35,
+		"def": 40,
+		"spd": 8,
+		"luck": 5
+	},
+	"element": "earth",
+	"skills": ["rock_smash", "crystal_barrier", "earthquake"],
+	"drops": [
+		{
+			"itemId": "magic_crystal",
+			"chance": 0.8,
+			"quantity": { "min": 2, "max": 5 }
+		},
+		{
+			"itemId": "crystal_core",
+			"chance": 0.3,
+			"quantity": { "min": 1, "max": 1 }
+		},
+		{
+			"itemId": "earth_essence",
+			"chance": 0.5,
+			"quantity": { "min": 1, "max": 2 }
+		}
+	],
+	"exp": 120,
+	"gold": 80,
+	"sprite": {
+		"idle": "crystal_golem_idle.png",
+		"attack": "crystal_golem_attack.png",
+		"hurt": "crystal_golem_hurt.png",
+		"dead": "crystal_golem_dead.png"
+	},
+	"aiPattern": "defensive",
+	"zone": "crystal_caves"
+}

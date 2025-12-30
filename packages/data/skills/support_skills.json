@@ -1,0 +1,154 @@
+{
+	"skills": [
+		{
+			"id": "heal",
+			"name": "Heal",
+			"description": "Restores HP to target ally.",
+			"type": "magic",
+			"element": "holy",
+			"mpCost": 10,
+			"power": 60,
+			"accuracy": 100,
+			"target": "single_ally",
+			"effects": [
+				{
+					"type": "heal",
+					"value": 60
+				}
+			],
+			"animation": "heal"
+		},
+		{
+			"id": "howl",
+			"name": "Howl",
+			"description": "Increases attack power temporarily.",
+			"type": "support",
+			"element": "neutral",
+			"mpCost": 8,
+			"power": 0,
+			"accuracy": 100,
+			"target": "self",
+			"effects": [
+				{
+					"type": "atk_up",
+					"value": 0.3,
+					"duration": 3
+				}
+			],
+			"animation": "howl"
+		},
+		{
+			"id": "crystal_barrier",
+			"name": "Crystal Barrier",
+			"description": "Creates a protective barrier, increasing defense.",
+			"type": "support",
+			"element": "earth",
+			"mpCost": 12,
+			"power": 0,
+			"accuracy": 100,
+			"target": "self",
+			"effects": [
+				{
+					"type": "def_up",
+					"value": 0.5,
+					"duration": 3
+				}
+			],
+			"animation": "crystal_barrier"
+		},
+		{
+			"id": "sand_veil",
+			"name": "Sand Veil",
+			"description": "Creates a sand cloud, reducing accuracy of enemy attacks.",
+			"type": "support",
+			"element": "earth",
+			"mpCost": 10,
+			"power": 0,
+			"accuracy": 100,
+			"target": "all_enemies",
+			"effects": [
+				{
+					"type": "accuracy_down",
+					"value": 0.2,
+					"duration": 2
+				}
+			],
+			"animation": "sand_veil"
+		},
+		{
+			"id": "burning_aura",
+			"name": "Burning Aura",
+			"description": "Surrounds self with flames, damaging attackers.",
+			"type": "support",
+			"element": "fire",
+			"mpCost": 15,
+			"power": 0,
+			"accuracy": 100,
+			"target": "self",
+			"effects": [
+				{
+					"type": "counter_damage",
+					"value": 20,
+					"duration": 3
+				}
+			],
+			"animation": "burning_aura"
+		},
+		{
+			"id": "steal",
+			"name": "Steal",
+			"description": "Attempts to steal an item from the enemy.",
+			"type": "special",
+			"element": "neutral",
+			"mpCost": 5,
+			"power": 0,
+			"accuracy": 60,
+			"target": "single",
+			"effects": [
+				{
+					"type": "steal_item",
+					"chance": 0.6
+				}
+			],
+			"animation": "steal"
+		},
+		{
+			"id": "pack_tactics",
+			"name": "Pack Tactics",
+			"description": "Calls for pack support, boosting speed.",
+			"type": "support",
+			"element": "neutral",
+			"mpCost": 8,
+			"power": 0,
+			"accuracy": 100,
+			"target": "self",
+			"effects": [
+				{
+					"type": "spd_up",
+					"value": 0.4,
+					"duration": 3
+				}
+			],
+			"animation": "pack_tactics"
+		},
+		{
+			"id": "constrict",
+			"name": "Constrict",
+			"description": "Wraps around the enemy, reducing their speed.",
+			"type": "physical",
+			"element": "neutral",
+			"mpCost": 8,
+			"power": 40,
+			"accuracy": 100,
+			"target": "single",
+			"effects": [
+				{
+					"type": "spd_down",
+					"value": 0.3,
+					"duration": 3
+				}
+			],
+			"animation": "constrict"
+		}
+	]
+}

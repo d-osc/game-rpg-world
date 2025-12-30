@@ -1,0 +1,61 @@
+{
+	"skills": [
+		{
+			"id": "tackle",
+			"name": "Tackle",
+			"description": "A basic physical attack.",
+			"type": "physical",
+			"element": "neutral",
+			"mpCost": 0,
+			"power": 40,
+			"accuracy": 100,
+			"target": "single",
+			"effects": [],
+			"animation": "tackle"
+		},
+		{
+			"id": "slash",
+			"name": "Slash",
+			"description": "A sharp slashing attack.",
+			"type": "physical",
+			"element": "neutral",
+			"mpCost": 5,
+			"power": 60,
+			"accuracy": 95,
+			"target": "single",
+			"effects": [],
+			"animation": "slash"
+		},
+		{
+			"id": "quick_stab",
+			"name": "Quick Stab",
+			"description": "A fast stabbing attack with high crit chance.",
+			"type": "physical",
+			"element": "neutral",
+			"mpCost": 8,
+			"power": 50,
+			"accuracy": 100,
+			"target": "single",
+			"effects": [
+				{
+					"type": "crit_boost",
+					"value": 0.3
+				}
+			],
+			"animation": "quick_stab"
+		},
+		{
+			"id": "bite",
+			"name": "Bite",
+			"description": "A vicious bite attack.",
+			"type": "physical",
+			"element": "neutral",
+			"mpCost": 6,
+			"power": 55,
+			"accuracy": 100,
+			"target": "single",
+			"effects": [],
+			"animation": "bite"
+		}
+	]
+}

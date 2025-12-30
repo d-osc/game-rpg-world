@@ -1,0 +1,38 @@
+{
+	"id": "slime",
+	"name": "Slime",
+	"description": "A bouncy blob of goo. Weak but numerous.",
+	"level": 1,
+	"stats": {
+		"hp": 50,
+		"mp": 10,
+		"atk": 8,
+		"def": 5,
+		"spd": 12,
+		"luck": 5
+	},
+	"element": "water",
+	"skills": ["tackle", "acid_spit"],
+	"drops": [
+		{
+			"itemId": "slime_gel",
+			"chance": 0.7,
+			"quantity": { "min": 1, "max": 3 }
+		},
+		{
+			"itemId": "potion",
+			"chance": 0.2,
+			"quantity": { "min": 1, "max": 1 }
+		}
+	],
+	"exp": 15,
+	"gold": 10,
+	"sprite": {
+		"idle": "slime_idle.png",
+		"attack": "slime_attack.png",
+		"hurt": "slime_hurt.png",
+		"dead": "slime_dead.png"
+	},
+	"aiPattern": "random",
+	"zone": "forest"
+}

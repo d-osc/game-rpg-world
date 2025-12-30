@@ -1,0 +1,43 @@
+{
+	"id": "fire_elemental",
+	"name": "Fire Elemental",
+	"description": "A being of pure flame, burning everything in its path.",
+	"level": 12,
+	"stats": {
+		"hp": 100,
+		"mp": 80,
+		"atk": 40,
+		"def": 10,
+		"spd": 22,
+		"luck": 18
+	},
+	"element": "fire",
+	"skills": ["fireball", "flame_burst", "burning_aura"],
+	"drops": [
+		{
+			"itemId": "fire_essence",
+			"chance": 0.9,
+			"quantity": { "min": 2, "max": 4 }
+		},
+		{
+			"itemId": "ember_core",
+			"chance": 0.4,
+			"quantity": { "min": 1, "max": 1 }
+		},
+		{
+			"itemId": "charcoal",
+			"chance": 0.6,
+			"quantity": { "min": 3, "max": 5 }
+		}
+	],
+	"exp": 180,
+	"gold": 120,
+	"sprite": {
+		"idle": "fire_elemental_idle.png",
+		"attack": "fire_elemental_attack.png",
+		"hurt": "fire_elemental_hurt.png",
+		"dead": "fire_elemental_dead.png"
+	},
+	"aiPattern": "aggressive",
+	"zone": "dune_sea"
+}

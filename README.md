@@ -30,6 +30,15 @@ Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
 - ✅ **Chat System**: P2P text chat with ChatManager and ChatUI
 - ✅ **RemotePlayerRenderer**: Render remote players with name tags and interpolation
 
+### Phase 4: Combat System ✅
+- ✅ **Turn-Based Combat**: Pokemon-style combat with state machine
+- ✅ **Monster Database**: 6 unique monster types with stats and drops
+- ✅ **Skills System**: 17 skills across 3 categories (Basic, Magic, Support)
+- ✅ **Combat AI**: 4 AI patterns (Random, Aggressive, Defensive, Tactical)
+- ✅ **Damage Calculation**: Formula with critical hits and element effectiveness
+- ✅ **Combat UI**: HP/MP bars, action menu, combat log
+- ✅ **Status Effects**: Poison, burn, stat buffs/debuffs
+
 ### Phase 2: Backend Server ✅
 - ✅ **Elit Server**: Full HTTP server with routing and error handling
 - ✅ **PostgreSQL Database**: Complete schema with 9 tables
@@ -140,7 +149,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (29% Complete)
+## 📊 Progress (35% Complete)
 
 ### Completed Phases ✅
 
@@ -154,11 +163,11 @@ bun run format
 - **Phase 1.5**: First Playable Demo (1 week) ✅
 - **Phase 2**: Elit Server + Auth (2 weeks) ✅
 - **Phase 3**: P2P Networking (3 weeks) ✅
+- **Phase 4**: Combat System (4 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 4**: Turn-based Combat System (4 weeks) - NEXT
-- **Phase 5**: Inventory & Items (2 weeks)
+- **Phase 5**: Inventory & Items (2 weeks) - NEXT
 - **Phase 6**: Multi-Job System (2 weeks)
 - **Phase 7**: World & Maps (3 weeks)
 - **Phase 8**: Economy - Crafting & Trading (3 weeks)
@@ -171,7 +180,7 @@ bun run format
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 5/17 phases (29%)
+**Current Progress:** 6/17 phases (35%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -239,6 +248,16 @@ Our custom-built engine includes:
 
 ## 🚀 Recent Achievements
 
+**Phase 4 Complete (2025-12-31):**
+- Turn-based combat system with 7-state state machine
+- 6 unique monster types with stats, drops, and zone mapping
+- 17 skills across 3 categories (Basic, Magic, Support)
+- 4 AI patterns for intelligent enemy behavior
+- Damage calculation with critical hits and element effectiveness
+- Combat UI with HP/MP bars, action menu, and combat log
+- Status effects framework (poison, burn, stat modifiers)
+- Ready for PvE combat integration
+
 **Phase 3 Complete (2025-12-31):**
 - WebSocket signaling server with JWT authentication on port 3001
 - Complete WebRTC P2P mesh networking between peers
@@ -295,5 +314,5 @@ Private project
 
 ---
 
-**Status:** P2P Networking complete! 🎉
-**Next:** Phase 4 - Turn-based Combat System
+**Status:** Combat System complete! 🎉
+**Next:** Phase 5 - Inventory & Items

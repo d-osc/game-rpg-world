@@ -1,0 +1,51 @@
+{
+	"monsters": [
+		{
+			"id": "slime",
+			"file": "./slime.json",
+			"tier": "common",
+			"minLevel": 1,
+			"maxLevel": 3
+		},
+		{
+			"id": "goblin",
+			"file": "./goblin.json",
+			"tier": "common",
+			"minLevel": 2,
+			"maxLevel": 5
+		},
+		{
+			"id": "wolf",
+			"file": "./wolf.json",
+			"tier": "uncommon",
+			"minLevel": 4,
+			"maxLevel": 7
+		},
+		{
+			"id": "crystal_golem",
+			"file": "./crystal_golem.json",
+			"tier": "rare",
+			"minLevel": 7,
+			"maxLevel": 10
+		},
+		{
+			"id": "sand_serpent",
+			"file": "./sand_serpent.json",
+			"tier": "uncommon",
+			"minLevel": 8,
+			"maxLevel": 12
+		},
+		{
+			"id": "fire_elemental",
+			"file": "./fire_elemental.json",
+			"tier": "rare",
+			"minLevel": 10,
+			"maxLevel": 15
+		}
+	],
+	"zones": {
+		"forest": ["slime", "goblin", "wolf"],
+		"crystal_caves": ["slime", "crystal_golem"],
+		"dune_sea": ["sand_serpent", "fire_elemental"]
+	}
+}
