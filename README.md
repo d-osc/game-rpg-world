@@ -249,6 +249,19 @@ Our custom-built engine includes:
 
 ## 🚀 Recent Achievements
 
+**Phase 5 Complete (2025-12-31):**
+- Complete inventory system with dual limits (slot-based + weight-based)
+- Equipment system with 8 slots and automatic stat calculation
+- 21 unique items across 4 categories (weapons, armor, consumables, materials)
+- Server-side validation with PostgreSQL (InventoryService)
+- Transaction and audit logging for anti-cheat
+- Full inventory UI with drag-and-drop support
+- Item tooltips, context menus, filtering, and sorting
+- Equipment panel showing equipped items with stat bonuses
+- Rarity-based color coding (common to legendary)
+- Client-server integration example
+- ~2,650 lines of code across 12 files
+
 **Phase 4 Complete (2025-12-31):**
 - Turn-based combat system with 7-state state machine
 - 6 unique monster types with stats, drops, and zone mapping
@@ -317,5 +330,5 @@ Private project
 
 ---
 
-**Status:** Combat System complete! 🎉
-**Next:** Phase 5 - Inventory & Items
+**Status:** Inventory & Items complete! 🎉
+**Next:** Phase 6 - Multi-Job System
