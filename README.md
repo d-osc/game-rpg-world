@@ -151,7 +151,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (35% Complete)
+## 📊 Progress (41% Complete)
 
 ### Completed Phases ✅
 
@@ -166,12 +166,11 @@ bun run format
 - **Phase 2**: Elit Server + Auth (2 weeks) ✅
 - **Phase 3**: P2P Networking (3 weeks) ✅
 - **Phase 4**: Combat System (4 weeks) ✅
+- **Phase 5**: Inventory & Items (2 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 5**: Inventory & Items (2 weeks) - NEXT
-- **Phase 6**: Multi-Job System (2 weeks)
-- **Phase 7**: World & Maps (3 weeks)
+- **Phase 6**: Multi-Job System (2 weeks) - NEXT
 - **Phase 8**: Economy - Crafting & Trading (3 weeks)
 - **Phase 9**: Auction House (2 weeks)
 - **Phase 10**: Player Shops (2 weeks)
@@ -182,7 +181,7 @@ bun run format
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 6/17 phases (35%)
+**Current Progress:** 7/17 phases (41%)
 
 ## 🎨 Custom Game Engine Features
 

@@ -1,0 +1,75 @@
+{
+	"items": [
+		{
+			"id": "cloth_hat",
+			"name": "Cloth Hat",
+			"description": "Basic cloth headwear.",
+			"type": "armor",
+			"rarity": "common",
+			"weight": 0.5,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 30,
+			"equipSlot": "head",
+			"stats": {
+				"def": 2
+			}
+		},
+		{
+			"id": "leather_armor",
+			"name": "Leather Armor",
+			"description": "Light and flexible protection.",
+			"type": "armor",
+			"rarity": "common",
+			"weight": 5,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 150,
+			"equipSlot": "body",
+			"stats": {
+				"def": 8,
+				"spd": 1
+			}
+		},
+		{
+			"id": "iron_armor",
+			"name": "Iron Armor",
+			"description": "Sturdy iron plate armor.",
+			"type": "armor",
+			"rarity": "uncommon",
+			"weight": 12,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 400,
+			"equipSlot": "body",
+			"stats": {
+				"hp": 20,
+				"def": 15,
+				"spd": -2
+			}
+		},
+		{
+			"id": "dragon_scale_armor",
+			"name": "Dragon Scale Armor",
+			"description": "Armor crafted from dragon scales. Extremely rare.",
+			"type": "armor",
+			"rarity": "legendary",
+			"weight": 8,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 10000,
+			"equipSlot": "body",
+			"stats": {
+				"hp": 50,
+				"def": 40,
+				"atk": 5
+			},
+			"effects": [
+				{
+					"type": "fire_resist",
+					"value": 25
+				}
+			]
+		}
+	]
+}

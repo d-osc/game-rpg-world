@@ -1,0 +1,93 @@
+{
+	"items": [
+		{
+			"id": "potion",
+			"name": "Potion",
+			"description": "Restores 50 HP.",
+			"type": "consumable",
+			"rarity": "common",
+			"weight": 0.2,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 50,
+			"effects": [
+				{
+					"type": "heal_hp",
+					"value": 50
+				}
+			]
+		},
+		{
+			"id": "hi_potion",
+			"name": "Hi-Potion",
+			"description": "Restores 150 HP.",
+			"type": "consumable",
+			"rarity": "uncommon",
+			"weight": 0.3,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 150,
+			"effects": [
+				{
+					"type": "heal_hp",
+					"value": 150
+				}
+			]
+		},
+		{
+			"id": "ether",
+			"name": "Ether",
+			"description": "Restores 30 MP.",
+			"type": "consumable",
+			"rarity": "common",
+			"weight": 0.2,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 80,
+			"effects": [
+				{
+					"type": "heal_mp",
+					"value": 30
+				}
+			]
+		},
+		{
+			"id": "elixir",
+			"name": "Elixir",
+			"description": "Fully restores HP and MP.",
+			"type": "consumable",
+			"rarity": "rare",
+			"weight": 0.5,
+			"stackable": true,
+			"maxStack": 20,
+			"value": 1000,
+			"effects": [
+				{
+					"type": "heal_hp",
+					"value": 9999
+				},
+				{
+					"type": "heal_mp",
+					"value": 9999
+				}
+			]
+		},
+		{
+			"id": "antidote",
+			"name": "Antidote",
+			"description": "Cures poison.",
+			"type": "consumable",
+			"rarity": "common",
+			"weight": 0.1,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 30,
+			"effects": [
+				{
+					"type": "cure_poison",
+					"value": 1
+				}
+			]
+		}
+	]
+}

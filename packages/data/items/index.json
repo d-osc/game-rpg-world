@@ -1,0 +1,21 @@
+{
+	"itemFiles": [
+		"./weapons.json",
+		"./armor.json",
+		"./consumables.json",
+		"./materials.json"
+	],
+	"categories": {
+		"weapon": ["rusty_sword", "iron_sword", "steel_sword", "flame_blade", "crystal_staff"],
+		"armor": ["cloth_hat", "leather_armor", "iron_armor", "dragon_scale_armor"],
+		"consumable": ["potion", "hi_potion", "ether", "elixir", "antidote"],
+		"material": ["slime_gel", "wolf_fang", "wolf_pelt", "magic_crystal", "crystal_core", "fire_essence", "dragon_scale"]
+	},
+	"rarities": {
+		"common": ["rusty_sword", "iron_sword", "cloth_hat", "leather_armor", "potion", "ether", "antidote", "slime_gel", "wolf_fang", "wolf_pelt"],
+		"uncommon": ["steel_sword", "iron_armor", "hi_potion", "magic_crystal", "fire_essence"],
+		"rare": ["flame_blade", "elixir", "crystal_core"],
+		"epic": ["crystal_staff"],
+		"legendary": ["dragon_scale_armor", "dragon_scale"]
+	}
+}

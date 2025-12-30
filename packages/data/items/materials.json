@@ -1,0 +1,81 @@
+{
+	"items": [
+		{
+			"id": "slime_gel",
+			"name": "Slime Gel",
+			"description": "Sticky gel from a slime. Used in alchemy.",
+			"type": "material",
+			"rarity": "common",
+			"weight": 0.1,
+			"stackable": true,
+			"maxStack": 999,
+			"value": 5
+		},
+		{
+			"id": "wolf_fang",
+			"name": "Wolf Fang",
+			"description": "Sharp fang from a wolf. Crafting material.",
+			"type": "material",
+			"rarity": "common",
+			"weight": 0.2,
+			"stackable": true,
+			"maxStack": 999,
+			"value": 15
+		},
+		{
+			"id": "wolf_pelt",
+			"name": "Wolf Pelt",
+			"description": "Soft fur from a wolf. Used in tailoring.",
+			"type": "material",
+			"rarity": "common",
+			"weight": 1,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 50
+		},
+		{
+			"id": "magic_crystal",
+			"name": "Magic Crystal",
+			"description": "A crystal infused with magic energy.",
+			"type": "material",
+			"rarity": "uncommon",
+			"weight": 0.5,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 100
+		},
+		{
+			"id": "crystal_core",
+			"name": "Crystal Core",
+			"description": "The heart of a crystal golem. Extremely valuable.",
+			"type": "material",
+			"rarity": "rare",
+			"weight": 2,
+			"stackable": true,
+			"maxStack": 20,
+			"value": 500
+		},
+		{
+			"id": "fire_essence",
+			"name": "Fire Essence",
+			"description": "Concentrated fire energy. Used in enchanting.",
+			"type": "material",
+			"rarity": "uncommon",
+			"weight": 0.3,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 150
+		},
+		{
+			"id": "dragon_scale",
+			"name": "Dragon Scale",
+			"description": "An incredibly rare dragon scale.",
+			"type": "material",
+			"rarity": "legendary",
+			"weight": 1,
+			"stackable": true,
+			"maxStack": 10,
+			"value": 5000
+		}
+	]
+}

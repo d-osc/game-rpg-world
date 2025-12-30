@@ -1,0 +1,89 @@
+{
+	"items": [
+		{
+			"id": "rusty_sword",
+			"name": "Rusty Sword",
+			"description": "An old, worn sword. Better than nothing.",
+			"type": "weapon",
+			"rarity": "common",
+			"weight": 3,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 50,
+			"equipSlot": "weapon",
+			"stats": {
+				"atk": 5
+			}
+		},
+		{
+			"id": "iron_sword",
+			"name": "Iron Sword",
+			"description": "A reliable iron sword.",
+			"type": "weapon",
+			"rarity": "common",
+			"weight": 4,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 200,
+			"equipSlot": "weapon",
+			"stats": {
+				"atk": 12
+			}
+		},
+		{
+			"id": "steel_sword",
+			"name": "Steel Sword",
+			"description": "A well-crafted steel sword.",
+			"type": "weapon",
+			"rarity": "uncommon",
+			"weight": 5,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 500,
+			"equipSlot": "weapon",
+			"stats": {
+				"atk": 20,
+				"spd": 2
+			}
+		},
+		{
+			"id": "flame_blade",
+			"name": "Flame Blade",
+			"description": "A sword imbued with fire magic.",
+			"type": "weapon",
+			"rarity": "rare",
+			"weight": 4,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 1500,
+			"equipSlot": "weapon",
+			"stats": {
+				"atk": 30,
+				"mp": 10
+			},
+			"effects": [
+				{
+					"type": "fire_damage",
+					"value": 5
+				}
+			]
+		},
+		{
+			"id": "crystal_staff",
+			"name": "Crystal Staff",
+			"description": "A staff made of pure magic crystal.",
+			"type": "weapon",
+			"rarity": "epic",
+			"weight": 2,
+			"stackable": false,
+			"maxStack": 1,
+			"value": 3000,
+			"equipSlot": "weapon",
+			"stats": {
+				"atk": 15,
+				"mp": 50,
+				"spd": -3
+			}
+		}
+	]
+}
