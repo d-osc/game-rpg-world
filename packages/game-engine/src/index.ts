@@ -10,8 +10,7 @@ export * from './renderer/Canvas2DRenderer.ts';
 export * from './renderer/Camera.ts';
 
 // Physics
-export * from './physics/CollisionDetection.ts';
-export * from './physics/AABB.ts';
+export * from './physics/index.ts';
 
 // Input
 export * from './input/Keyboard.ts';
