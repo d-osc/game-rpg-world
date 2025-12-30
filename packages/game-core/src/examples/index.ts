@@ -4,3 +4,4 @@
  */
 
 export { NetworkingExample } from './NetworkingExample.ts';
+export { CombatExample } from './CombatExample.ts';

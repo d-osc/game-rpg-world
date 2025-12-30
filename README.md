@@ -31,13 +31,15 @@ Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
 - ✅ **RemotePlayerRenderer**: Render remote players with name tags and interpolation
 
 ### Phase 4: Combat System ✅
-- ✅ **Turn-Based Combat**: Pokemon-style combat with state machine
+- ✅ **Turn-Based Combat**: Pokemon-style combat with 7-state machine
 - ✅ **Monster Database**: 6 unique monster types with stats and drops
 - ✅ **Skills System**: 17 skills across 3 categories (Basic, Magic, Support)
 - ✅ **Combat AI**: 4 AI patterns (Random, Aggressive, Defensive, Tactical)
 - ✅ **Damage Calculation**: Formula with critical hits and element effectiveness
 - ✅ **Combat UI**: HP/MP bars, action menu, combat log
 - ✅ **Status Effects**: Poison, burn, stat buffs/debuffs
+- ✅ **Combat Animations**: Attack/skill effects, floating damage numbers
+- ✅ **P2P Combat Sync**: Deterministic battles with hash validation
 
 ### Phase 2: Backend Server ✅
 - ✅ **Elit Server**: Full HTTP server with routing and error handling
@@ -256,7 +258,9 @@ Our custom-built engine includes:
 - Damage calculation with critical hits and element effectiveness
 - Combat UI with HP/MP bars, action menu, and combat log
 - Status effects framework (poison, burn, stat modifiers)
-- Ready for PvE combat integration
+- Combat animations: attack motion blur, skill particles, floating damage numbers
+- P2P combat sync with deterministic RNG and hash validation
+- Full PvE and PvP combat support
 
 **Phase 3 Complete (2025-12-31):**
 - WebSocket signaling server with JWT authentication on port 3001

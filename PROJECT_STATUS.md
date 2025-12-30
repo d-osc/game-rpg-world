@@ -646,9 +646,9 @@ Client A ←→ WebSocket Signaling Server ←→ Client B
 
 ## ⚔️ Phase 4: Combat System (4 สัปดาห์)
 
-**Status:** ✅ COMPLETED - Core Combat System Ready!
+**Status:** ✅ COMPLETED - Full Combat System with Animations & P2P!
 **Duration:** 4 สัปดาห์
-**Progress:** 6/8 tasks completed (Animations and P2P sync deferred)
+**Progress:** 8/8 tasks completed (100%)
 
 ### Tasks Checklist
 
@@ -689,24 +689,38 @@ Client A ←→ WebSocket Signaling Server ←→ Client B
   - [x] Add element effectiveness system (Fire/Water/Earth/Neutral)
   - [x] Add status effects (poison, burn, stat buffs/debuffs)
 
-- [ ] **Combat Animations** (Deferred to Phase 4.5)
-  - [ ] Add attack animations
-  - [ ] Add skill effect animations
-  - [ ] Add damage number popup
+- [x] **Combat Animations** ✅
+  - [x] Add attack animations (motion blur, impact flash)
+  - [x] Add skill effect animations (particle systems)
+  - [x] Add damage number popup (floating text with modifiers)
+  - [x] Create CombatAnimationManager
+  - [x] Support for critical/weak/resisted indicators
 
-- [ ] **P2P Combat Sync** (Deferred to Phase 4.5)
-  - [ ] Sync combat actions between peers
-  - [ ] Deterministic combat calculations
-  - [ ] Hash validation for combat results
+- [x] **P2P Combat Sync** ✅
+  - [x] Sync combat actions between peers
+  - [x] Deterministic combat calculations (seeded RNG)
+  - [x] Hash validation for combat results
+  - [x] Create CombatSync system
+  - [x] Combat init/action/result/end messages
+  - [x] Desync detection with event system
 
 ### Deliverable
-- [x] Core combat system complete with turn-based battles, AI opponents, and skill system
+- [x] Complete combat system with animations, P2P sync, and full PvP support
 
 **Critical Files Created:**
+Core Combat (4 files):
 - [x] `packages/game-core/src/combat/CombatManager.ts` - Turn-based combat engine (586 lines)
 - [x] `packages/game-core/src/combat/CombatAI.ts` - AI decision making (277 lines)
+- [x] `packages/game-core/src/combat/CombatAnimations.ts` - Animation system (378 lines)
+- [x] `packages/game-core/src/combat/CombatSync.ts` - P2P synchronization (311 lines)
 - [x] `packages/game-core/src/combat/index.ts` - Module exports
+
+UI & Examples (3 files):
 - [x] `packages/game-core/src/ui/CombatUI.ts` - Combat UI component (455 lines)
+- [x] `packages/game-core/src/examples/CombatExample.ts` - Integration example (238 lines)
+- [x] `packages/game-core/src/examples/index.ts` - Updated exports
+
+Data (11 files):
 - [x] `packages/data/monsters/slime.json` - Slime monster data
 - [x] `packages/data/monsters/goblin.json` - Goblin monster data
 - [x] `packages/data/monsters/wolf.json` - Wolf monster data
@@ -720,6 +734,7 @@ Client A ←→ WebSocket Signaling Server ←→ Client B
 - [x] `packages/data/skills/index.json` - Skill registry
 
 **Features Implemented:**
+Core Combat:
 - ✅ Turn-based state machine with 7 combat states
 - ✅ Speed-based turn order calculation
 - ✅ 4 AI patterns (Random, Aggressive, Defensive, Tactical)
@@ -728,18 +743,35 @@ Client A ←→ WebSocket Signaling Server ←→ Client B
 - ✅ Element effectiveness (Fire > Earth > Water > Fire)
 - ✅ Status effects framework (poison, burn, stat modifiers)
 - ✅ MP cost system for skills
-- ✅ Combat UI with HP/MP bars and action menu
-- ✅ Combat log with color-coded messages
 - ✅ 6 unique monster types with varied stats
 - ✅ 17 skills across 3 categories
 
-**Git Commit:**
-- Pending: Phase 4 Combat System implementation
+UI & Visuals:
+- ✅ Combat UI with HP/MP bars and action menu
+- ✅ Combat log with color-coded messages
+- ✅ Attack animations with motion blur
+- ✅ Skill particle effects (element-based colors)
+- ✅ Floating damage numbers with modifiers
+- ✅ Critical/weak/resisted indicators
+
+P2P Multiplayer:
+- ✅ Deterministic RNG with seeded random
+- ✅ Combat action synchronization
+- ✅ Result hash validation
+- ✅ Desync detection and events
+- ✅ Combat state messages (init/action/result/end)
+- ✅ Full PvP combat support
+
+**Git Commits:**
+- `0d286d0` - Phase 4: Turn-Based Combat System (core)
+- Pending: Phase 4 animations and P2P sync
 
 **Notes:**
-- Combat animations and P2P sync deferred to Phase 4.5
-- Current implementation is fully functional for single-player combat
-- Ready for integration with game demo
+- Complete implementation with all features
+- Ready for both PvE and PvP combat
+- Animation system can be rendered on any canvas
+- P2P sync ensures fair multiplayer battles
+- Integration example provided in CombatExample.ts
 
 ---
 
