@@ -75,7 +75,7 @@ export class DemoScene extends Scene {
     console.log('[DemoScene] Entered');
 
     // Toggle debug with F3
-    keyboard.onKeyPressed('f3', () => {
+    keyboard.onKeyDown('f3', () => {
       this.showDebug = !this.showDebug;
       console.log('[DemoScene] Debug:', this.showDebug);
     });
