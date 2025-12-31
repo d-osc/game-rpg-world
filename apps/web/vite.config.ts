@@ -15,10 +15,27 @@ export default defineConfig({
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
   },
+  esbuild: {
+    tsconfigRaw: {
+      compilerOptions: {
+        useDefineForClassFields: false,
+      },
+    },
+  },
   server: {
     port: 5173,
+    fs: {
+      strict: false,
+    },
   },
   optimizeDeps: {
     include: ['@rpg/game-engine', '@rpg/game-core'],
+    esbuildOptions: {
+      tsconfigRaw: {
+        compilerOptions: {
+          experimentalDecorators: true,
+        },
+      },
+    },
   },
 });
