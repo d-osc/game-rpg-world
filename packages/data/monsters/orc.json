@@ -1,0 +1,42 @@
+{
+	"id": "orc",
+	"name": "Orc Raider",
+	"description": "A brutish warrior from the mountain tribes, known for their savage strength.",
+	"level": 9,
+	"stats": {
+		"hp": 130,
+		"mp": 15,
+		"atk": 40,
+		"def": 25,
+		"spd": 18,
+		"luck": 6
+	},
+	"element": "neutral",
+	"weaknesses": [],
+	"resistances": ["earth"],
+	"skills": ["cleave", "war_cry"],
+	"exp": 120,
+	"gold": 75,
+	"drops": [
+		{
+			"itemId": "iron_ore",
+			"chance": 0.35,
+			"minQuantity": 2,
+			"maxQuantity": 4
+		},
+		{
+			"itemId": "leather_armor",
+			"chance": 0.12,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		},
+		{
+			"itemId": "orcish_axe",
+			"chance": 0.05,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		}
+	],
+	"aiPattern": "aggressive",
+	"sprite": "orc.png"
+}

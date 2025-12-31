@@ -41,11 +41,55 @@
 			"tier": "rare",
 			"minLevel": 10,
 			"maxLevel": 15
+		},
+		{
+			"id": "skeleton",
+			"file": "./skeleton.json",
+			"tier": "common",
+			"minLevel": 5,
+			"maxLevel": 8
+		},
+		{
+			"id": "orc",
+			"file": "./orc.json",
+			"tier": "uncommon",
+			"minLevel": 8,
+			"maxLevel": 11
+		},
+		{
+			"id": "ice_wraith",
+			"file": "./ice_wraith.json",
+			"tier": "rare",
+			"minLevel": 11,
+			"maxLevel": 14
+		},
+		{
+			"id": "dragon_whelp",
+			"file": "./dragon_whelp.json",
+			"tier": "epic",
+			"minLevel": 14,
+			"maxLevel": 17
+		},
+		{
+			"id": "dark_mage",
+			"file": "./dark_mage.json",
+			"tier": "epic",
+			"minLevel": 17,
+			"maxLevel": 20
+		},
+		{
+			"id": "giant_spider",
+			"file": "./giant_spider.json",
+			"tier": "uncommon",
+			"minLevel": 10,
+			"maxLevel": 13
 		}
 	],
 	"zones": {
-		"forest": ["slime", "goblin", "wolf"],
-		"crystal_caves": ["slime", "crystal_golem"],
-		"dune_sea": ["sand_serpent", "fire_elemental"]
+		"forest": ["slime", "goblin", "wolf", "giant_spider"],
+		"crystal_caves": ["slime", "crystal_golem", "ice_wraith"],
+		"dune_sea": ["sand_serpent", "fire_elemental", "dragon_whelp"],
+		"graveyard": ["skeleton", "dark_mage"],
+		"mountain_pass": ["orc", "wolf"]
 	}
 }

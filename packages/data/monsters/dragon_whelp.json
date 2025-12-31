@@ -1,0 +1,42 @@
+{
+	"id": "dragon_whelp",
+	"name": "Dragon Whelp",
+	"description": "A young dragon, small but already dangerous with fiery breath.",
+	"level": 15,
+	"stats": {
+		"hp": 180,
+		"mp": 60,
+		"atk": 50,
+		"def": 35,
+		"spd": 28,
+		"luck": 16
+	},
+	"element": "fire",
+	"weaknesses": ["water"],
+	"resistances": ["fire", "earth"],
+	"skills": ["flame_breath", "claw_swipe", "intimidate"],
+	"exp": 220,
+	"gold": 150,
+	"drops": [
+		{
+			"itemId": "dragon_scale",
+			"chance": 0.5,
+			"minQuantity": 1,
+			"maxQuantity": 3
+		},
+		{
+			"itemId": "fire_gem",
+			"chance": 0.3,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		},
+		{
+			"itemId": "dragon_fang",
+			"chance": 0.15,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		}
+	],
+	"aiPattern": "tactical",
+	"sprite": "dragon_whelp.png"
+}

@@ -76,6 +76,94 @@
 			"stackable": true,
 			"maxStack": 10,
 			"value": 5000
+		},
+		{
+			"id": "bone_fragment",
+			"name": "Bone Fragment",
+			"description": "Piece of bone from an undead creature.",
+			"type": "material",
+			"rarity": "common",
+			"weight": 0.2,
+			"stackable": true,
+			"maxStack": 999,
+			"value": 12
+		},
+		{
+			"id": "frost_crystal",
+			"name": "Frost Crystal",
+			"description": "A crystal infused with freezing energy.",
+			"type": "material",
+			"rarity": "uncommon",
+			"weight": 0.4,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 180
+		},
+		{
+			"id": "dark_crystal",
+			"name": "Dark Crystal",
+			"description": "A crystal pulsing with dark magic.",
+			"type": "material",
+			"rarity": "rare",
+			"weight": 0.5,
+			"stackable": true,
+			"maxStack": 50,
+			"value": 350
+		},
+		{
+			"id": "spider_silk",
+			"name": "Spider Silk",
+			"description": "Strong silk from a giant spider.",
+			"type": "material",
+			"rarity": "common",
+			"weight": 0.1,
+			"stackable": true,
+			"maxStack": 999,
+			"value": 20
+		},
+		{
+			"id": "poison_venom",
+			"name": "Poison Venom",
+			"description": "Toxic venom. Handle with care.",
+			"type": "material",
+			"rarity": "uncommon",
+			"weight": 0.2,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 120
+		},
+		{
+			"id": "dragon_fang",
+			"name": "Dragon Fang",
+			"description": "A razor-sharp fang from a young dragon.",
+			"type": "material",
+			"rarity": "epic",
+			"weight": 0.8,
+			"stackable": true,
+			"maxStack": 20,
+			"value": 800
+		},
+		{
+			"id": "fire_gem",
+			"name": "Fire Gem",
+			"description": "A gem containing pure fire energy.",
+			"type": "material",
+			"rarity": "rare",
+			"weight": 0.3,
+			"stackable": true,
+			"maxStack": 50,
+			"value": 400
+		},
+		{
+			"id": "spell_tome",
+			"name": "Spell Tome Fragment",
+			"description": "A page from a forbidden spell book.",
+			"type": "material",
+			"rarity": "rare",
+			"weight": 0.1,
+			"stackable": true,
+			"maxStack": 99,
+			"value": 250
 		}
 	]
 }

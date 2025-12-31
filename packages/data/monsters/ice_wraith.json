@@ -1,0 +1,42 @@
+{
+	"id": "ice_wraith",
+	"name": "Ice Wraith",
+	"description": "A ghostly spirit of frozen souls, bringing chilling death to the living.",
+	"level": 12,
+	"stats": {
+		"hp": 95,
+		"mp": 80,
+		"atk": 35,
+		"def": 15,
+		"spd": 32,
+		"luck": 14
+	},
+	"element": "water",
+	"weaknesses": ["fire"],
+	"resistances": ["water", "neutral"],
+	"skills": ["ice_shard", "frost_nova", "freeze"],
+	"exp": 150,
+	"gold": 90,
+	"drops": [
+		{
+			"itemId": "frost_crystal",
+			"chance": 0.4,
+			"minQuantity": 1,
+			"maxQuantity": 2
+		},
+		{
+			"itemId": "mana_potion",
+			"chance": 0.25,
+			"minQuantity": 1,
+			"maxQuantity": 2
+		},
+		{
+			"itemId": "ice_staff",
+			"chance": 0.08,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		}
+	],
+	"aiPattern": "tactical",
+	"sprite": "ice_wraith.png"
+}

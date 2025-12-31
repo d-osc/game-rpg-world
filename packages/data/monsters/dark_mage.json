@@ -1,0 +1,48 @@
+{
+	"id": "dark_mage",
+	"name": "Dark Mage",
+	"description": "A corrupted sorcerer wielding forbidden shadow magic.",
+	"level": 18,
+	"stats": {
+		"hp": 110,
+		"mp": 150,
+		"atk": 55,
+		"def": 20,
+		"spd": 30,
+		"luck": 18
+	},
+	"element": "neutral",
+	"weaknesses": [],
+	"resistances": ["neutral"],
+	"skills": ["shadow_bolt", "curse", "life_drain", "dark_shield"],
+	"exp": 280,
+	"gold": 200,
+	"drops": [
+		{
+			"itemId": "dark_crystal",
+			"chance": 0.4,
+			"minQuantity": 1,
+			"maxQuantity": 2
+		},
+		{
+			"itemId": "spell_tome",
+			"chance": 0.2,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		},
+		{
+			"itemId": "mage_robe",
+			"chance": 0.12,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		},
+		{
+			"itemId": "elixir",
+			"chance": 0.15,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		}
+	],
+	"aiPattern": "tactical",
+	"sprite": "dark_mage.png"
+}

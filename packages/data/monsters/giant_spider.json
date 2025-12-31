@@ -1,0 +1,42 @@
+{
+	"id": "giant_spider",
+	"name": "Giant Spider",
+	"description": "A massive arachnid with venomous fangs and sticky web attacks.",
+	"level": 11,
+	"stats": {
+		"hp": 105,
+		"mp": 40,
+		"atk": 38,
+		"def": 22,
+		"spd": 35,
+		"luck": 12
+	},
+	"element": "neutral",
+	"weaknesses": ["fire"],
+	"resistances": [],
+	"skills": ["poison_bite", "web_trap", "skitter"],
+	"exp": 135,
+	"gold": 80,
+	"drops": [
+		{
+			"itemId": "spider_silk",
+			"chance": 0.45,
+			"minQuantity": 2,
+			"maxQuantity": 4
+		},
+		{
+			"itemId": "poison_venom",
+			"chance": 0.3,
+			"minQuantity": 1,
+			"maxQuantity": 2
+		},
+		{
+			"itemId": "antidote",
+			"chance": 0.2,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		}
+	],
+	"aiPattern": "defensive",
+	"sprite": "giant_spider.png"
+}

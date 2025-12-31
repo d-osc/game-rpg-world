@@ -1,0 +1,42 @@
+{
+	"id": "skeleton",
+	"name": "Skeleton Warrior",
+	"description": "An undead warrior risen from the grave, armed with rusty weapons.",
+	"level": 6,
+	"stats": {
+		"hp": 90,
+		"mp": 20,
+		"atk": 28,
+		"def": 18,
+		"spd": 22,
+		"luck": 8
+	},
+	"element": "neutral",
+	"weaknesses": ["fire"],
+	"resistances": ["neutral"],
+	"skills": ["bash", "bone_throw"],
+	"exp": 85,
+	"gold": 45,
+	"drops": [
+		{
+			"itemId": "bone_fragment",
+			"chance": 0.3,
+			"minQuantity": 1,
+			"maxQuantity": 3
+		},
+		{
+			"itemId": "rusty_sword",
+			"chance": 0.08,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		},
+		{
+			"itemId": "health_potion",
+			"chance": 0.15,
+			"minQuantity": 1,
+			"maxQuantity": 1
+		}
+	],
+	"aiPattern": "aggressive",
+	"sprite": "skeleton.png"
+}
