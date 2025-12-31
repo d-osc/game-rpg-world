@@ -18,7 +18,6 @@ import { TiledMap, TiledMapLoader } from '../world/TiledMapLoader';
 export class DemoScene extends Scene {
   // Renderer
   private renderer: Canvas2DRenderer | null = null;
-  private camera: Camera;
 
   // Entities
   private player: Player | null = null;
@@ -34,9 +33,6 @@ export class DemoScene extends Scene {
 
   constructor() {
     super('DemoScene');
-
-    // Create camera
-    this.camera = new Camera(0, 0, 800, 600);
   }
 
   /**
@@ -57,12 +53,6 @@ export class DemoScene extends Scene {
 
     // Create movement system
     this.movementSystem = new MovementSystem(this.player, 200);
-
-    // Set camera to follow player with smoothing
-    this.camera.follow(this.player.position, 0.1);
-
-    // Set camera bounds to map size
-    this.camera.setBounds(this.map.getBounds());
 
     console.log('[DemoScene] Loaded successfully');
   }
@@ -93,8 +83,10 @@ export class DemoScene extends Scene {
     // Update movement system
     this.movementSystem.update(deltaTime);
 
-    // Update camera
-    this.camera.update(deltaTime);
+    // Update camera (from renderer)
+    if (this.renderer) {
+      this.renderer.getCamera().update(deltaTime);
+    }
   }
 
   /**
@@ -111,7 +103,13 @@ export class DemoScene extends Scene {
     // Create renderer if needed
     if (!this.renderer) {
       this.renderer = new Canvas2DRenderer(ctx.canvas as HTMLCanvasElement);
-      this.renderer.setCamera(this.camera);
+
+      // Get camera from renderer and configure it
+      const camera = this.renderer.getCamera();
+      if (this.player && this.map) {
+        camera.follow(this.player.position, 0.1);
+        camera.setBounds(this.map.getBounds());
+      }
     }
 
     // Begin frame
