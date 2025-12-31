@@ -1,0 +1,66 @@
+{
+	"name": "@rpg/desktop",
+	"version": "1.0.0",
+	"description": "RPG Desktop App",
+	"main": "dist/main/index.js",
+	"scripts": {
+		"dev": "bun run build && electron .",
+		"build": "bun run build:main && bun run build:preload && bun run build:renderer",
+		"build:main": "bun build src/main/index.ts --outdir dist/main --target node",
+		"build:preload": "bun build src/preload/index.ts --outdir dist/preload --target node",
+		"build:renderer": "cd ../web && bun run build && cd ../desktop && mkdir -p dist/renderer && cp -r ../web/dist/* dist/renderer/",
+		"pack": "electron-builder --dir",
+		"dist": "electron-builder",
+		"dist:win": "electron-builder --win",
+		"dist:mac": "electron-builder --mac",
+		"dist:linux": "electron-builder --linux"
+	},
+	"dependencies": {
+		"electron-updater": "^6.1.7"
+	},
+	"devDependencies": {
+		"electron": "^28.0.0",
+		"electron-builder": "^24.9.1"
+	},
+	"build": {
+		"appId": "com.rpg.desktop",
+		"productName": "RPG Game",
+		"directories": {
+			"output": "release",
+			"buildResources": "build"
+		},
+		"files": [
+			"dist/**/*",
+			"package.json"
+		],
+		"win": {
+			"target": [
+				{
+					"target": "nsis",
+					"arch": ["x64"]
+				}
+			],
+			"icon": "build/icon.ico"
+		},
+		"mac": {
+			"target": [
+				{
+					"target": "dmg",
+					"arch": ["x64", "arm64"]
+				}
+			],
+			"icon": "build/icon.icns",
+			"category": "public.app-category.games"
+		},
+		"linux": {
+			"target": [
+				{
+					"target": "AppImage",
+					"arch": ["x64"]
+				}
+			],
+			"icon": "build/icon.png",
+			"category": "Game"
+		}
+	}
+}
