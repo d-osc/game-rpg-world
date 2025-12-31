@@ -161,8 +161,8 @@ export class DemoScene extends Scene {
     // Vertical lines
     for (let x = 0; x <= this.map.data.width; x++) {
       const worldX = x * tileSize;
-      const screenStart = this.camera.worldToScreen(new Vector2(worldX, 0));
-      const screenEnd = this.camera.worldToScreen(new Vector2(worldX, mapHeight));
+      const screenStart = this.renderer!.getCamera().worldToScreen(new Vector2(worldX, 0));
+      const screenEnd = this.renderer!.getCamera().worldToScreen(new Vector2(worldX, mapHeight));
       ctx.beginPath();
       ctx.moveTo(screenStart.x, screenStart.y);
       ctx.lineTo(screenEnd.x, screenEnd.y);
@@ -172,8 +172,8 @@ export class DemoScene extends Scene {
     // Horizontal lines
     for (let y = 0; y <= this.map.data.height; y++) {
       const worldY = y * tileSize;
-      const screenStart = this.camera.worldToScreen(new Vector2(0, worldY));
-      const screenEnd = this.camera.worldToScreen(new Vector2(mapWidth, worldY));
+      const screenStart = this.renderer!.getCamera().worldToScreen(new Vector2(0, worldY));
+      const screenEnd = this.renderer!.getCamera().worldToScreen(new Vector2(mapWidth, worldY));
       ctx.beginPath();
       ctx.moveTo(screenStart.x, screenStart.y);
       ctx.lineTo(screenEnd.x, screenEnd.y);
@@ -190,7 +190,7 @@ export class DemoScene extends Scene {
     if (!this.player || !this.renderer) return;
 
     // For now, render player as a colored circle
-    const screenPos = this.camera.worldToScreen(this.player.position);
+    const screenPos = this.renderer!.getCamera().worldToScreen(this.player.position);
 
     // Draw player shadow
     ctx.save();
@@ -205,7 +205,7 @@ export class DemoScene extends Scene {
 
     // Draw direction indicator
     const dirEnd = this.player.position.add(this.player.direction.multiply(24));
-    const screenDirEnd = this.camera.worldToScreen(dirEnd);
+    const screenDirEnd = this.renderer!.getCamera().worldToScreen(dirEnd);
 
     ctx.save();
     ctx.strokeStyle = '#FFFFFF';
@@ -241,7 +241,7 @@ export class DemoScene extends Scene {
       `Velocity: (${this.player.velocity.x.toFixed(1)}, ${this.player.velocity.y.toFixed(1)})`,
       `Moving: ${this.player.isMoving}`,
       `Animation: ${this.player.currentAnimation}`,
-      `Camera: (${Math.round(this.camera.position.x)}, ${Math.round(this.camera.position.y)})`,
+      `Camera: (${Math.round(this.renderer!.getCamera().position.x)}, ${Math.round(this.renderer!.getCamera().position.y)})`,
       `Controls: WASD/Arrows to move, F3 to toggle debug`,
     ];
 
