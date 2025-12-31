@@ -3,9 +3,9 @@
  * Manages monster spawning and respawning in zones
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
-import type { Position } from './WorldManager.ts';
-import type { Zone } from './WorldManager.ts';
+import { EventEmitter } from '../utils/EventEmitter';
+import type { Position } from './WorldManager';
+import type { Zone } from './WorldManager';
 
 export interface SpawnPoint {
 	id: string;

@@ -3,8 +3,8 @@
  * Example usage of player shop system
  */
 
-import { PlayerShopManager } from '../economy/PlayerShopManager.ts';
-import { PlayerShopUI } from '../ui/PlayerShopUI.ts';
+import { PlayerShopManager } from '../economy/PlayerShopManager';
+import { PlayerShopUI } from '../ui/PlayerShopUI';
 
 export class PlayerShopExample {
 	private shopManager: PlayerShopManager;

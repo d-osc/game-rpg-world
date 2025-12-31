@@ -3,7 +3,7 @@
  * Multi-job system - learn and use skills from multiple jobs simultaneously
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface JobStats {
 	hp: number;

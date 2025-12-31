@@ -3,7 +3,7 @@
  * Manages world state, continents, zones, and zone transitions
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface Position {
 	x: number;

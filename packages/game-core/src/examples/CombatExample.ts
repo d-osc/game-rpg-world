@@ -10,9 +10,9 @@ import {
 	DeterministicRNG,
 	CombatAI,
 	AIPattern,
-} from '../combat/index.ts';
-import type { CombatEntity, CombatAction } from '../combat/index.ts';
-import { CombatUI } from '../ui/CombatUI.ts';
+} from '../combat/index';
+import type { CombatEntity, CombatAction } from '../combat/index';
+import { CombatUI } from '../ui/CombatUI';
 
 export class CombatExample {
 	private combat: CombatManager;

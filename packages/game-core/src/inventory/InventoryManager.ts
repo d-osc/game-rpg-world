@@ -3,7 +3,7 @@
  * Manages player inventory with slot and weight limits
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface Item {
 	id: string;

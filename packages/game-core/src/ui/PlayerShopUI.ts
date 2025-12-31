@@ -3,7 +3,7 @@
  * UI for managing and browsing player shops
  */
 
-import type { PlayerShopManager, PlayerShop, ShopItem } from '../economy/PlayerShopManager.ts';
+import type { PlayerShopManager, PlayerShop, ShopItem } from '../economy/PlayerShopManager';
 
 export class PlayerShopUI {
 	private container: HTMLElement;

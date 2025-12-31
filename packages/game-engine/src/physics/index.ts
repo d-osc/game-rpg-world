@@ -3,10 +3,10 @@
  * Collision detection and rigid body physics
  */
 
-export { AABB } from './AABB.ts';
-export { CollisionDetection } from './CollisionDetection.ts';
-export type { CollisionResult } from './CollisionDetection.ts';
-export { Quadtree } from './Quadtree.ts';
-export type { QuadtreeObject } from './Quadtree.ts';
-export { RigidBody } from './RigidBody.ts';
-export type { RigidBodyConfig } from './RigidBody.ts';
+export { AABB } from './AABB';
+export { CollisionDetection } from './CollisionDetection';
+export type { CollisionResult } from './CollisionDetection';
+export { Quadtree } from './Quadtree';
+export type { QuadtreeObject } from './Quadtree';
+export { RigidBody } from './RigidBody';
+export type { RigidBodyConfig } from './RigidBody';

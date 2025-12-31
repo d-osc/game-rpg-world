@@ -3,8 +3,8 @@
  * P2P combat synchronization for deterministic combat
  */
 
-import type { CombatAction, CombatEntity, DamageResult } from './CombatManager.ts';
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import type { CombatAction, CombatEntity, DamageResult } from './CombatManager';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface CombatSyncMessage {
 	type: 'combat-init' | 'combat-action' | 'combat-result' | 'combat-end';

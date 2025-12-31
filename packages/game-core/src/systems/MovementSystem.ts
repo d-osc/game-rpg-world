@@ -4,7 +4,7 @@
  */
 
 import { Vector2, keyboard, Keyboard } from '@rpg/game-engine';
-import { Player } from '../entities/Player.ts';
+import { Player } from '../entities/Player';
 
 export class MovementSystem {
   private player: Player;

@@ -3,9 +3,9 @@
  * Example of integrating auction house system
  */
 
-import { AuctionHouseClient } from '../economy/AuctionHouseClient.ts';
-import { AuctionHouseUI } from '../ui/AuctionHouseUI.ts';
-import type { AuctionOrder } from '../economy/AuctionHouseClient.ts';
+import { AuctionHouseClient } from '../economy/AuctionHouseClient';
+import { AuctionHouseUI } from '../ui/AuctionHouseUI';
+import type { AuctionOrder } from '../economy/AuctionHouseClient';
 
 export class AuctionHouseExample {
 	private auctionClient: AuctionHouseClient;

@@ -3,7 +3,7 @@
  * HTML/CSS-based job management window
  */
 
-import type { JobManager, Job, LearnedJob } from '../jobs/JobManager.ts';
+import type { JobManager, Job, LearnedJob } from '../jobs/JobManager';
 
 export interface JobUIConfig {
 	container: HTMLElement;

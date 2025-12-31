@@ -3,7 +3,7 @@
  * Multi-job system with skills and passive abilities
  */
 
-export { JobManager } from './JobManager.ts';
+export { JobManager } from './JobManager';
 export type {
 	Job,
 	JobStats,
@@ -11,4 +11,4 @@ export type {
 	PassiveAbility,
 	LearnedJob,
 	JobManagerEvents,
-} from './JobManager.ts';
+} from './JobManager';

@@ -3,8 +3,8 @@
  * Basic physics simulation component
  */
 
-import { Vector2 } from '../math/Vector2.ts';
-import { AABB } from './AABB.ts';
+import { Vector2 } from '../math/Vector2';
+import { AABB } from './AABB';
 
 export interface RigidBodyConfig {
   mass?: number;

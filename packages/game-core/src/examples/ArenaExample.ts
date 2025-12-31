@@ -3,8 +3,8 @@
  * Example usage of PvP arena system
  */
 
-import { ArenaManager } from '../pvp/ArenaManager.ts';
-import { ArenaUI } from '../ui/ArenaUI.ts';
+import { ArenaManager } from '../pvp/ArenaManager';
+import { ArenaUI } from '../ui/ArenaUI';
 
 export class ArenaExample {
 	private arenaManager: ArenaManager;

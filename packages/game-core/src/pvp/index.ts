@@ -3,7 +3,7 @@
  * Arena matchmaking and ranked combat
  */
 
-export { ArenaManager } from './ArenaManager.ts';
+export { ArenaManager } from './ArenaManager';
 export type {
 	ArenaPlayer,
 	ArenaMatch,
@@ -11,4 +11,4 @@ export type {
 	QueueStatus,
 	MatchResult,
 	ArenaManagerEvents,
-} from './ArenaManager.ts';
+} from './ArenaManager';

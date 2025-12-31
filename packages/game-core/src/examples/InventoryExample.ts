@@ -3,9 +3,9 @@
  * Example of how to use the inventory system with UI and server validation
  */
 
-import { InventoryManager, EquipmentManager } from '../inventory/index.ts';
-import { InventoryUI } from '../ui/InventoryUI.ts';
-import type { Item } from '../inventory/InventoryManager.ts';
+import { InventoryManager, EquipmentManager } from '../inventory/index';
+import { InventoryUI } from '../ui/InventoryUI';
+import type { Item } from '../inventory/InventoryManager';
 
 export class InventoryExample {
 	private inventoryManager: InventoryManager;

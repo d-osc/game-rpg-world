@@ -3,11 +3,11 @@
  * Example of integrating crafting and trading systems
  */
 
-import { CraftingManager } from '../economy/CraftingManager.ts';
-import { TradingManager } from '../economy/TradingManager.ts';
-import { CraftingUI } from '../ui/CraftingUI.ts';
-import { TradingUI } from '../ui/TradingUI.ts';
-import type { CraftingRecipe, TradeItem } from '../economy/index.ts';
+import { CraftingManager } from '../economy/CraftingManager';
+import { TradingManager } from '../economy/TradingManager';
+import { CraftingUI } from '../ui/CraftingUI';
+import { TradingUI } from '../ui/TradingUI';
+import type { CraftingRecipe, TradeItem } from '../economy/index';
 
 // Mock inventory for example
 const mockInventory = new Map<string, number>([

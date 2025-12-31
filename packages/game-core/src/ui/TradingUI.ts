@@ -3,7 +3,7 @@
  * User interface for P2P trading
  */
 
-import type { TradingManager, Trade, TradeItem } from '../economy/TradingManager.ts';
+import type { TradingManager, Trade, TradeItem } from '../economy/TradingManager';
 
 export class TradingUI {
 	private container: HTMLElement | null = null;

@@ -3,32 +3,32 @@
  * Crafting, trading, and currency management
  */
 
-export { CraftingManager } from './CraftingManager.ts';
+export { CraftingManager } from './CraftingManager';
 export type {
 	CraftingRecipe,
 	CraftingMaterial,
 	CraftingProgress,
 	CraftingResult,
 	CraftingManagerEvents,
-} from './CraftingManager.ts';
+} from './CraftingManager';
 
-export { TradingManager } from './TradingManager.ts';
+export { TradingManager } from './TradingManager';
 export type {
 	TradeItem,
 	TradeOffer,
 	Trade,
 	TradingManagerEvents,
-} from './TradingManager.ts';
+} from './TradingManager';
 
-export { AuctionHouseClient } from './AuctionHouseClient.ts';
+export { AuctionHouseClient } from './AuctionHouseClient';
 export type {
 	AuctionOrder,
 	CreateOrderRequest,
 	SearchRequest,
 	AuctionHouseClientEvents,
-} from './AuctionHouseClient.ts';
+} from './AuctionHouseClient';
 
-export { PlayerShopManager } from './PlayerShopManager.ts';
+export { PlayerShopManager } from './PlayerShopManager';
 export type {
 	ShopLocation,
 	ShopItem,
@@ -37,4 +37,4 @@ export type {
 	PurchaseRequest,
 	SearchShopsRequest,
 	PlayerShopManagerEvents,
-} from './PlayerShopManager.ts';
+} from './PlayerShopManager';

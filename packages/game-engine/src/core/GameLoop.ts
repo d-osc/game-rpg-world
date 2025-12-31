@@ -3,8 +3,8 @@
  * Main game loop using requestAnimationFrame
  */
 
-import { time } from './Time.ts';
-import { sceneManager } from './Scene.ts';
+import { time } from './Time';
+import { sceneManager } from './Scene';
 
 export type GameLoopCallback = (deltaTime: number) => void;
 

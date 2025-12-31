@@ -11,9 +11,9 @@ import {
   keyboard,
   Rectangle,
 } from '@rpg/game-engine';
-import { Player } from '../entities/Player.ts';
-import { MovementSystem } from '../systems/MovementSystem.ts';
-import { TiledMap, TiledMapLoader } from '../world/TiledMapLoader.ts';
+import { Player } from '../entities/Player';
+import { MovementSystem } from '../systems/MovementSystem';
+import { TiledMap, TiledMapLoader } from '../world/TiledMapLoader';
 
 export class DemoScene extends Scene {
   // Renderer

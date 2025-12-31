@@ -3,7 +3,7 @@
  * Represents a 2D rectangle with position and size
  */
 
-import { Vector2 } from './Vector2.ts';
+import { Vector2 } from './Vector2';
 
 export class Rectangle {
   x: number;

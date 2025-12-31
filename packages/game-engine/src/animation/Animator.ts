@@ -3,7 +3,7 @@
  * Manages multiple animations and transitions
  */
 
-import { SpriteAnimation } from './SpriteAnimation.ts';
+import { SpriteAnimation } from './SpriteAnimation';
 
 export interface AnimatorConfig {
   animations: SpriteAnimation[];

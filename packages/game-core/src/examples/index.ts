@@ -3,11 +3,11 @@
  * Usage examples and integration guides
  */
 
-export { NetworkingExample } from './NetworkingExample.ts';
-export { CombatExample } from './CombatExample.ts';
-export { InventoryExample } from './InventoryExample.ts';
-export { JobExample } from './JobExample.ts';
-export { EconomyExample } from './EconomyExample.ts';
-export { AuctionHouseExample } from './AuctionHouseExample.ts';
-export { PlayerShopExample } from './PlayerShopExample.ts';
-export { ArenaExample } from './ArenaExample.ts';
+export { NetworkingExample } from './NetworkingExample';
+export { CombatExample } from './CombatExample';
+export { InventoryExample } from './InventoryExample';
+export { JobExample } from './JobExample';
+export { EconomyExample } from './EconomyExample';
+export { AuctionHouseExample } from './AuctionHouseExample';
+export { PlayerShopExample } from './PlayerShopExample';
+export { ArenaExample } from './ArenaExample';

@@ -3,7 +3,7 @@
  * User interface for auction house
  */
 
-import type { AuctionHouseClient, AuctionOrder, SearchRequest } from '../economy/AuctionHouseClient.ts';
+import type { AuctionHouseClient, AuctionOrder, SearchRequest } from '../economy/AuctionHouseClient';
 
 export class AuctionHouseUI {
 	private container: HTMLElement | null = null;

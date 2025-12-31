@@ -3,7 +3,7 @@
  * Manages zone-based peer discovery for P2P networking
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface ZonePlayerInfo {
 	playerId: string;

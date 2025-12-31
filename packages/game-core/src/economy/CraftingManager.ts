@@ -3,7 +3,7 @@
  * Manages crafting recipes, requirements, and crafting process
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface CraftingMaterial {
 	item_id: string;

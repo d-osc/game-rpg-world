@@ -3,16 +3,16 @@
  * World management, maps, and zones
  */
 
-export { TiledMap, TiledMapLoader } from './TiledMapLoader.ts';
+export { TiledMap, TiledMapLoader } from './TiledMapLoader';
 export type {
   TiledLayer,
   TiledObject,
   TiledProperty,
   TiledTileset,
   TiledMapData,
-} from './TiledMapLoader.ts';
+} from './TiledMapLoader';
 
-export { WorldManager } from './WorldManager.ts';
+export { WorldManager } from './WorldManager';
 export type {
 	Position,
 	Size,
@@ -21,17 +21,17 @@ export type {
 	Continent,
 	WorldData,
 	WorldManagerEvents,
-} from './WorldManager.ts';
+} from './WorldManager';
 
-export { NPCManager } from './NPCManager.ts';
-export type { NPCData, NPCDialogue, NPCInstance, NPCManagerEvents } from './NPCManager.ts';
+export { NPCManager } from './NPCManager';
+export type { NPCData, NPCDialogue, NPCInstance, NPCManagerEvents } from './NPCManager';
 
-export { MonsterSpawner } from './MonsterSpawner.ts';
+export { MonsterSpawner } from './MonsterSpawner';
 export type {
 	SpawnPoint,
 	SpawnedMonster,
 	MonsterSpawnerEvents,
-} from './MonsterSpawner.ts';
+} from './MonsterSpawner';
 
-export { ZoneDiscovery } from './ZoneDiscovery.ts';
-export type { ZonePlayerInfo, ZoneDiscoveryEvents } from './ZoneDiscovery.ts';
+export { ZoneDiscovery } from './ZoneDiscovery';
+export type { ZonePlayerInfo, ZoneDiscoveryEvents } from './ZoneDiscovery';

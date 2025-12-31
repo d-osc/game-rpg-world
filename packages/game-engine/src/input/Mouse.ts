@@ -3,7 +3,7 @@
  * Mouse input management
  */
 
-import { Vector2 } from '../math/Vector2.ts';
+import { Vector2 } from '../math/Vector2';
 
 export enum MouseButton {
   LEFT = 0,

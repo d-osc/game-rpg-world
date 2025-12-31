@@ -3,5 +3,5 @@
  * Game entities (Player, NPCs, Monsters, etc.)
  */
 
-export { Player } from './Player.ts';
-export type { PlayerConfig } from './Player.ts';
+export { Player } from './Player';
+export type { PlayerConfig } from './Player';

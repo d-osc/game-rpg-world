@@ -3,7 +3,7 @@
  * Touch input management for mobile devices
  */
 
-import { Vector2 } from '../math/Vector2.ts';
+import { Vector2 } from '../math/Vector2';
 
 export interface TouchInfo {
   id: number;

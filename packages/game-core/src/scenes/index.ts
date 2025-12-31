@@ -3,4 +3,4 @@
  * Game scenes
  */
 
-export { DemoScene } from './DemoScene.ts';
+export { DemoScene } from './DemoScene';

@@ -3,10 +3,10 @@
  * Example of how to use the multi-job system with UI
  */
 
-import { JobManager } from '../jobs/JobManager.ts';
-import { JobUI } from '../ui/JobUI.ts';
-import type { Job } from '../jobs/JobManager.ts';
-import type { InventoryManager } from '../inventory/InventoryManager.ts';
+import { JobManager } from '../jobs/JobManager';
+import { JobUI } from '../ui/JobUI';
+import type { Job } from '../jobs/JobManager';
+import type { InventoryManager } from '../inventory/InventoryManager';
 
 export class JobExample {
 	private jobManager: JobManager;

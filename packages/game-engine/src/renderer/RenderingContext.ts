@@ -3,7 +3,7 @@
  * Wrapper for rendering context that can be either Canvas2D or WebGL
  */
 
-import { Canvas2DRenderer } from './Canvas2DRenderer.ts';
+import { Canvas2DRenderer } from './Canvas2DRenderer';
 
 export type RendererType = 'canvas2d' | 'webgl';
 

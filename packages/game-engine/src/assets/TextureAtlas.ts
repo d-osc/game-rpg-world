@@ -3,7 +3,7 @@
  * Manages sprite sheets and texture atlases
  */
 
-import { Rectangle } from '../math/Rectangle.ts';
+import { Rectangle } from '../math/Rectangle';
 
 export interface SpriteFrame {
   x: number;

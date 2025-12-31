@@ -3,9 +3,9 @@
  * Main rendering engine using Canvas 2D API
  */
 
-import { Camera } from './Camera.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import { Rectangle } from '../math/Rectangle.ts';
+import { Camera } from './Camera';
+import { Vector2 } from '../math/Vector2';
+import { Rectangle } from '../math/Rectangle';
 
 export interface RenderLayer {
   name: string;

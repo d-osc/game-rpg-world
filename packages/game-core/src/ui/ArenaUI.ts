@@ -3,7 +3,7 @@
  * UI for PvP arena matchmaking and leaderboard
  */
 
-import type { ArenaManager, ArenaPlayer, ArenaMatch, LeaderboardEntry } from '../pvp/ArenaManager.ts';
+import type { ArenaManager, ArenaPlayer, ArenaMatch, LeaderboardEntry } from '../pvp/ArenaManager';
 
 export class ArenaUI {
 	private container: HTMLElement;

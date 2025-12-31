@@ -3,8 +3,8 @@
  * Manages sprite rendering, caching, and batching
  */
 
-import { Vector2 } from '../math/Vector2.ts';
-import { TextureAtlas, SpriteSheet, SpriteFrame } from './TextureAtlas.ts';
+import { Vector2 } from '../math/Vector2';
+import { TextureAtlas, SpriteSheet, SpriteFrame } from './TextureAtlas';
 
 export interface SpriteOptions {
   rotation?: number;

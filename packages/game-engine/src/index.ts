@@ -1,29 +1,29 @@
 // @rpg/game-engine - Custom 2D Game Engine
 
 // Core
-export * from './core/GameLoop.ts';
-export * from './core/Time.ts';
-export * from './core/Scene.ts';
+export * from './core/GameLoop';
+export * from './core/Time';
+export * from './core/Scene';
 
 // Renderer
-export * from './renderer/Canvas2DRenderer.ts';
-export * from './renderer/Camera.ts';
-export * from './renderer/RemotePlayerRenderer.ts';
+export * from './renderer/Canvas2DRenderer';
+export * from './renderer/Camera';
+export * from './renderer/RemotePlayerRenderer';
 
 // Physics
-export * from './physics/index.ts';
+export * from './physics/index';
 
 // Input
-export * from './input/index.ts';
+export * from './input/index';
 
 // Assets
-export * from './assets/index.ts';
+export * from './assets/index';
 
 // Animation
-export * from './animation/index.ts';
+export * from './animation/index';
 
 // Math
-export * from './math/Vector2.ts';
-export * from './math/Rectangle.ts';
+export * from './math/Vector2';
+export * from './math/Rectangle';
 
 console.log('[@rpg/game-engine] Loaded');

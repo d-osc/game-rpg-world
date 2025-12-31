@@ -3,8 +3,8 @@
  * Inventory and equipment management
  */
 
-export { InventoryManager } from './InventoryManager.ts';
-export type { Item, InventorySlot, InventoryLimits, InventoryEvents } from './InventoryManager.ts';
+export { InventoryManager } from './InventoryManager';
+export type { Item, InventorySlot, InventoryLimits, InventoryEvents } from './InventoryManager';
 
-export { EquipmentManager } from './EquipmentManager.ts';
-export type { EquipSlot, Equipment, EquipmentStats, EquipmentEvents } from './EquipmentManager.ts';
+export { EquipmentManager } from './EquipmentManager';
+export type { EquipSlot, Equipment, EquipmentStats, EquipmentEvents } from './EquipmentManager';

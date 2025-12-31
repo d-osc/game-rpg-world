@@ -3,9 +3,9 @@
  * Spatial partitioning data structure for efficient collision detection
  */
 
-import { Rectangle } from '../math/Rectangle.ts';
-import { Vector2 } from '../math/Vector2.ts';
-import { AABB } from './AABB.ts';
+import { Rectangle } from '../math/Rectangle';
+import { Vector2 } from '../math/Vector2';
+import { AABB } from './AABB';
 
 export interface QuadtreeObject {
   bounds: AABB;

@@ -3,9 +3,9 @@
  * Various collision detection algorithms
  */
 
-import { Vector2 } from '../math/Vector2.ts';
-import { Rectangle } from '../math/Rectangle.ts';
-import { AABB } from './AABB.ts';
+import { Vector2 } from '../math/Vector2';
+import { Rectangle } from '../math/Rectangle';
+import { AABB } from './AABB';
 
 export interface CollisionResult {
   colliding: boolean;

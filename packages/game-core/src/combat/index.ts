@@ -3,7 +3,7 @@
  * Turn-based combat system
  */
 
-export { CombatManager, CombatState, CombatActionType } from './CombatManager.ts';
+export { CombatManager, CombatState, CombatActionType } from './CombatManager';
 export type {
 	CombatStats,
 	StatusEffect,
@@ -11,19 +11,19 @@ export type {
 	CombatAction,
 	DamageResult,
 	CombatEvents,
-} from './CombatManager.ts';
+} from './CombatManager';
 
-export { CombatAI, AIPattern } from './CombatAI.ts';
+export { CombatAI, AIPattern } from './CombatAI';
 
 export {
 	CombatAnimationManager,
 	DamageNumber,
 	AttackAnimation,
 	SkillAnimation,
-} from './CombatAnimations.ts';
-export type { DamageNumberConfig, CombatAnimationConfig } from './CombatAnimations.ts';
+} from './CombatAnimations';
+export type { DamageNumberConfig, CombatAnimationConfig } from './CombatAnimations';
 
-export { CombatSync, DeterministicRNG } from './CombatSync.ts';
+export { CombatSync, DeterministicRNG } from './CombatSync';
 export type {
 	CombatSyncMessage,
 	CombatInitData,
@@ -31,4 +31,4 @@ export type {
 	CombatResultData,
 	CombatEndData,
 	CombatSyncEvents,
-} from './CombatSync.ts';
+} from './CombatSync';

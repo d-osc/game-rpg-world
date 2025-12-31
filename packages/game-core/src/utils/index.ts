@@ -3,4 +3,4 @@
  * Utility classes and functions
  */
 
-export { EventEmitter } from './EventEmitter.ts';
+export { EventEmitter } from './EventEmitter';

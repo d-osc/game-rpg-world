@@ -3,7 +3,7 @@
  * Manages P2P trading between players
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface TradeItem {
 	item_id: string;

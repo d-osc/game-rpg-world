@@ -3,7 +3,7 @@
  * Client-side PvP arena management
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface ArenaPlayer {
 	player_id: string;

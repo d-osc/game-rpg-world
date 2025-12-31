@@ -3,7 +3,7 @@
  * Client-side player shop management
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface ShopLocation {
 	zone_id: string;

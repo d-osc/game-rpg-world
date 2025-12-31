@@ -3,8 +3,8 @@
  * Simple collision detection using axis-aligned rectangles
  */
 
-import { Vector2 } from '../math/Vector2.ts';
-import { Rectangle } from '../math/Rectangle.ts';
+import { Vector2 } from '../math/Vector2';
+import { Rectangle } from '../math/Rectangle';
 
 export class AABB {
   // Center position

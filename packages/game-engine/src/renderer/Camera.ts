@@ -3,8 +3,8 @@
  * Handles viewport transformation, following targets, and zoom
  */
 
-import { Vector2 } from '../math/Vector2.ts';
-import { Rectangle } from '../math/Rectangle.ts';
+import { Vector2 } from '../math/Vector2';
+import { Rectangle } from '../math/Rectangle';
 
 export class Camera {
   // Camera position (center of viewport)

@@ -3,8 +3,8 @@
  * Manages NPCs, dialogue, and NPC interactions
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
-import type { Position } from './WorldManager.ts';
+import { EventEmitter } from '../utils/EventEmitter';
+import type { Position } from './WorldManager';
 
 export interface NPCDialogue {
 	greeting: string;

@@ -3,7 +3,7 @@
  * User interface for crafting system
  */
 
-import type { CraftingManager, CraftingRecipe, CraftingMaterial } from '../economy/CraftingManager.ts';
+import type { CraftingManager, CraftingRecipe, CraftingMaterial } from '../economy/CraftingManager';
 
 export class CraftingUI {
 	private container: HTMLElement | null = null;

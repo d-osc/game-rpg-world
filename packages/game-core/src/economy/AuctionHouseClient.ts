@@ -3,7 +3,7 @@
  * Client-side auction house interface
  */
 
-import { EventEmitter } from '../utils/EventEmitter.ts';
+import { EventEmitter } from '../utils/EventEmitter';
 
 export interface AuctionOrder {
 	id: number;

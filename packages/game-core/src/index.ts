@@ -1,25 +1,25 @@
 // @rpg/game-core - Core game logic (RPG systems)
 
 // ECS
-export * from './systems/index.ts';
-export * from './components/index.ts';
+export * from './systems/index';
+export * from './components/index';
 
 // Game systems
-export * from './combat/index.ts';
-export * from './jobs/index.ts';
-export * from './world/index.ts';
-export * from './inventory/index.ts';
-export * from './economy/index.ts';
-export * from './entities/index.ts';
+export * from './combat/index';
+export * from './jobs/index';
+export * from './world/index';
+export * from './inventory/index';
+export * from './economy/index';
+export * from './entities/index';
 
 // Scenes
-export * from './scenes/index.ts';
+export * from './scenes/index';
 
 // UI
-export * from './ui/index.ts';
+export * from './ui/index';
 
 // Utils
-export * from './utils/index.ts';
+export * from './utils/index';
 
 // Examples - not exported by default to avoid unnecessary dependencies
 // Import directly from '@rpg/game-core/examples' if needed

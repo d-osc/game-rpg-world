@@ -5,7 +5,7 @@
 
 import { NetworkManager } from '@rpg/networking';
 import { RemotePlayerRenderer } from '@rpg/game-engine';
-import { ChatUI } from '../ui/ChatUI.ts';
+import { ChatUI } from '../ui/ChatUI';
 import type { Canvas2DRenderer, Camera } from '@rpg/game-engine';
 
 export class NetworkingExample {

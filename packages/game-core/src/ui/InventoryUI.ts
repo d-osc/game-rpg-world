@@ -3,8 +3,8 @@
  * HTML/CSS-based inventory window with drag-and-drop
  */
 
-import type { InventoryManager, Item, InventorySlot } from '../inventory/InventoryManager.ts';
-import type { EquipmentManager, EquipSlot } from '../inventory/EquipmentManager.ts';
+import type { InventoryManager, Item, InventorySlot } from '../inventory/InventoryManager';
+import type { EquipmentManager, EquipSlot } from '../inventory/EquipmentManager';
 
 export interface InventoryUIConfig {
 	container: HTMLElement;

@@ -3,4 +3,4 @@
  * Game systems (Movement, Rendering, etc.)
  */
 
-export { MovementSystem } from './MovementSystem.ts';
+export { MovementSystem } from './MovementSystem';

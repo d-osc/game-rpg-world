@@ -7,7 +7,7 @@ import type {
 	CombatEntity,
 	CombatAction,
 	CombatActionType,
-} from './CombatManager.ts';
+} from './CombatManager';
 
 export enum AIPattern {
 	RANDOM = 'random', // Random actions

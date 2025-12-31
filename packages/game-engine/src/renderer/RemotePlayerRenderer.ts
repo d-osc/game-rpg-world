@@ -3,8 +3,8 @@
  * Renders remote players from network state
  */
 
-import type { Canvas2DRenderer } from './Canvas2DRenderer.ts';
-import type { Camera } from './Camera.ts';
+import type { Canvas2DRenderer } from './Canvas2DRenderer';
+import type { Camera } from './Camera';
 
 export interface RemotePlayer {
 	playerId: string;

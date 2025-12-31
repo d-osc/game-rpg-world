@@ -8,7 +8,7 @@ import type {
 	CombatEntity,
 	CombatAction,
 	CombatActionType,
-} from '../combat/CombatManager.ts';
+} from '../combat/CombatManager';
 
 export interface CombatUIConfig {
 	container: HTMLElement;
