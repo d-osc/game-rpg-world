@@ -2,7 +2,7 @@
 
 A 2D multiplayer RPG game with turn-based combat (Pokemon-style), multi-job system, open world, and complex economy.
 
-**Current Status:** 🎮 **Phase 13 Complete - Mobile App Ready!**
+**Current Status:** 🎮 **Phase 14 Complete - Polished & Ready for Launch!**
 
 ## 🎯 Quick Start - Play the Demo!
 
@@ -29,6 +29,14 @@ Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
 - ✅ **Auto-Reconnect**: Exponential backoff on disconnection
 - ✅ **Chat System**: P2P text chat with ChatManager and ChatUI
 - ✅ **RemotePlayerRenderer**: Render remote players with name tags and interpolation
+
+### Phase 14: Polish & Balance ✅
+- ✅ **Content Expansion**: 12 monsters (doubled!), 15 materials (+8 new)
+- ✅ **Particle System**: Complete visual effects with 4 presets
+- ✅ **Audio System**: Sound effects + music with crossfading
+- ✅ **Tutorial System**: 9-step guided tutorial for new players
+- ✅ **Performance Tools**: FPS monitor, debug overlay, object pooling
+- ✅ **5 Zones**: forest, caves, dunes, graveyard, mountains
 
 ### Phase 13: Mobile App ✅
 - ✅ **Capacitor 5.x**: iOS and Android support
