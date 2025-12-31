@@ -151,7 +151,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (76% Complete)
+## 📊 Progress (82% Complete)
 
 ### Completed Phases ✅
 
@@ -173,16 +173,16 @@ bun run format
 - **Phase 9**: Auction House (2 weeks) ✅
 - **Phase 10**: Player Shops (2 weeks) ✅
 - **Phase 11**: PvP Arena (2 weeks) ✅
+- **Phase 12**: Desktop App (2 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 12**: Desktop App (2 weeks) - NEXT
-- **Phase 13**: Mobile App (4 weeks)
+- **Phase 13**: Mobile App (4 weeks) - NEXT
 - **Phase 14**: Polish & Balance (5 weeks)
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 13/17 phases (76%)
+**Current Progress:** 14/17 phases (82%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -249,6 +249,23 @@ Our custom-built engine includes:
 - [Web Demo README](./apps/web/README.md) - How to run the playable demo
 
 ## 🚀 Recent Achievements
+
+**Phase 12 Complete (2025-12-31):**
+- Complete Electron desktop application
+- Main process with lifecycle management (~450 lines)
+- Window management with persistent bounds
+- Native application menus (File, View, Help)
+- Settings persistence (JSON in userData)
+- Auto-updater with electron-updater
+- Desktop notifications support
+- Preload script with secure IPC (~50 lines)
+- DesktopPlatformAdapter for renderer (~140 lines)
+- Seamless web app integration
+- Multi-platform builds (Windows/Mac/Linux)
+- NSIS installer, DMG, AppImage
+- Development and production modes
+- Complete documentation and README
+- ~640 lines across 7 files
 
 **Phase 11 Complete (2025-12-31):**
 - Complete PvP arena matchmaking system
@@ -434,5 +451,5 @@ Private project
 
 ---
 
-**Status:** PvP Arena System complete! 🎉
-**Next:** Phase 12 - Desktop App
+**Status:** Desktop App complete! 🎉
+**Next:** Phase 13 - Mobile App
