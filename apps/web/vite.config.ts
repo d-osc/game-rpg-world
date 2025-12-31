@@ -13,8 +13,12 @@ export default defineConfig({
       '@rpg/networking': resolve(__dirname, '../../packages/networking/src'),
       '@rpg/shared': resolve(__dirname, '../../packages/shared/src'),
     },
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
   },
   server: {
     port: 5173,
+  },
+  optimizeDeps: {
+    include: ['@rpg/game-engine', '@rpg/game-core'],
   },
 });
