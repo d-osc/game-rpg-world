@@ -10,3 +10,4 @@ export { JobExample } from './JobExample.ts';
 export { EconomyExample } from './EconomyExample.ts';
 export { AuctionHouseExample } from './AuctionHouseExample.ts';
 export { PlayerShopExample } from './PlayerShopExample.ts';
+export { ArenaExample } from './ArenaExample.ts';
