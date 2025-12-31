@@ -27,3 +27,14 @@ export type {
 	SearchRequest,
 	AuctionHouseClientEvents,
 } from './AuctionHouseClient.ts';
+
+export { PlayerShopManager } from './PlayerShopManager.ts';
+export type {
+	ShopLocation,
+	ShopItem,
+	PlayerShop,
+	AddItemRequest,
+	PurchaseRequest,
+	SearchShopsRequest,
+	PlayerShopManagerEvents,
+} from './PlayerShopManager.ts';
