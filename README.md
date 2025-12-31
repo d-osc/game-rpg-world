@@ -7,15 +7,25 @@ A 2D multiplayer RPG game with turn-based combat (Pokemon-style), multi-job syst
 ## 🎯 Quick Start - Play the Demo!
 
 ```bash
-# Install dependencies
+# 1. Install dependencies
 bun install
 
-# Run the demo
+# 2. Run the web demo
 cd apps/web
 bun run dev
 ```
 
-Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
+Open http://localhost:5173 in your browser!
+
+### 🎮 Controls
+- **WASD** or **Arrow Keys**: Move player
+- **F3**: Toggle debug info (FPS, position, etc.)
+
+### 🔧 Troubleshooting
+If you encounter issues:
+1. Clear Vite cache: `rm -rf apps/web/node_modules/.vite apps/web/dist`
+2. Restart dev server: Stop (Ctrl+C) and run `bun run dev` again
+3. Hard refresh browser: `Ctrl+Shift+R` (Windows/Linux) or `Cmd+Shift+R` (Mac)
 
 ## ✨ What's Completed
 
@@ -211,11 +221,26 @@ Open http://localhost:5173 and use **WASD** or **Arrow Keys** to move!
 - ✅ **API Endpoints**: Register, login, logout, save, load, history
 
 ### Phase 1.5: First Playable Demo ✅
-- ✅ Player movement with WASD/Arrow controls
-- ✅ Smooth camera following the player
-- ✅ Map rendering system (Tiled format support)
-- ✅ Debug overlay (press F3)
-- ✅ All custom engine systems integrated and validated
+- ✅ **Player Movement**: WASD/Arrow controls with smooth movement
+- ✅ **Camera System**: Smooth camera following with bounds
+- ✅ **Map Rendering**: Tiled format support with test map
+- ✅ **Debug Overlay**: Press F3 to toggle (FPS, position, direction)
+- ✅ **Custom Engine**: All engine systems integrated and validated
+
+### 🆕 Recent Updates (2025-12-31)
+**Build & Configuration Fixes:**
+- ✅ Fixed all import/export issues for Vite/ESM compatibility
+- ✅ Removed `.ts` extensions from 66 TypeScript files
+- ✅ Added comprehensive Vite configuration with path aliases
+- ✅ Created missing utility files (EventEmitter, components index)
+- ✅ Fixed API mismatches (Camera, Keyboard, Renderer)
+
+**Current Demo Features:**
+- 🎮 **Playable demo** with player movement on a test map
+- 📷 **Camera follows player** with smooth interpolation
+- 🗺️ **Test map** with grass tiles and collision boundaries
+- 🐛 **Debug mode** shows FPS, player position, and movement vector
+- ⚡ **60 FPS** smooth gameplay with custom game engine
 
 ### Phase 1: Custom Game Engine ✅
 - ✅ **Core Systems**: GameLoop, Time management, Scene management
