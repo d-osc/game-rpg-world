@@ -151,7 +151,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (65% Complete)
+## 📊 Progress (71% Complete)
 
 ### Completed Phases ✅
 
@@ -171,18 +171,18 @@ bun run format
 - **Phase 7**: World & Maps (3 weeks) ✅
 - **Phase 8**: Economy - Crafting & Trading (3 weeks) ✅
 - **Phase 9**: Auction House (2 weeks) ✅
+- **Phase 10**: Player Shops (2 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 10**: Player Shops (2 weeks) - NEXT
-- **Phase 11**: PvP Arena (2 weeks)
+- **Phase 11**: PvP Arena (2 weeks) - NEXT
 - **Phase 12**: Desktop App (2 weeks)
 - **Phase 13**: Mobile App (4 weeks)
 - **Phase 14**: Polish & Balance (5 weeks)
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 11/17 phases (65%)
+**Current Progress:** 12/17 phases (71%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -249,6 +249,27 @@ Our custom-built engine includes:
 - [Web Demo README](./apps/web/README.md) - How to run the playable demo
 
 ## 🚀 Recent Achievements
+
+**Phase 10 Complete (2025-12-31):**
+- Complete player shop system
+- PlayerShopService with PostgreSQL (~770 lines)
+- Shop creation with 1 shop per player limit
+- Shop location on map (zone_id, x, y coordinates)
+- Shop items management (max 100 items per shop)
+- Purchase system with stock deduction
+- Transaction logging and statistics
+- 3 PostgreSQL tables: player_shops, player_shop_items, player_shop_transactions
+- PlayerShopManager with RESTful API (~500 lines)
+- Event-driven architecture with callbacks
+- Shop CRUD operations (create, update, delete)
+- Item management (add, remove, update price)
+- Search and browse shops by zone/item/name
+- PlayerShopUI with 3-tab interface (~670 lines)
+- Browse Shops, My Shop, and Create Shop tabs
+- Shop status toggle (open/closed)
+- Real-time updates via events
+- PlayerShopExample with integration examples (~450 lines)
+- ~2,400 lines of code across 6 files
 
 **Phase 9 Complete (2025-12-31):**
 - Complete centralized auction house system
@@ -392,5 +413,5 @@ Private project
 
 ---
 
-**Status:** Economy System complete! 🎉
-**Next:** Phase 9 - Auction House
+**Status:** Player Shop System complete! 🎉
+**Next:** Phase 11 - PvP Arena

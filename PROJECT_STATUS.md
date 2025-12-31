@@ -2,7 +2,7 @@
 
 **Last Updated:** 2025-12-31
 **Project Duration:** ~47 สัปดาห์ (12 เดือน)
-**Current Phase:** Phase 9 ✅ COMPLETED (100%) - Ready for Phase 10
+**Current Phase:** Phase 10 ✅ COMPLETED (100%) - Ready for Phase 11
 
 ---
 
@@ -20,14 +20,14 @@ Phase 6   ✅✅✅✅✅✅✅✅✅✅  100% [COMPLETED]
 Phase 7   ✅✅✅✅✅✅✅✅✅✅  100% [COMPLETED]
 Phase 8   ✅✅✅✅✅✅✅✅✅✅  100% [COMPLETED]
 Phase 9   ✅✅✅✅✅✅✅✅✅✅  100% [COMPLETED]
-Phase 10  ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜  0%   [NOT STARTED]
+Phase 10  ✅✅✅✅✅✅✅✅✅✅  100% [COMPLETED]
 Phase 11  ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜  0%   [NOT STARTED]
 Phase 12  ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜  0%   [NOT STARTED]
 Phase 13  ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜  0%   [NOT STARTED]
 Phase 14  ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜  0%   [NOT STARTED]
 Phase 15  ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜  0%   [NOT STARTED]
 
-Overall: ✅✅✅✅✅✅✅✅✅✅✅  65% (11/17 phases)
+Overall: ✅✅✅✅✅✅✅✅✅✅✅✅  71% (12/17 phases)
 ```
 
 **Legend:**
@@ -1374,54 +1374,103 @@ Complete auction house ready for production. Server-side validation ensures fair
 
 ---
 
-## 🏬 Phase 10: Player Shops (2 สัปดาห์)
+## 🏬 Phase 10: Player Shops (2 สัปดาห์) ✅ COMPLETED
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Completed
 **Duration:** 2 สัปดาห์
-**Progress:** 0/6 tasks completed
+**Progress:** 6/6 tasks completed
+**Completed Date:** 2025-12-31
 
 ### Tasks Checklist
 
-- [ ] **PlayerShopManager**
-  - [ ] Create PlayerShopManager.ts
-  - [ ] Implement createShop()
-  - [ ] Implement listItemInShop()
-  - [ ] Implement buyFromShop()
+- [x] **PlayerShopManager**
+  - [x] Create PlayerShopManager.ts
+  - [x] Implement createShop()
+  - [x] Implement listItemInShop()
+  - [x] Implement buyFromShop()
 
-- [ ] **Shop Creation**
-  - [ ] Add shop creation fee
-  - [ ] Set shop location on map
-  - [ ] Name shop
+- [x] **Shop Creation**
+  - [x] Add shop creation fee
+  - [x] Set shop location on map
+  - [x] Name shop
 
-- [ ] **Shop Inventory**
-  - [ ] Add/remove items from shop
-  - [ ] Set item prices
-  - [ ] Track sold items
+- [x] **Shop Inventory**
+  - [x] Add/remove items from shop
+  - [x] Set item prices
+  - [x] Track sold items
 
-- [ ] **Shop Discovery**
-  - [ ] Register shop with server
-  - [ ] Show shop markers on map
-  - [ ] List all shops in zone
+- [x] **Shop Discovery**
+  - [x] Register shop with server
+  - [x] Show shop markers on map
+  - [x] List all shops in zone
 
-- [ ] **Shop UI**
-  - [ ] Create shop browsing window
-  - [ ] Show shop inventory
-  - [ ] Purchase items
+- [x] **Shop UI**
+  - [x] Create shop browsing window
+  - [x] Show shop inventory
+  - [x] Purchase items
 
-- [ ] **Server Registry**
-  - [ ] Create PlayerShopService.ts (server)
-  - [ ] Store shop data
-  - [ ] Handle shop transactions
+- [x] **Server Registry**
+  - [x] Create PlayerShopService.ts (server)
+  - [x] Store shop data
+  - [x] Handle shop transactions
 
 ### Deliverable
-- [ ] เปิดร้านได้, ขายให้ผู้เล่นอื่น
+- [x] เปิดร้านได้, ขายให้ผู้เล่นอื่น
 
-**Critical Files to Create:**
-- [ ] `packages/game-core/src/economy/PlayerShopManager.ts`
-- [ ] `apps/server/src/player-shops/PlayerShopService.ts`
+**Critical Files Created:**
+- [x] `packages/game-core/src/economy/PlayerShopManager.ts`
+- [x] `apps/server/src/player-shops/PlayerShopService.ts`
+- [x] `packages/game-core/src/ui/PlayerShopUI.ts`
+- [x] `packages/game-core/src/examples/PlayerShopExample.ts`
+
+### Implementation Summary
+
+**Server-side (PostgreSQL):**
+- PlayerShopService with 3 tables: player_shops, player_shop_items, player_shop_transactions
+- 1 shop limit per player
+- Shop location on map (zone_id, x, y coordinates)
+- Max 100 items per shop
+- Shop name validation (3-50 characters)
+- Description support (max 200 characters)
+- Transaction logging and statistics
+- Atomic transactions for purchases
+- Stock management with auto-removal when quantity reaches 0
+
+**Client-side:**
+- PlayerShopManager with RESTful API client
+- Event-driven architecture with EventEmitter
+- Shop CRUD operations (create, update, delete, search)
+- Item management (add, remove, update price)
+- Purchase system with inventory/currency integration
+- Callback-based integration for flexibility
+- Shop discovery by zone, owner, item, or name
+- Transaction history and statistics
+
+**User Interface:**
+- 3-tab layout: Browse Shops, My Shop, Create Shop
+- Browse tab: Search shops by name/zone/item
+- My Shop tab: Manage shop status, items, and prices
+- Create Shop tab: Form to create new shop with location
+- Shop status toggle (open/closed)
+- Real-time updates via events
+- Item price updates and removal
+- Purchase workflow with quantity input
+
+**Features:**
+- Player-owned shops on the map
+- Face-to-face shopping experience
+- Shop discovery and browsing
+- Transaction logging for analytics
+- Statistics tracking (total sales, revenue, unique customers)
+- Server validation prevents exploits
+- Inventory integration (items moved to/from shop)
+
+**Total:** ~2,400 lines of code across 6 files
+
+**Git Commit:** `09d19c9`
 
 **Notes:**
-_Add notes here as you progress_
+Complete player shop system ready for production. Players can create shops at specific map locations, manage inventory, and sell to other players. Server-side validation ensures fair trading. Integration with inventory and currency systems complete.
 
 ---
 
