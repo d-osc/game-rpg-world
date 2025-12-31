@@ -18,7 +18,10 @@ export * from './scenes/index.ts';
 // UI
 export * from './ui/index.ts';
 
-// Examples
-export * from './examples/index.ts';
+// Utils
+export * from './utils/index.ts';
+
+// Examples - not exported by default to avoid unnecessary dependencies
+// Import directly from '@rpg/game-core/examples' if needed
 
 console.log('[@rpg/game-core] Loaded');
