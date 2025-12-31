@@ -3,7 +3,7 @@
  * Turn-based combat system (Pokemon-style)
  */
 
-import { EventEmitter } from '@rpg/networking';
+import { EventEmitter } from '../utils/EventEmitter.ts';
 
 export enum CombatState {
 	INIT = 'INIT',

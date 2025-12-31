@@ -4,7 +4,7 @@
  */
 
 import type { CombatAction, CombatEntity, DamageResult } from './CombatManager.ts';
-import { EventEmitter } from '@rpg/networking';
+import { EventEmitter } from '../utils/EventEmitter.ts';
 
 export interface CombatSyncMessage {
 	type: 'combat-init' | 'combat-action' | 'combat-result' | 'combat-end';

@@ -3,7 +3,7 @@
  * Manages equipped items and stat bonuses
  */
 
-import { EventEmitter } from '@rpg/networking';
+import { EventEmitter } from '../utils/EventEmitter.ts';
 import type { Item } from './InventoryManager.ts';
 
 export type EquipSlot = 'weapon' | 'head' | 'body' | 'legs' | 'hands' | 'feet' | 'accessory1' | 'accessory2';
