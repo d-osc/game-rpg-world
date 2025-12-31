@@ -4,7 +4,7 @@
  */
 
 import { gameLoop, sceneManager } from '@rpg/game-engine';
-import { DemoScene } from '@rpg/game-core/scenes/DemoScene';
+import { DemoScene } from '@rpg/game-core';
 
 // Wait for DOM to be ready
 window.addEventListener('DOMContentLoaded', () => {
