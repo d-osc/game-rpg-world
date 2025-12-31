@@ -151,7 +151,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (71% Complete)
+## 📊 Progress (76% Complete)
 
 ### Completed Phases ✅
 
@@ -172,17 +172,17 @@ bun run format
 - **Phase 8**: Economy - Crafting & Trading (3 weeks) ✅
 - **Phase 9**: Auction House (2 weeks) ✅
 - **Phase 10**: Player Shops (2 weeks) ✅
+- **Phase 11**: PvP Arena (2 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 11**: PvP Arena (2 weeks) - NEXT
-- **Phase 12**: Desktop App (2 weeks)
+- **Phase 12**: Desktop App (2 weeks) - NEXT
 - **Phase 13**: Mobile App (4 weeks)
 - **Phase 14**: Polish & Balance (5 weeks)
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 12/17 phases (71%)
+**Current Progress:** 13/17 phases (76%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -249,6 +249,27 @@ Our custom-built engine includes:
 - [Web Demo README](./apps/web/README.md) - How to run the playable demo
 
 ## 🚀 Recent Achievements
+
+**Phase 11 Complete (2025-12-31):**
+- Complete PvP arena matchmaking system
+- ArenaService with ELO rating system (~720 lines)
+- Initial rating: 1500, K-factor: 32
+- Automatic matchmaking every 5 seconds
+- Rating-based matching (max 200 rating difference)
+- Queue timeout: 5 minutes
+- 2 PostgreSQL tables: arena_players, arena_matches
+- Win/loss tracking and streak statistics
+- Leaderboard with minimum 10 matches requirement
+- ArenaManager with RESTful API (~470 lines)
+- Queue management with auto-polling
+- Match status polling (1-second interval)
+- Player stats and rank fetching
+- ArenaUI with 4-tab interface (~600 lines)
+- Queue, My Stats, Leaderboard, Match History tabs
+- Real-time match notifications
+- Victory/defeat animations
+- ArenaExample with integration examples (~470 lines)
+- ~2,260 lines of code across 6 files
 
 **Phase 10 Complete (2025-12-31):**
 - Complete player shop system
@@ -413,5 +434,5 @@ Private project
 
 ---
 
-**Status:** Player Shop System complete! 🎉
-**Next:** Phase 11 - PvP Arena
+**Status:** PvP Arena System complete! 🎉
+**Next:** Phase 12 - Desktop App
