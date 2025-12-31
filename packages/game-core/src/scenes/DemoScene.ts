@@ -36,8 +36,7 @@ export class DemoScene extends Scene {
     super('DemoScene');
 
     // Create camera
-    this.camera = new Camera(new Vector2(0, 0), 800, 600);
-    this.camera.setFollowSmoothing(0.1);
+    this.camera = new Camera(0, 0, 800, 600);
   }
 
   /**
@@ -59,8 +58,8 @@ export class DemoScene extends Scene {
     // Create movement system
     this.movementSystem = new MovementSystem(this.player, 200);
 
-    // Set camera to follow player
-    this.camera.setFollowTarget(this.player.position);
+    // Set camera to follow player with smoothing
+    this.camera.follow(this.player.position, 0.1);
 
     // Set camera bounds to map size
     this.camera.setBounds(this.map.getBounds());
