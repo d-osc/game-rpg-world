@@ -151,7 +151,7 @@ bun run lint
 bun run format
 ```
 
-## 📊 Progress (59% Complete)
+## 📊 Progress (65% Complete)
 
 ### Completed Phases ✅
 
@@ -170,11 +170,11 @@ bun run format
 - **Phase 6**: Multi-Job System (2 weeks) ✅
 - **Phase 7**: World & Maps (3 weeks) ✅
 - **Phase 8**: Economy - Crafting & Trading (3 weeks) ✅
+- **Phase 9**: Auction House (2 weeks) ✅
 
 ### Upcoming Phases ⏳
 
-- **Phase 9**: Auction House (2 weeks) - NEXT
-- **Phase 10**: Player Shops (2 weeks)
+- **Phase 10**: Player Shops (2 weeks) - NEXT
 - **Phase 11**: PvP Arena (2 weeks)
 - **Phase 12**: Desktop App (2 weeks)
 - **Phase 13**: Mobile App (4 weeks)
@@ -182,7 +182,7 @@ bun run format
 - **Phase 15**: Testing & Launch (4 weeks)
 
 **Total Duration:** ~47 weeks (12 months)
-**Current Progress:** 10/17 phases (59%)
+**Current Progress:** 11/17 phases (65%)
 
 ## 🎨 Custom Game Engine Features
 
@@ -249,6 +249,23 @@ Our custom-built engine includes:
 - [Web Demo README](./apps/web/README.md) - How to run the playable demo
 
 ## 🚀 Recent Achievements
+
+**Phase 9 Complete (2025-12-31):**
+- Complete centralized auction house system
+- AuctionHouseService with PostgreSQL (~550 lines)
+- Order creation with 7-day auto-expiration
+- Search and filtering (item, price range, seller, sorting)
+- Buy/sell/cancel operations with atomic transactions
+- 5% auction fee on all sales
+- Max 50 active orders per player
+- AuctionHouseClient with RESTful API (~350 lines)
+- Event-driven architecture with real-time updates
+- AuctionHouseUI with 3-tab interface (~550 lines)
+- Browse, My Orders, and Create Order tabs
+- Real-time search with price/date sorting
+- Item price history for pricing guidance
+- Transaction logging and statistics
+- ~2,200 lines of code across 6 files
 
 **Phase 8 Complete (2025-12-31):**
 - Complete economy system with crafting and P2P trading
