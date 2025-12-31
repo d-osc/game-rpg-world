@@ -1,13 +1,17 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig({
   resolve: {
     alias: {
-      '@rpg/game-engine': resolve(__dirname, '../../packages/game-engine/src/index.ts'),
-      '@rpg/game-core': resolve(__dirname, '../../packages/game-core/src/index.ts'),
-      '@rpg/networking': resolve(__dirname, '../../packages/networking/src/index.ts'),
-      '@rpg/shared': resolve(__dirname, '../../packages/shared/src/index.ts'),
+      '@rpg/game-engine': resolve(__dirname, '../../packages/game-engine/src'),
+      '@rpg/game-core': resolve(__dirname, '../../packages/game-core/src'),
+      '@rpg/networking': resolve(__dirname, '../../packages/networking/src'),
+      '@rpg/shared': resolve(__dirname, '../../packages/shared/src'),
     },
   },
   server: {
