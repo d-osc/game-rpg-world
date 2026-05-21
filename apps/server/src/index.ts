@@ -3,187 +3,110 @@
  * Elit-based backend server for authentication, save/load, and multiplayer coordination
  */
 
-import { Elit } from 'elit';
+import { createServer } from 'http';
+import { ServerRouter } from 'elit/server';
 import { createWebSocketServer } from 'elit/ws';
 import { testConnection } from './database/index.ts';
 import { AuthService } from './auth/index.ts';
 import { authMiddleware } from './auth/middleware.ts';
 import { SaveService } from './save/index.ts';
-import { SignalingServer } from './signaling/index.ts';
+import { GameServer } from './game/GameServer.ts';
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const HOST = process.env.HOST || 'localhost';
 
-const app = new Elit();
+const router = new ServerRouter();
 
 console.log('[RPG Server] Initializing...');
 
-// Initialize database connection
-testConnection().catch((error) => {
+testConnection().catch((error: any) => {
 	console.error('[RPG Server] Database connection failed:', error);
-	console.log('[RPG Server] Running without database connection');
 });
 
-// Health check endpoint
-app.get('/health', (ctx) => {
-	ctx.json({
-		status: 'ok',
-		timestamp: new Date().toISOString(),
-		service: 'rpg-game-server',
-		version: '0.1.0',
-	});
+// Health check
+router.get('/health', async (ctx: any) => {
+	ctx.res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'rpg-game-server', version: '0.1.0' });
 });
 
-// API Router
-app.get('/api/test', (ctx) => {
-	ctx.json({
-		message: 'API is working!',
-		timestamp: new Date().toISOString(),
-	});
+router.get('/api/test', async (ctx: any) => {
+	ctx.res.json({ message: 'API is working!', timestamp: new Date().toISOString() });
 });
 
 // Auth routes
-app.post('/api/auth/register', async (ctx) => {
-	const body = await ctx.request.json();
-	const result = await AuthService.register(body);
-
-	if (result.success) {
-		ctx.status(201).json(result);
-	} else {
-		ctx.status(400).json(result);
-	}
+router.post('/api/auth/register', async (ctx: any) => {
+	const result = await AuthService.register(ctx.body);
+	ctx.res.json(result, result.success ? 201 : 400);
 });
 
-app.post('/api/auth/login', async (ctx) => {
-	const body = await ctx.request.json();
-	const result = await AuthService.login(body);
-
-	if (result.success) {
-		ctx.json(result);
-	} else {
-		ctx.status(401).json(result);
-	}
+router.post('/api/auth/login', async (ctx: any) => {
+	const result = await AuthService.login(ctx.body);
+	ctx.res.json(result, result.success ? 200 : 401);
 });
 
-app.post('/api/auth/logout', authMiddleware, async (ctx) => {
-	const authHeader = ctx.request.headers.get('authorization');
+router.post('/api/auth/logout', authMiddleware, async (ctx: any) => {
+	const authHeader = ctx.req.headers.get?.('authorization') || ctx.req.headers['authorization'] as string;
 	const token = authHeader?.split(' ')[1];
-
-	if (token) {
-		await AuthService.logout(token);
-	}
-
-	ctx.json({ success: true, message: 'Logged out successfully' });
+	if (token) await AuthService.logout(token);
+	ctx.res.json({ success: true, message: 'Logged out successfully' });
 });
 
-// Save/Load routes (protected)
-app.get('/api/save', authMiddleware, async (ctx) => {
+// Save/Load routes
+router.get('/api/save', authMiddleware, async (ctx: any) => {
 	const player = (ctx as any).player;
 	const result = await SaveService.loadSave(player.playerId);
-
-	if (result.success) {
-		ctx.json(result);
-	} else {
-		ctx.status(404).json(result);
-	}
+	ctx.res.json(result, result.success ? 200 : 404);
 });
 
-app.post('/api/save', authMiddleware, async (ctx) => {
+router.post('/api/save', authMiddleware, async (ctx: any) => {
 	const player = (ctx as any).player;
-	const body = await ctx.request.json();
-	const saveType = body.saveType || 'auto';
-
-	const result = await SaveService.saveSave(player.playerId, body.saveData, saveType);
-
-	if (result.success) {
-		ctx.json(result);
-	} else {
-		ctx.status(500).json(result);
-	}
+	const saveType = ctx.body.saveType || 'auto';
+	const result = await SaveService.saveSave(player.playerId, ctx.body.saveData, saveType);
+	ctx.res.json(result, result.success ? 200 : 500);
 });
 
-app.get('/api/save/history', authMiddleware, async (ctx) => {
+router.get('/api/save/history', authMiddleware, async (ctx: any) => {
 	const player = (ctx as any).player;
 	const history = await SaveService.getSaveHistory(player.playerId);
-	ctx.json({ success: true, data: history });
+	ctx.res.json({ success: true, data: history });
 });
 
-app.get('/api/save/snapshot/:saveId', authMiddleware, async (ctx) => {
+router.get('/api/save/snapshot/:saveId', authMiddleware, async (ctx: any) => {
 	const player = (ctx as any).player;
-	const saveId = ctx.params.saveId;
-	const result = await SaveService.loadSnapshot(player.playerId, saveId);
-
-	if (result.success) {
-		ctx.json(result);
-	} else {
-		ctx.status(404).json(result);
-	}
+	const result = await SaveService.loadSnapshot(player.playerId, ctx.params.saveId);
+	ctx.res.json(result, result.success ? 200 : 404);
 });
 
-// Error handling
-app.onError((error, ctx) => {
-	console.error('[Server Error]', error);
-	ctx.status(500).json({
-		error: 'Internal Server Error',
-		message: error.message,
-	});
+// Stats
+router.get('/api/stats', async (ctx: any) => {
+	ctx.res.json({ connections: gameServer.getConnectionCount(), zones: gameServer.getZoneCount(), zoneInfo: gameServer.getZoneInfo() });
 });
 
-// 404 handler
-app.use((ctx) => {
-	ctx.status(404).json({
-		error: 'Not Found',
-		path: ctx.request.url,
-	});
-});
-
-// Start HTTP server
-const httpServer = app.listen(PORT, () => {
-	console.log('🎮 RPG Game Server');
-	console.log(`✓ Server running on http://${HOST}:${PORT}`);
-	console.log(`✓ Health check: http://${HOST}:${PORT}/health`);
-	console.log(`✓ API test: http://${HOST}:${PORT}/api/test`);
-});
-
-// Setup WebSocket server for signaling
+// Signaling server
 const WS_PORT = parseInt(process.env.WS_PORT || '3001', 10);
-const signalingServer = new SignalingServer();
+const gameServer = new GameServer();
 
 const wss = createWebSocketServer({ port: WS_PORT }, () => {
-	console.log(`✓ WebSocket server running on ws://${HOST}:${WS_PORT}`);
-	console.log(`✓ Signaling server ready for P2P connections`);
+	console.log(`WebSocket server running on ws://${HOST}:${WS_PORT}`);
 });
 
-// Handle WebSocket connections
-wss.on('connection', async (ws, request) => {
-	// Extract token from query string
+wss.on('connection', async (ws: any, request: any) => {
 	const url = new URL(request.url || '', `http://${request.headers.host}`);
 	const token = url.searchParams.get('token');
-
-	if (!token) {
-		ws.close(1008, 'No authentication token provided');
-		return;
-	}
-
-	// Verify JWT token
+	if (!token) { ws.close(1008, 'No authentication token'); return; }
 	const payload = await AuthService.verifyToken(token);
-	if (!payload) {
-		ws.close(1008, 'Invalid authentication token');
-		return;
-	}
-
-	// Get username from database or payload
-	const username = payload.username;
-	const playerId = payload.playerId;
-
-	// Register connection with signaling server
-	signalingServer.handleConnection(ws, playerId, username);
+	if (!payload) { ws.close(1008, 'Invalid authentication token'); return; }
+	gameServer.handleConnection(ws, payload.playerId, payload.username);
 });
 
-// Stats endpoint
-app.get('/api/stats', (ctx) => {
-	ctx.json({
-		connections: signalingServer.getConnectionCount(),
-		zones: signalingServer.getZoneCount(),
-	});
+// Position broadcast loop at 10Hz
+setInterval(() => {
+	gameServer.broadcastPositions();
+}, 100);
+
+// Start HTTP server
+const httpServer = createServer((req, res) => router.handle(req, res));
+httpServer.listen(PORT, () => {
+	console.log('RPG Game Server');
+	console.log(`Server running on http://${HOST}:${PORT}`);
+	console.log(`Health check: http://${HOST}:${PORT}/health`);
 });

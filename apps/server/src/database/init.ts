@@ -1,49 +1,34 @@
 /**
  * Database Initialization
- * Run database schema and setup
+ * Seeds collections with empty arrays if they don't exist
  */
 
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { pool, testConnection } from './config.ts';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { players, sessions, profiles, saves, jobs, inventory, skills, testConnection } from './config.ts';
 
 export async function initializeDatabase(): Promise<void> {
-	console.log('[Database] Initializing database schema...');
+	console.log('[Database] Initializing collections...');
 
 	try {
-		// Test connection first
-		const connected = await testConnection();
-		if (!connected) {
-			throw new Error('Failed to connect to database');
-		}
+		await testConnection();
 
-		// Read schema file
-		const schemaPath = join(__dirname, 'schema.sql');
-		const schema = readFileSync(schemaPath, 'utf-8');
+		// Touch all collections to ensure they exist
+		players.getAll();
+		sessions.getAll();
+		profiles.getAll();
+		saves.getAll();
+		jobs.getAll();
+		inventory.getAll();
+		skills.getAll();
 
-		// Execute schema
-		await pool.query(schema);
-
-		console.log('[Database] ✓ Schema initialized successfully');
+		console.log('[Database] Collections ready');
 	} catch (error) {
-		console.error('[Database] ✗ Failed to initialize schema:', error);
+		console.error('[Database] Initialization failed:', error);
 		throw error;
 	}
 }
 
-// Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
 	initializeDatabase()
-		.then(() => {
-			console.log('[Database] Initialization complete');
-			process.exit(0);
-		})
-		.catch((error) => {
-			console.error('[Database] Initialization failed:', error);
-			process.exit(1);
-		});
+		.then(() => { console.log('[Database] Init complete'); process.exit(0); })
+		.catch((e) => { console.error(e); process.exit(1); });
 }

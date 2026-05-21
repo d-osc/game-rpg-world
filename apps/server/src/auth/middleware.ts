@@ -4,7 +4,7 @@
  */
 
 import { AuthService } from './AuthService.ts';
-import type { Context } from 'elit';
+
 
 /**
  * Extract token from Authorization header
@@ -20,14 +20,14 @@ function extractToken(authHeader: string | undefined): string | null {
 		return null;
 	}
 
-	return parts[1];
+	return parts[1] ?? null;
 }
 
 /**
  * Authentication middleware
  * Verifies JWT token and attaches player data to context
  */
-export async function authMiddleware(ctx: Context, next: () => Promise<void>) {
+export async function authMiddleware(ctx: any, next: () => Promise<void>) {
 	const authHeader = ctx.request.headers.get('authorization');
 	const token = extractToken(authHeader);
 
@@ -60,7 +60,7 @@ export async function authMiddleware(ctx: Context, next: () => Promise<void>) {
  * Attaches player data if token is valid, but doesn't reject if missing
  */
 export async function optionalAuthMiddleware(
-	ctx: Context,
+	ctx: any,
 	next: () => Promise<void>,
 ) {
 	const authHeader = ctx.request.headers.get('authorization');

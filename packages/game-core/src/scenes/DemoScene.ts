@@ -31,6 +31,9 @@ export class DemoScene extends Scene {
   // Debug
   private showDebug: boolean = true;
 
+  // Keyboard handler tracking
+  private keyHandlers: Map<string, (e: KeyboardEvent) => void> = new Map();
+
   constructor() {
     super('DemoScene');
   }
@@ -38,7 +41,7 @@ export class DemoScene extends Scene {
   /**
    * Load scene resources
    */
-  async load(): Promise<void> {
+  override async load(): Promise<void> {
     console.log('[DemoScene] Loading...');
 
     // Create a simple test map
@@ -60,21 +63,24 @@ export class DemoScene extends Scene {
   /**
    * Called when scene becomes active
    */
-  onEnter(): void {
+  override onEnter(): void {
     super.onEnter();
     console.log('[DemoScene] Entered');
 
     // Toggle debug with F3
-    keyboard.onKeyDown('f3', () => {
+    const handler = (e: KeyboardEvent) => {
+      e.preventDefault();
       this.showDebug = !this.showDebug;
       console.log('[DemoScene] Debug:', this.showDebug);
-    });
+    };
+    this.keyHandlers.set('f3', handler);
+    keyboard.onKeyDown('f3', handler);
   }
 
   /**
    * Update scene logic
    */
-  update(deltaTime: number): void {
+  override update(deltaTime: number): void {
     if (!this.player || !this.movementSystem) return;
 
     // Update input (keyboard state)
@@ -92,7 +98,7 @@ export class DemoScene extends Scene {
   /**
    * Render scene
    */
-  render(ctx: CanvasRenderingContext2D | WebGLRenderingContext): void {
+  override render(ctx: CanvasRenderingContext2D | WebGLRenderingContext): void {
     if (!(ctx instanceof CanvasRenderingContext2D)) {
       console.warn('[DemoScene] WebGL not supported yet');
       return;
@@ -236,7 +242,7 @@ export class DemoScene extends Scene {
     ctx.font = '14px monospace';
 
     const lines = [
-      `FPS: ${Math.round(1 / (performance.now() - this.lastFrameTime) * 1000) || 60}`,
+      `FPS: ${(() => { const dt = performance.now() - this.lastFrameTime; return dt > 0 ? Math.round(1000 / dt) : 60; })()}`,
       `Position: (${Math.round(this.player.position.x)}, ${Math.round(this.player.position.y)})`,
       `Velocity: (${this.player.velocity.x.toFixed(1)}, ${this.player.velocity.y.toFixed(1)})`,
       `Moving: ${this.player.isMoving}`,
@@ -254,10 +260,19 @@ export class DemoScene extends Scene {
 
   private lastFrameTime: number = performance.now();
 
+  override onExit(): void {
+    super.onExit();
+    for (const [key, handler] of this.keyHandlers) {
+      keyboard.removeKeyDownListener(key, handler);
+    }
+    this.keyHandlers.clear();
+    console.log('[DemoScene] Exited');
+  }
+
   /**
    * Clean up scene resources
    */
-  destroy(): void {
+  override destroy(): void {
     console.log('[DemoScene] Destroyed');
     this.player = null;
     this.movementSystem = null;

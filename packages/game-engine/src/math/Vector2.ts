@@ -93,6 +93,13 @@ export class Vector2 {
   }
 
   /**
+   * Distance to another vector (alias for distanceTo)
+   */
+  distance(v: Vector2): number {
+    return this.distanceTo(v);
+  }
+
+  /**
    * Squared distance (faster than distanceTo)
    */
   distanceToSquared(v: Vector2): number {

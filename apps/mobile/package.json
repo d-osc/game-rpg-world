@@ -2,38 +2,27 @@
 	"name": "@rpg/mobile",
 	"version": "1.0.0",
 	"description": "RPG Mobile App",
+	"type": "module",
 	"main": "index.js",
 	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"preview": "vite preview",
-		"sync": "cap sync",
-		"copy": "cap copy",
-		"open:ios": "cap open ios",
-		"open:android": "cap open android",
-		"run:ios": "cap run ios",
-		"run:android": "cap run android",
-		"build:ios": "bun run build && cap sync ios && cap build ios",
-		"build:android": "bun run build && cap sync android && cap build android",
-		"init:android": "cap add android",
-		"init:ios": "cap add ios",
-		"clean": "rm -rf dist android ios .capacitor",
-		"deploy:android": "bun run build:android && cd android && ./gradlew assembleRelease",
-		"deploy:ios": "bun run build:ios && cd ios/App && xcodebuild -workspace App.xcworkspace -scheme App -configuration Release archive"
+		"dev": "elit dev",
+		"build": "elit build",
+		"preview": "elit preview",
+		"mobile:init": "elit mobile init",
+		"mobile:doctor": "elit mobile doctor",
+		"mobile:sync": "elit mobile sync",
+		"mobile:open:android": "elit mobile open android",
+		"mobile:open:ios": "elit mobile open ios",
+		"mobile:run:android": "elit mobile run android",
+		"mobile:run:ios": "elit mobile run ios",
+		"mobile:build:android": "elit mobile build android",
+		"mobile:build:ios": "elit mobile build ios"
 	},
 	"dependencies": {
-		"@capacitor/android": "^5.5.1",
-		"@capacitor/app": "^5.0.6",
-		"@capacitor/core": "^5.5.1",
-		"@capacitor/haptics": "^5.0.6",
-		"@capacitor/ios": "^5.5.1",
-		"@capacitor/keyboard": "^5.0.6",
-		"@capacitor/push-notifications": "^5.1.0",
-		"@capacitor/splash-screen": "^5.0.6",
-		"@capacitor/status-bar": "^5.0.6"
+		"@rpg/shared": "workspace:*",
+		"@rpg/game-engine": "workspace:*",
+		"@rpg/game-core": "workspace:*",
+		"elit": "^3.6.7"
 	},
-	"devDependencies": {
-		"@capacitor/cli": "^5.5.1",
-		"vite": "^5.0.0"
-	}
+	"devDependencies": {}
 }

@@ -3,7 +3,7 @@
  * Example of how to integrate Chat and RemotePlayerRenderer with the game
  */
 
-import { NetworkManager } from '@rpg/networking';
+import { NetworkManager } from '../../../networking/src/peer-manager/NetworkManager.ts';
 import { RemotePlayerRenderer } from '@rpg/game-engine';
 import { ChatUI } from '../ui/ChatUI';
 import type { Canvas2DRenderer, Camera } from '@rpg/game-engine';
@@ -56,7 +56,7 @@ export class NetworkingExample {
 	 */
 	private setupNetworkEvents(): void {
 		// Handle peer joined
-		this.networkManager.on('peer-joined', (playerId, username) => {
+		this.networkManager.on('peer-joined', (playerId: string, username: string) => {
 			console.log(`Player joined: ${username} (${playerId})`);
 
 			// Add remote player to renderer
@@ -69,7 +69,7 @@ export class NetworkingExample {
 		});
 
 		// Handle peer left
-		this.networkManager.on('peer-left', (playerId) => {
+		this.networkManager.on('peer-left', (playerId: string) => {
 			console.log(`Player left: ${playerId}`);
 
 			// Remove remote player from renderer
@@ -77,7 +77,7 @@ export class NetworkingExample {
 		});
 
 		// Handle peer data (non-chat messages)
-		this.networkManager.on('peer-data', (playerId, data) => {
+		this.networkManager.on('peer-data', (playerId: string, data: any) => {
 			// Handle different message types
 			switch (data.type) {
 				case 'player-state':

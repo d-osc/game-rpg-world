@@ -21,6 +21,12 @@ export * from './ui/index';
 // Utils
 export * from './utils/index';
 
+// Data
+export * from './data/index';
+
+// State
+export * from './state/index';
+
 // Examples - not exported by default to avoid unnecessary dependencies
 // Import directly from '@rpg/game-core/examples' if needed
 

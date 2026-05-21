@@ -7,6 +7,9 @@
   "dependencies": {
     "@rpg/shared": "workspace:*",
     "@rpg/game-engine": "workspace:*",
-    "bitecs": "^0.3.40"
+    "@rpg/data": "workspace:*",
+    "bitecs": "^0.3.40",
+    "elit": "^3.6.7",
+    "three": "^0.184.0"
   }
 }

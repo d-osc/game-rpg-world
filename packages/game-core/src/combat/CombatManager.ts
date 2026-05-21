@@ -85,6 +85,7 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 	private currentTurnIndex: number = 0;
 	private pendingAction: CombatAction | null = null;
 	private turnCount: number = 0;
+	private skillDataLookup: ((skillId: string) => any) | null = null;
 
 	// Element effectiveness chart
 	private elementChart: Map<string, { weak: string[]; resist: string[] }> = new Map([
@@ -96,6 +97,13 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 
 	constructor() {
 		super();
+	}
+
+	/**
+	 * Set skill data lookup function
+	 */
+	setSkillDataLookup(lookup: (skillId: string) => any): void {
+		this.skillDataLookup = lookup;
 	}
 
 	/**
@@ -142,8 +150,11 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 		// Process status effects at turn start
 		this.processStatusEffects();
 
+		// Check if combat ended from status effects
+		if (this.checkCombatEnd()) return;
+
 		// Get current actor
-		const actorId = this.turnOrder[this.currentTurnIndex];
+		const actorId = this.turnOrder[this.currentTurnIndex]!;
 		const actor = this.entities.get(actorId);
 
 		if (!actor) {
@@ -266,11 +277,21 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 		target: CombatEntity,
 		skillId: string,
 	): DamageResult {
-		// TODO: Load skill data from JSON
-		// For now, use placeholder values
-		const skillPower = 70;
-		const skillElement = 'fire';
-		const mpCost = 10;
+		// Use skill data lookup if available, otherwise fallback to defaults
+		let skillPower = 70;
+		let skillElement = 'neutral';
+		let mpCost = 10;
+
+		let skillType = 'physical';
+		if (this.skillDataLookup) {
+			const skillData = this.skillDataLookup(skillId);
+			if (skillData) {
+				skillPower = skillData.power || 70;
+				skillElement = skillData.element || 'neutral';
+				mpCost = skillData.mpCost || skillData.mp_cost || 10;
+				skillType = skillData.type || 'physical';
+			}
+		}
 
 		// Check MP
 		if (actor.stats.mp < mpCost) {
@@ -278,11 +299,12 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 		}
 
 		// Consume MP
-		actor.stats.mp -= mpCost;
+		actor.stats.mp = Math.max(0, actor.stats.mp - mpCost);
 
-		// Calculate damage
+		// Calculate damage - use luck (INT) for magic skills, atk for physical
+		const offensiveStat = skillType === 'magic' ? actor.stats.luck : actor.stats.atk;
 		let baseDamage = this.calculateBaseDamage(
-			actor.stats.atk + skillPower,
+			offensiveStat + skillPower,
 			target.stats.def,
 		);
 		const isCritical = this.rollCritical(actor.stats.luck);
@@ -297,11 +319,38 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 		if (isResisted) baseDamage = Math.floor(baseDamage * 0.5);
 		if (isCritical) baseDamage = Math.floor(baseDamage * 1.5);
 
+		// Apply skill status effects
+		let statusInflicted: string | undefined;
+		if (this.skillDataLookup) {
+			const skillData = this.skillDataLookup(skillId);
+			if (skillData && skillData.effects) {
+				for (const effect of skillData.effects) {
+					if (effect.type === 'crit_boost') continue;
+					const chance = (effect as any).chance ?? 1.0;
+					if (Math.random() < chance) {
+						const statusType = ['burn', 'poison', 'freeze', 'stun'].includes(effect.type)
+							? effect.type : null;
+						if (statusType) {
+							target.statusEffects.push({
+								type: statusType,
+								value: effect.value || 0,
+								duration: (effect as any).duration ?? 3,
+								turnsLeft: (effect as any).duration ?? 3,
+							});
+							this.emit('status-applied', target.id, target.statusEffects[target.statusEffects.length - 1]!);
+							statusInflicted = statusType;
+						}
+					}
+				}
+			}
+		}
+
 		return {
 			damage: baseDamage,
 			isCritical,
 			isResisted,
 			isWeak,
+			statusInflicted,
 		};
 	}
 
@@ -314,6 +363,7 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 		const success = Math.random() < fleeChance;
 
 		if (success) {
+			this.pendingAction = null;
 			this.state = CombatState.FLED;
 			this.emit('state-changed', this.state);
 			this.emit('combat-end', 'fled');
@@ -401,7 +451,7 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 	/**
 	 * End current turn
 	 */
-	private endTurn(): void {
+	public endTurn(): void {
 		this.state = CombatState.TURN_END;
 		this.emit('state-changed', this.state);
 
@@ -413,6 +463,23 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 	 * Move to next turn
 	 */
 	private nextTurn(): void {
+		// Safety: count alive entities to prevent infinite loop
+		const aliveCount = this.turnOrder.filter(id => {
+			const entity = this.entities.get(id);
+			return entity && entity.stats.hp > 0;
+		}).length;
+
+		if (aliveCount <= 1) {
+			this.checkCombatEnd();
+			if (this.state === CombatState.VICTORY || this.state === CombatState.DEFEAT || this.state === CombatState.FLED) {
+				return;
+			}
+		}
+
+		if (this.turnOrder.length === 0) {
+			this.checkCombatEnd();
+			return;
+		}
 		this.currentTurnIndex = (this.currentTurnIndex + 1) % this.turnOrder.length;
 
 		// Start new turn
@@ -457,10 +524,17 @@ export class CombatManager extends EventEmitter<CombatEvents> {
 	}
 
 	/**
+	 * Get current state (alias)
+	 */
+	getCurrentState(): CombatState {
+		return this.state;
+	}
+
+	/**
 	 * Get current actor
 	 */
 	getCurrentActor(): CombatEntity | null {
-		const actorId = this.turnOrder[this.currentTurnIndex];
+		const actorId = this.turnOrder[this.currentTurnIndex]!;
 		return this.entities.get(actorId) || null;
 	}
 

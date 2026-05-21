@@ -1,178 +1,86 @@
 /**
  * Desktop Renderer Entry Point
- * Integrates Electron features with the web app
+ * Three.js 3D renderer with HTML overlay for UI
  */
 
-/**
- * Desktop Platform Adapter
- * Provides desktop-specific features to the game
- */
-export class DesktopPlatformAdapter {
-	private isElectron: boolean;
+import { div } from 'elit/el';
+import { createState, reactive } from 'elit/state';
+import { render } from 'elit/dom';
+import { CreateStyle } from 'elit/style';
+import { gameLoop, EnhancedSceneManager, ThreeJSRenderer } from '@rpg/game-engine';
+import { SceneTestScene } from '@rpg/game-core';
 
-	constructor() {
-		this.isElectron = typeof window !== 'undefined' && 'electronAPI' in window;
-		this.initialize();
-	}
+const css = new CreateStyle();
+css.addTag('*', { margin: '0', padding: '0', boxSizing: 'border-box' });
+css.addTag('body', {
+	background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+	display: 'flex', flexDirection: 'column',
+	alignItems: 'center', justifyContent: 'center',
+	minHeight: '100vh', padding: '20px',
+	fontFamily: 'Arial, sans-serif',
+});
+css.addClass('game-mount', {
+	position: 'relative', display: 'inline-block', lineHeight: '0',
+	width: '1280px', height: '720px',
+});
+css.addClass('game-mount canvas', {
+	borderRadius: '8px', border: '3px solid rgba(255,255,255,0.3)',
+	boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+});
+css.addClass('html-overlay', {
+	position: 'absolute', top: '0', left: '0', width: '100%', height: '100%',
+	overflow: 'hidden', pointerEvents: 'none', transition: 'opacity 0.3s',
+});
+css.addClass('html-overlay > *', { pointerEvents: 'auto' });
+css.addClass('transition-overlay', {
+	position: 'absolute', inset: '0', background: '#000',
+	pointerEvents: 'none', opacity: '0', borderRadius: '8px',
+});
+css.inject();
 
-	/**
-	 * Initialize desktop features
-	 */
-	private async initialize(): Promise<void> {
-		if (!this.isElectron) {
-			console.log('[Desktop] Running in web mode');
-			return;
-		}
+const loading = createState(true);
 
-		console.log('[Desktop] Running in Electron');
-		console.log('[Desktop] Platform:', window.electronAPI.platform);
+render('#app', div(
+	reactive(loading, (isVisible) =>
+		isVisible ? div({ style: 'color:#fff;text-align:center;font-size:1.2em;margin-top:20px;' }, 'Loading...') : div()
+	),
+));
 
-		// Get app version
-		const version = await this.getAppVersion();
-		console.log('[Desktop] Version:', version);
+const gameMount = document.getElementById('game-mount')!;
+gameMount.className = 'game-mount';
 
-		// Setup keyboard shortcuts
-		this.setupKeyboardShortcuts();
-	}
+const threeRenderer = new ThreeJSRenderer(gameMount, 1280, 720);
 
-	/**
-	 * Setup keyboard shortcuts
-	 */
-	private setupKeyboardShortcuts(): void {
-		document.addEventListener('keydown', (e) => {
-			// F11 - Toggle fullscreen
-			if (e.key === 'F11') {
-				e.preventDefault();
-				this.toggleFullscreen();
-			}
-		});
-	}
+const overlayContainer = document.createElement('div');
+overlayContainer.className = 'html-overlay';
+gameMount.appendChild(overlayContainer);
 
-	/**
-	 * Check if running in Electron
-	 */
-	isDesktop(): boolean {
-		return this.isElectron;
-	}
+const transitionOverlay = document.createElement('div');
+transitionOverlay.className = 'transition-overlay';
+gameMount.appendChild(transitionOverlay);
 
-	/**
-	 * Show desktop notification
-	 */
-	async showNotification(title: string, body: string): Promise<void> {
-		if (!this.isElectron) {
-			// Fallback to web notifications
-			if ('Notification' in window && Notification.permission === 'granted') {
-				new Notification(title, { body });
-			}
-			return;
-		}
+const sceneManager = EnhancedSceneManager.getInstance();
+sceneManager.setThreeJSRenderer(threeRenderer);
+sceneManager.setOverlayContainer(overlayContainer);
+sceneManager.setTransitionElement(transitionOverlay);
 
-		try {
-			await window.electronAPI.showNotification(title, body);
-		} catch (error) {
-			console.error('[Desktop] Failed to show notification:', error);
-		}
-	}
+gameLoop.onUpdate((deltaTime) => {
+	sceneManager.update(deltaTime);
+});
 
-	/**
-	 * Toggle fullscreen
-	 */
-	async toggleFullscreen(): Promise<boolean> {
-		if (!this.isElectron) {
-			// Fallback to web fullscreen API
-			if (!document.fullscreenElement) {
-				await document.documentElement.requestFullscreen();
-				return true;
-			} else {
-				await document.exitFullscreen();
-				return false;
-			}
-		}
+gameLoop.onRender(() => {
+	sceneManager.render();
+});
 
-		try {
-			const result = await window.electronAPI.toggleFullscreen();
-			return result.fullscreen;
-		} catch (error) {
-			console.error('[Desktop] Failed to toggle fullscreen:', error);
-			return false;
-		}
-	}
+gameLoop.start();
+console.log('[Desktop] Game loop started');
 
-	/**
-	 * Open external link
-	 */
-	async openExternal(url: string): Promise<void> {
-		if (!this.isElectron) {
-			window.open(url, '_blank');
-			return;
-		}
+const testScene = new SceneTestScene();
+sceneManager.addScene(testScene);
 
-		try {
-			await window.electronAPI.openExternal(url);
-		} catch (error) {
-			console.error('[Desktop] Failed to open external link:', error);
-		}
-	}
-
-	/**
-	 * Get app version
-	 */
-	async getAppVersion(): Promise<string> {
-		if (!this.isElectron) {
-			return '1.0.0 (Web)';
-		}
-
-		try {
-			return await window.electronAPI.getAppVersion();
-		} catch (error) {
-			console.error('[Desktop] Failed to get version:', error);
-			return 'Unknown';
-		}
-	}
-
-	/**
-	 * Get settings
-	 */
-	async getSettings(): Promise<any> {
-		if (!this.isElectron) {
-			// Load from localStorage for web
-			const stored = localStorage.getItem('appSettings');
-			return stored ? JSON.parse(stored) : {};
-		}
-
-		try {
-			return await window.electronAPI.getSettings();
-		} catch (error) {
-			console.error('[Desktop] Failed to get settings:', error);
-			return {};
-		}
-	}
-
-	/**
-	 * Save settings
-	 */
-	async saveSettings(settings: any): Promise<void> {
-		if (!this.isElectron) {
-			// Save to localStorage for web
-			localStorage.setItem('appSettings', JSON.stringify(settings));
-			return;
-		}
-
-		try {
-			await window.electronAPI.saveSettings(settings);
-		} catch (error) {
-			console.error('[Desktop] Failed to save settings:', error);
-		}
-	}
-}
-
-// Create global instance
-const desktopAdapter = new DesktopPlatformAdapter();
-
-// Export for use in game code
-export default desktopAdapter;
-
-// Attach to window for easy access
-if (typeof window !== 'undefined') {
-	(window as any).desktopAdapter = desktopAdapter;
-}
+sceneManager.switchTo('SceneTest', { type: 'none', duration: 0 }).then(() => {
+	loading.value = false;
+	console.log('[Desktop] Game ready!');
+}).catch((error) => {
+	console.error('[Desktop] Error loading scene:', error);
+});

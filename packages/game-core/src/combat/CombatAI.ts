@@ -6,9 +6,8 @@
 import type {
 	CombatEntity,
 	CombatAction,
-	CombatActionType,
 } from './CombatManager';
-
+import { CombatActionType } from './CombatManager';
 export enum AIPattern {
 	RANDOM = 'random', // Random actions
 	AGGRESSIVE = 'aggressive', // Always attack strongest target
@@ -47,19 +46,24 @@ export class CombatAI {
 		actor: CombatEntity,
 		enemies: CombatEntity[],
 	): CombatAction {
-		const availableActions: CombatActionType[] = ['ATTACK'];
+		// Guard: flee if no enemies
+		if (enemies.length === 0) {
+			return { actorId: actor.id, type: CombatActionType.FLEE, targetId: actor.id };
+		}
+
+		const availableActions: CombatActionType[] = [CombatActionType.ATTACK];
 
 		// Add skills if has MP
 		if (actor.stats.mp >= 10 && actor.skills.length > 0) {
-			availableActions.push('SKILL');
+			availableActions.push(CombatActionType.SKILL);
 		}
 
 		// Random action type
 		const actionType =
-			availableActions[Math.floor(Math.random() * availableActions.length)];
+			availableActions[Math.floor(Math.random() * availableActions.length)]!;
 
 		// Random target
-		const target = enemies[Math.floor(Math.random() * enemies.length)];
+		const target = enemies[Math.floor(Math.random() * enemies.length)]!;
 
 		const action: CombatAction = {
 			actorId: actor.id,
@@ -68,7 +72,7 @@ export class CombatAI {
 		};
 
 		// If skill, pick random skill
-		if (actionType === 'SKILL' && actor.skills.length > 0) {
+		if (actionType === CombatActionType.SKILL && actor.skills.length > 0) {
 			action.skillId = actor.skills[Math.floor(Math.random() * actor.skills.length)];
 		}
 
@@ -82,6 +86,11 @@ export class CombatAI {
 		actor: CombatEntity,
 		enemies: CombatEntity[],
 	): CombatAction {
+		// Guard: flee if no enemies
+		if (enemies.length === 0) {
+			return { actorId: actor.id, type: CombatActionType.FLEE, targetId: actor.id };
+		}
+
 		// Target enemy with highest attack
 		const target = enemies.reduce((prev, current) =>
 			current.stats.atk > prev.stats.atk ? current : prev,
@@ -102,7 +111,7 @@ export class CombatAI {
 			if (offensiveSkills.length > 0) {
 				return {
 					actorId: actor.id,
-					type: 'SKILL',
+					type: CombatActionType.SKILL,
 					targetId: target.id,
 					skillId: offensiveSkills[0],
 				};
@@ -112,7 +121,7 @@ export class CombatAI {
 		// Default to attack
 		return {
 			actorId: actor.id,
-			type: 'ATTACK',
+			type: CombatActionType.ATTACK,
 			targetId: target.id,
 		};
 	}
@@ -125,7 +134,12 @@ export class CombatAI {
 		allies: CombatEntity[],
 		enemies: CombatEntity[],
 	): CombatAction {
-		const hpPercent = actor.stats.hp / actor.stats.maxHp;
+		// Guard: flee if no enemies
+		if (enemies.length === 0) {
+			return { actorId: actor.id, type: CombatActionType.FLEE, targetId: actor.id };
+		}
+
+		const hpPercent = actor.stats.maxHp > 0 ? actor.stats.hp / actor.stats.maxHp : 1;
 
 		// If low HP, use defensive/healing skill
 		if (hpPercent < 0.3 && actor.stats.mp >= 10) {
@@ -140,7 +154,7 @@ export class CombatAI {
 			if (defensiveSkills.length > 0) {
 				return {
 					actorId: actor.id,
-					type: 'SKILL',
+					type: CombatActionType.SKILL,
 					targetId: actor.id, // Target self
 					skillId: defensiveSkills[0],
 				};
@@ -154,7 +168,7 @@ export class CombatAI {
 
 		return {
 			actorId: actor.id,
-			type: 'ATTACK',
+			type: CombatActionType.ATTACK,
 			targetId: target.id,
 		};
 	}
@@ -167,8 +181,13 @@ export class CombatAI {
 		allies: CombatEntity[],
 		enemies: CombatEntity[],
 	): CombatAction {
-		const hpPercent = actor.stats.hp / actor.stats.maxHp;
-		const mpPercent = actor.stats.mp / actor.stats.maxMp;
+		// Guard: flee if no enemies
+		if (enemies.length === 0) {
+			return { actorId: actor.id, type: CombatActionType.FLEE, targetId: actor.id };
+		}
+
+		const hpPercent = actor.stats.maxHp > 0 ? actor.stats.hp / actor.stats.maxHp : 1;
+		const mpPercent = actor.stats.maxMp > 0 ? actor.stats.mp / actor.stats.maxMp : 1;
 
 		// 1. If very low HP and has defensive skill, use it
 		if (hpPercent < 0.25 && mpPercent >= 0.2) {
@@ -180,7 +199,7 @@ export class CombatAI {
 			if (defensiveSkills.length > 0) {
 				return {
 					actorId: actor.id,
-					type: 'SKILL',
+					type: CombatActionType.SKILL,
 					targetId: actor.id,
 					skillId: defensiveSkills[0],
 				};
@@ -188,11 +207,11 @@ export class CombatAI {
 		}
 
 		// 2. If any enemy is low HP, finish them off
-		const weakEnemy = enemies.find((e) => e.stats.hp / e.stats.maxHp < 0.2);
+		const weakEnemy = enemies.find((e) => e.stats.maxHp > 0 && e.stats.hp / e.stats.maxHp < 0.2);
 		if (weakEnemy) {
 			return {
 				actorId: actor.id,
-				type: 'ATTACK',
+				type: CombatActionType.ATTACK,
 				targetId: weakEnemy.id,
 			};
 		}
@@ -214,7 +233,7 @@ export class CombatAI {
 			if (offensiveSkills.length > 0) {
 				return {
 					actorId: actor.id,
-					type: 'SKILL',
+					type: CombatActionType.SKILL,
 					targetId: target.id,
 					skillId: offensiveSkills[0],
 				};
@@ -228,7 +247,7 @@ export class CombatAI {
 
 		return {
 			actorId: actor.id,
-			type: 'ATTACK',
+			type: CombatActionType.ATTACK,
 			targetId: target.id,
 		};
 	}
@@ -238,7 +257,7 @@ export class CombatAI {
 	 */
 	static calculateFleeChance(actor: CombatEntity, enemies: CombatEntity[]): number {
 		const avgEnemySpeed =
-			enemies.reduce((sum, e) => sum + e.stats.spd, 0) / enemies.length;
+			enemies.length > 0 ? enemies.reduce((sum, e) => sum + e.stats.spd, 0) / enemies.length : 0;
 		const speedDiff = actor.stats.spd - avgEnemySpeed;
 
 		// Base 50% + speed difference
@@ -255,6 +274,9 @@ export class CombatAI {
 		targets: CombatEntity[],
 		criteria: 'weakest' | 'strongest' | 'lowest_hp' | 'highest_threat',
 	): CombatEntity {
+		if (targets.length === 0) {
+			return { id: '', name: '', level: 1, stats: { hp: 0, maxHp: 0, mp: 0, maxMp: 0, atk: 0, def: 0, spd: 0, luck: 0 }, isPlayer: false, skills: [], statusEffects: [] };
+		}
 		switch (criteria) {
 			case 'weakest':
 				return targets.reduce((prev, current) =>
@@ -271,13 +293,13 @@ export class CombatAI {
 			case 'highest_threat':
 				// Threat = ATK * (HP / maxHP)
 				return targets.reduce((prev, current) => {
-					const prevThreat = prev.stats.atk * (prev.stats.hp / prev.stats.maxHp);
+					const prevThreat = prev.stats.atk * (prev.stats.maxHp > 0 ? prev.stats.hp / prev.stats.maxHp : 0);
 					const currentThreat =
-						current.stats.atk * (current.stats.hp / current.stats.maxHp);
+						current.stats.atk * (current.stats.maxHp > 0 ? current.stats.hp / current.stats.maxHp : 0);
 					return currentThreat > prevThreat ? current : prev;
 				});
 			default:
-				return targets[0];
+				return targets[0] ?? { id: '', name: '', level: 1, stats: { hp: 0, maxHp: 0, mp: 0, maxMp: 0, atk: 0, def: 0, spd: 0, luck: 0 }, isPlayer: false, skills: [], statusEffects: [] };
 		}
 	}
 
@@ -288,8 +310,8 @@ export class CombatAI {
 		actor: CombatEntity,
 		mpThreshold: number = 0.3,
 	): boolean {
-		const mpPercent = actor.stats.mp / actor.stats.maxMp;
-		return mpPercent >= mpThreshold && actor.skills.length > 0;
+		const mpPercent = actor.stats.maxMp > 0 ? actor.stats.mp / actor.stats.maxMp : 0;
+		return (mpPercent >= mpThreshold) && actor.skills.length > 0;
 	}
 
 	/**

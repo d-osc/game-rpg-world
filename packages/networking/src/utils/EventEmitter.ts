@@ -5,7 +5,7 @@
 
 type EventHandler<T = any> = (data: T) => void;
 
-export class EventEmitter<Events extends Record<string, EventHandler>> {
+export class EventEmitter<Events extends object> {
 	private events: Map<keyof Events, Set<EventHandler>> = new Map();
 
 	/**
@@ -23,7 +23,7 @@ export class EventEmitter<Events extends Record<string, EventHandler>> {
 	 */
 	once<K extends keyof Events>(event: K, handler: Events[K]): void {
 		const onceHandler = ((data: any) => {
-			handler(data);
+			(handler as (data: any) => void)(data);
 			this.off(event, onceHandler as Events[K]);
 		}) as Events[K];
 
@@ -45,13 +45,13 @@ export class EventEmitter<Events extends Record<string, EventHandler>> {
 	 */
 	protected emit<K extends keyof Events>(
 		event: K,
-		...args: Parameters<Events[K]>
+		...args: any[]
 	): void {
 		const handlers = this.events.get(event);
 		if (handlers) {
 			handlers.forEach((handler) => {
 				try {
-					handler(...args);
+					(handler as (...a: any[]) => void)(...args);
 				} catch (error) {
 					console.error(`Error in event handler for ${String(event)}:`, error);
 				}

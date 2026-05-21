@@ -94,7 +94,7 @@ export class Time {
    * Get unscaled delta time
    */
   get unscaledDeltaTime(): number {
-    return this._deltaTime / this._timeScale;
+    return this._timeScale > 0 ? this._deltaTime / this._timeScale : 0;
   }
 
   /**

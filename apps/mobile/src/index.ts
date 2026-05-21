@@ -1,11 +1,18 @@
 /**
- * Mobile App Entry Point
- * Initializes mobile-specific features and starts the game
+ * Mobile Game Integration
+ * Uses elit for touch controls and mobile UI
  */
 
+import { div } from 'elit/el';
+import { createState } from 'elit/state';
+import { render } from 'elit/dom';
+import { CreateStyle } from 'elit/style';
 import mobileAdapter from './platform/MobilePlatformAdapter';
 import { VirtualJoystick } from './ui/VirtualJoystick';
 import { TouchControls } from './ui/TouchControls';
+
+// Mobile controls visibility state
+const controlsVisible = createState(true);
 
 /**
  * Mobile Game Integration
@@ -20,44 +27,39 @@ export class MobileGame {
 		this.initialize();
 	}
 
-	/**
-	 * Initialize mobile features
-	 */
 	private async initialize(): Promise<void> {
 		console.log('[Mobile] Initializing mobile game');
 
-		// Only setup mobile controls on mobile platforms
+		// Inject mobile controls styles
+		const css = new CreateStyle();
+		css.addId('mobile-controls-layer', {
+			position: 'fixed', top: '0', left: '0',
+			width: '100%', height: '100%',
+			pointerEvents: 'none', zIndex: '999',
+		});
+		css.inject();
+
 		if (mobileAdapter.isMobilePlatform()) {
 			this.setupMobileControls();
 			this.setupMobileEvents();
 		}
 
-		// Listen for app lifecycle events
 		this.setupLifecycleListeners();
 	}
 
-	/**
-	 * Setup mobile controls
-	 */
 	private setupMobileControls(): void {
 		console.log('[Mobile] Setting up mobile controls');
 
-		// Create virtual joystick
 		this.joystick = new VirtualJoystick(this.container, {
 			onUpdate: (data) => {
-				// Dispatch joystick input to game
 				document.dispatchEvent(
-					new CustomEvent('joystick-update', {
-						detail: data,
-					})
+					new CustomEvent('joystick-update', { detail: data })
 				);
 			},
 		});
 
-		// Create touch controls
 		this.touchControls = new TouchControls(this.container);
 
-		// Add action buttons
 		this.touchControls.addButton({
 			id: 'attack',
 			label: 'A',
@@ -103,113 +105,58 @@ export class MobileGame {
 		});
 	}
 
-	/**
-	 * Setup mobile-specific events
-	 */
 	private setupMobileEvents(): void {
-		// Handle orientation changes
 		window.addEventListener('orientationchange', () => {
 			console.log('[Mobile] Orientation changed');
 			this.handleOrientationChange();
 		});
 
-		// Handle visibility changes
 		document.addEventListener('visibilitychange', () => {
 			if (document.hidden) {
-				console.log('[Mobile] App hidden');
 				this.onAppPause();
 			} else {
-				console.log('[Mobile] App visible');
 				this.onAppResume();
 			}
 		});
 	}
 
-	/**
-	 * Setup lifecycle listeners
-	 */
 	private setupLifecycleListeners(): void {
-		// App resume
-		document.addEventListener('app-resume', () => {
-			console.log('[Mobile] App resumed');
-			this.onAppResume();
-		});
-
-		// App pause
-		document.addEventListener('app-pause', () => {
-			console.log('[Mobile] App paused');
-			this.onAppPause();
-		});
-
-		// Back button
-		document.addEventListener('back-button', () => {
-			console.log('[Mobile] Back button pressed');
-			this.onBackButton();
-		});
+		document.addEventListener('app-resume', () => this.onAppResume());
+		document.addEventListener('app-pause', () => this.onAppPause());
+		document.addEventListener('back-button', () => this.onBackButton());
 	}
 
-	/**
-	 * Handle orientation change
-	 */
 	private handleOrientationChange(): void {
-		// Notify game to adjust layout
 		document.dispatchEvent(new Event('orientation-change'));
-
-		// Give haptic feedback
 		mobileAdapter.haptic('light');
 	}
 
-	/**
-	 * App resume handler
-	 */
 	private onAppResume(): void {
-		// Resume game loop
 		document.dispatchEvent(new Event('game-resume'));
-
-		// Show controls
-		if (this.joystick) this.joystick.show();
-		if (this.touchControls) this.touchControls.show();
+		controlsVisible.value = true;
 	}
 
-	/**
-	 * App pause handler
-	 */
 	private onAppPause(): void {
-		// Pause game loop
 		document.dispatchEvent(new Event('game-pause'));
-
-		// Hide controls
-		if (this.joystick) this.joystick.hide();
-		if (this.touchControls) this.touchControls.hide();
+		controlsVisible.value = false;
 	}
 
-	/**
-	 * Back button handler
-	 */
 	private onBackButton(): void {
-		// Let game handle back button
 		document.dispatchEvent(new Event('back-button'));
 	}
 
-	/**
-	 * Show mobile controls
-	 */
 	showControls(): void {
+		controlsVisible.value = true;
 		if (this.joystick) this.joystick.show();
 		if (this.touchControls) this.touchControls.show();
 	}
 
-	/**
-	 * Hide mobile controls
-	 */
 	hideControls(): void {
+		controlsVisible.value = false;
 		if (this.joystick) this.joystick.hide();
 		if (this.touchControls) this.touchControls.hide();
 	}
 
-	/**
-	 * Cleanup
-	 */
 	destroy(): void {
 		if (this.joystick) this.joystick.destroy();
 		if (this.touchControls) this.touchControls.destroy();
@@ -217,14 +164,10 @@ export class MobileGame {
 	}
 }
 
-// Export mobile adapter for direct access
 export { mobileAdapter };
-
-// Export UI components
 export { VirtualJoystick } from './ui/VirtualJoystick';
 export { TouchControls } from './ui/TouchControls';
 
-// Attach to window for easy access
 if (typeof window !== 'undefined') {
 	(window as any).mobileAdapter = mobileAdapter;
 }

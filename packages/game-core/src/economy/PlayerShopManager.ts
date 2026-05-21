@@ -486,7 +486,7 @@ export class PlayerShopManager extends EventEmitter<PlayerShopManagerEvents> {
 	 */
 	async fetchMyShop(): Promise<PlayerShop | null> {
 		const shops = await this.searchShops({ owner_id: this.playerId });
-		this.myShop = shops.length > 0 ? shops[0] : null;
+		this.myShop = shops.length > 0 ? shops[0]! : null;
 
 		if (this.myShop) {
 			// Fetch full details including items

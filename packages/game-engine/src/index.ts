@@ -4,11 +4,15 @@
 export * from './core/GameLoop';
 export * from './core/Time';
 export * from './core/Scene';
+export * from './core/EnhancedSceneManager';
 
 // Renderer
 export * from './renderer/Canvas2DRenderer';
 export * from './renderer/Camera';
+export * from './renderer/ThreeJSRenderer';
+export * from './renderer/Camera3D';
 export * from './renderer/RemotePlayerRenderer';
+export * from './renderer/RemotePlayer3DRenderer';
 
 // Physics
 export * from './physics/index';

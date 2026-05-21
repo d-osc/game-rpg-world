@@ -46,7 +46,10 @@ export class Player {
   update(deltaTime: number): void {
     // Update position based on velocity
     if (this.velocity.length() > 0) {
-      this.position = this.position.add(this.velocity.multiply(deltaTime));
+      // Mutate position in-place so camera reference stays valid
+      const delta = this.velocity.multiply(deltaTime);
+      this.position.x += delta.x;
+      this.position.y += delta.y;
       this.isMoving = true;
 
       // Update direction based on velocity
@@ -150,7 +153,8 @@ export class Player {
    * Set player position
    */
   setPosition(position: Vector2): void {
-    this.position = position.clone();
+    this.position.x = position.x;
+    this.position.y = position.y;
     this.bounds.center = this.position.clone();
   }
 

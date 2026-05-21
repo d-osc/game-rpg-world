@@ -10,7 +10,30 @@
       "Bash(bun run:*)",
       "Bash(bun --version:*)",
       "Bash(bun:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(pkill:*)",
+      "Bash(taskkill:*)",
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(done)",
+      "Bash(cat:*)",
+      "Bash(vite:*)",
+      "Bash(npx tsc *)",
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(node -e \"const p = require\\('./node_modules/elit/package.json'\\); console.log\\(JSON.stringify\\({bin: p.bin, scripts: p.scripts, exports: p.exports}, null, 2\\)\\)\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:d.get\\(k\\) for k in ['bin','scripts','exports','devDependencies','dependencies']}, indent=2\\)\\)\")",
+      "Bash(npx elit *)",
+      "Bash(node -e \"import\\('elit'\\).then\\(m => console.log\\(Object.keys\\(m\\).filter\\(k => k.includes\\('config'\\) || k.includes\\('Config'\\) || k === 'default'\\).join\\(', '\\)\\)\\)\")",
+      "Bash(node -e \"import\\('elit'\\).then\\(m => { const keys = Object.keys\\(m\\); console.log\\('has defineConfig:', keys.includes\\('defineConfig'\\)\\); console.log\\('has default:', 'default' in m\\); console.log\\(keys.slice\\(0, 30\\).join\\(', '\\)\\); }\\)\")",
+      "Bash(bunx elit *)",
+      "Bash(node -e \"import\\('elit/server'\\).then\\(m => console.log\\(Object.keys\\(m\\).join\\(', '\\)\\)\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(kill %1)",
+      "Bash(sleep 5 && cat c:/Users/ondev/AppData/Local/Temp/claude/c--Users-ondev-Projects-rpg/91bfc95e-064f-47b7-8af4-c67b718d99e3/tasks/btpd878m7.output)",
+      "Read(//c/Users/ondev/AppData/Local/Temp/claude/c--Users-ondev-Projects-rpg/91bfc95e-064f-47b7-8af4-c67b718d99e3/tasks/**)",
+      "Bash(read d *)",
+      "Bash(node_modules/.bin/tsc.exe --noEmit)",
+      "Bash(xxd \"c:/Users/ondev/Projects/rpg/packages/game-core/src/scenes/WorldScene.ts\")"
     ]
   }
 }

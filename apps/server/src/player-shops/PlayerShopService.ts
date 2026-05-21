@@ -1,9 +1,13 @@
 /**
  * PlayerShopService
- * Server-side player shop management with PostgreSQL
+ * Server-side player shop management using elit/database
  */
 
-import type { Pool } from 'pg';
+import { Collection } from '../database/config.ts';
+
+const shops = new Collection<any>('player_shops');
+const shopItems = new Collection<any>('player_shop_items');
+const shopTransactions = new Collection<any>('player_shop_transactions');
 
 export interface ShopLocation {
 	zone_id: string;
@@ -72,93 +76,22 @@ export interface PurchaseResult {
 }
 
 export class PlayerShopService {
-	private db: Pool;
 	private readonly MAX_SHOPS_PER_PLAYER = 1;
 	private readonly MAX_ITEMS_PER_SHOP = 100;
 	private readonly SHOP_NAME_MIN_LENGTH = 3;
 	private readonly SHOP_NAME_MAX_LENGTH = 50;
 	private readonly DESCRIPTION_MAX_LENGTH = 200;
+	private nextId = 1;
 
-	constructor(db: Pool) {
-		this.db = db;
-	}
-
-	/**
-	 * Initialize database tables
-	 */
 	async initialize(): Promise<void> {
-		const client = await this.db.connect();
-		try {
-			// Player shops table
-			await client.query(`
-				CREATE TABLE IF NOT EXISTS player_shops (
-					id SERIAL PRIMARY KEY,
-					owner_id VARCHAR(255) NOT NULL,
-					owner_name VARCHAR(255) NOT NULL,
-					shop_name VARCHAR(50) NOT NULL,
-					description TEXT,
-					zone_id VARCHAR(255) NOT NULL,
-					x REAL NOT NULL,
-					y REAL NOT NULL,
-					is_open BOOLEAN DEFAULT true,
-					created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-					updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-					UNIQUE(owner_id)
-				)
-			`);
-
-			// Shop items table
-			await client.query(`
-				CREATE TABLE IF NOT EXISTS player_shop_items (
-					id SERIAL PRIMARY KEY,
-					shop_id INTEGER NOT NULL REFERENCES player_shops(id) ON DELETE CASCADE,
-					item_id VARCHAR(255) NOT NULL,
-					quantity INTEGER NOT NULL CHECK (quantity >= 0),
-					price_per_unit INTEGER NOT NULL CHECK (price_per_unit > 0),
-					created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-					updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-					UNIQUE(shop_id, item_id)
-				)
-			`);
-
-			// Shop transactions table
-			await client.query(`
-				CREATE TABLE IF NOT EXISTS player_shop_transactions (
-					id SERIAL PRIMARY KEY,
-					shop_id INTEGER NOT NULL REFERENCES player_shops(id),
-					buyer_id VARCHAR(255) NOT NULL,
-					buyer_name VARCHAR(255) NOT NULL,
-					item_id VARCHAR(255) NOT NULL,
-					quantity INTEGER NOT NULL,
-					price_per_unit INTEGER NOT NULL,
-					total_cost INTEGER NOT NULL,
-					created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-				)
-			`);
-
-			// Indexes
-			await client.query('CREATE INDEX IF NOT EXISTS idx_shops_zone ON player_shops(zone_id)');
-			await client.query('CREATE INDEX IF NOT EXISTS idx_shops_owner ON player_shops(owner_id)');
-			await client.query('CREATE INDEX IF NOT EXISTS idx_shop_items_shop ON player_shop_items(shop_id)');
-			await client.query('CREATE INDEX IF NOT EXISTS idx_shop_items_item ON player_shop_items(item_id)');
-			await client.query(
-				'CREATE INDEX IF NOT EXISTS idx_shop_transactions_shop ON player_shop_transactions(shop_id)',
-			);
-			await client.query(
-				'CREATE INDEX IF NOT EXISTS idx_shop_transactions_buyer ON player_shop_transactions(buyer_id)',
-			);
-
-			console.log('[PlayerShopService] Database tables initialized');
-		} finally {
-			client.release();
+		const all = shops.getAll();
+		if (all.length > 0) {
+			this.nextId = Math.max(...all.map((s: any) => s.id)) + 1;
 		}
+		console.log('[PlayerShopService] Database ready');
 	}
 
-	/**
-	 * Create a new player shop
-	 */
 	async createShop(request: CreateShopRequest): Promise<{ success: boolean; shopId?: number; error?: string }> {
-		// Validate shop name
 		if (
 			!request.shop_name ||
 			request.shop_name.length < this.SHOP_NAME_MIN_LENGTH ||
@@ -170,7 +103,6 @@ export class PlayerShopService {
 			};
 		}
 
-		// Validate description
 		if (request.description && request.description.length > this.DESCRIPTION_MAX_LENGTH) {
 			return {
 				success: false,
@@ -178,107 +110,62 @@ export class PlayerShopService {
 			};
 		}
 
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
-
-			// Check if player already has a shop
-			const existingShop = await client.query('SELECT id FROM player_shops WHERE owner_id = $1', [
-				request.owner_id,
-			]);
-
-			if (existingShop.rows.length >= this.MAX_SHOPS_PER_PLAYER) {
-				await client.query('ROLLBACK');
+			const existingShop = shops.find((s: any) => s.owner_id === request.owner_id);
+			if (existingShop.length >= this.MAX_SHOPS_PER_PLAYER) {
 				return {
 					success: false,
 					error: `You can only have ${this.MAX_SHOPS_PER_PLAYER} shop at a time`,
 				};
 			}
 
-			// Create shop
-			const result = await client.query(
-				`INSERT INTO player_shops
-				(owner_id, owner_name, shop_name, description, zone_id, x, y, is_open)
-				VALUES ($1, $2, $3, $4, $5, $6, $7, true)
-				RETURNING id`,
-				[
-					request.owner_id,
-					request.owner_name,
-					request.shop_name,
-					request.description || '',
-					request.zone_id,
-					request.x,
-					request.y,
-				],
-			);
+			const shopId = this.nextId++;
+			const now = new Date().toISOString();
+			shops.insert({
+				id: shopId,
+				owner_id: request.owner_id,
+				owner_name: request.owner_name,
+				shop_name: request.shop_name,
+				description: request.description || '',
+				zone_id: request.zone_id,
+				x: request.x,
+				y: request.y,
+				is_open: true,
+				created_at: now,
+				updated_at: now,
+			});
 
-			await client.query('COMMIT');
-
-			console.log(`[PlayerShopService] Shop created: ${request.shop_name} (ID: ${result.rows[0].id})`);
-
-			return {
-				success: true,
-				shopId: result.rows[0].id,
-			};
+			console.log(`[PlayerShopService] Shop created: ${request.shop_name} (ID: ${shopId})`);
+			return { success: true, shopId };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[PlayerShopService] Failed to create shop:', error);
-			return {
-				success: false,
-				error: 'Failed to create shop',
-			};
-		} finally {
-			client.release();
+			return { success: false, error: 'Failed to create shop' };
 		}
 	}
 
-	/**
-	 * Delete a player shop
-	 */
 	async deleteShop(shopId: number, ownerId: string): Promise<{ success: boolean; error?: string }> {
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop) return { success: false, error: 'Shop not found' };
+			if (shop.owner_id !== ownerId) return { success: false, error: 'Not authorized to delete this shop' };
 
-			// Verify ownership
-			const shop = await client.query('SELECT owner_id FROM player_shops WHERE id = $1', [shopId]);
-
-			if (shop.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Shop not found' };
-			}
-
-			if (shop.rows[0].owner_id !== ownerId) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Not authorized to delete this shop' };
-			}
-
-			// Delete shop (cascade will delete items and transactions)
-			await client.query('DELETE FROM player_shops WHERE id = $1', [shopId]);
-
-			await client.query('COMMIT');
+			shopItems.delete((i: any) => i.shop_id === shopId);
+			shopTransactions.delete((t: any) => t.shop_id === shopId);
+			shops.delete((s: any) => s.id === shopId);
 
 			console.log(`[PlayerShopService] Shop deleted: ${shopId}`);
-
 			return { success: true };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[PlayerShopService] Failed to delete shop:', error);
 			return { success: false, error: 'Failed to delete shop' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Update shop details
-	 */
 	async updateShop(
 		shopId: number,
 		ownerId: string,
 		updates: { shop_name?: string; description?: string; is_open?: boolean },
 	): Promise<{ success: boolean; error?: string }> {
-		// Validate updates
 		if (updates.shop_name !== undefined) {
 			if (
 				updates.shop_name.length < this.SHOP_NAME_MIN_LENGTH ||
@@ -298,508 +185,240 @@ export class PlayerShopService {
 			};
 		}
 
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop) return { success: false, error: 'Shop not found' };
+			if (shop.owner_id !== ownerId) return { success: false, error: 'Not authorized to update this shop' };
 
-			// Verify ownership
-			const shop = await client.query('SELECT owner_id FROM player_shops WHERE id = $1', [shopId]);
+			if (Object.keys(updates).length === 0) return { success: false, error: 'No updates provided' };
 
-			if (shop.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Shop not found' };
-			}
-
-			if (shop.rows[0].owner_id !== ownerId) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Not authorized to update this shop' };
-			}
-
-			// Build update query
-			const updateFields: string[] = [];
-			const values: any[] = [];
-			let paramIndex = 1;
-
-			if (updates.shop_name !== undefined) {
-				updateFields.push(`shop_name = $${paramIndex++}`);
-				values.push(updates.shop_name);
-			}
-
-			if (updates.description !== undefined) {
-				updateFields.push(`description = $${paramIndex++}`);
-				values.push(updates.description);
-			}
-
-			if (updates.is_open !== undefined) {
-				updateFields.push(`is_open = $${paramIndex++}`);
-				values.push(updates.is_open);
-			}
-
-			if (updateFields.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'No updates provided' };
-			}
-
-			updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
-			values.push(shopId);
-
-			await client.query(
-				`UPDATE player_shops SET ${updateFields.join(', ')} WHERE id = $${paramIndex}`,
-				values,
-			);
-
-			await client.query('COMMIT');
+			shops.update((s: any) => s.id === shopId, { ...updates, updated_at: new Date().toISOString() });
 
 			console.log(`[PlayerShopService] Shop updated: ${shopId}`);
-
 			return { success: true };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[PlayerShopService] Failed to update shop:', error);
 			return { success: false, error: 'Failed to update shop' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Add item to shop
-	 */
 	async addItem(
 		shopId: number,
 		ownerId: string,
 		request: AddItemRequest,
 	): Promise<{ success: boolean; error?: string }> {
-		// Validate item
-		if (request.quantity <= 0) {
-			return { success: false, error: 'Quantity must be greater than 0' };
-		}
+		if (request.quantity <= 0) return { success: false, error: 'Quantity must be greater than 0' };
+		if (request.price_per_unit <= 0) return { success: false, error: 'Price must be greater than 0' };
 
-		if (request.price_per_unit <= 0) {
-			return { success: false, error: 'Price must be greater than 0' };
-		}
-
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop) return { success: false, error: 'Shop not found' };
+			if (shop.owner_id !== ownerId) return { success: false, error: 'Not authorized to modify this shop' };
 
-			// Verify ownership
-			const shop = await client.query('SELECT owner_id FROM player_shops WHERE id = $1', [shopId]);
-
-			if (shop.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Shop not found' };
+			const items = shopItems.find((i: any) => i.shop_id === shopId);
+			if (items.length >= this.MAX_ITEMS_PER_SHOP) {
+				return { success: false, error: `Shop can only have ${this.MAX_ITEMS_PER_SHOP} different items` };
 			}
 
-			if (shop.rows[0].owner_id !== ownerId) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Not authorized to modify this shop' };
+			const existing = shopItems.findOne((i: any) => i.shop_id === shopId && i.item_id === request.item_id);
+			if (existing) {
+				shopItems.update((i: any) => i.id === existing.id, {
+					quantity: existing.quantity + request.quantity,
+					price_per_unit: request.price_per_unit,
+					updated_at: new Date().toISOString(),
+				});
+			} else {
+				shopItems.insert({
+					id: crypto.randomUUID(),
+					shop_id: shopId,
+					item_id: request.item_id,
+					quantity: request.quantity,
+					price_per_unit: request.price_per_unit,
+					created_at: new Date().toISOString(),
+					updated_at: new Date().toISOString(),
+				});
 			}
 
-			// Check item count
-			const itemCount = await client.query('SELECT COUNT(*) FROM player_shop_items WHERE shop_id = $1', [
-				shopId,
-			]);
-
-			if (parseInt(itemCount.rows[0].count) >= this.MAX_ITEMS_PER_SHOP) {
-				await client.query('ROLLBACK');
-				return {
-					success: false,
-					error: `Shop can only have ${this.MAX_ITEMS_PER_SHOP} different items`,
-				};
-			}
-
-			// Insert or update item
-			await client.query(
-				`INSERT INTO player_shop_items (shop_id, item_id, quantity, price_per_unit)
-				VALUES ($1, $2, $3, $4)
-				ON CONFLICT (shop_id, item_id)
-				DO UPDATE SET
-					quantity = player_shop_items.quantity + $3,
-					price_per_unit = $4,
-					updated_at = CURRENT_TIMESTAMP`,
-				[shopId, request.item_id, request.quantity, request.price_per_unit],
-			);
-
-			// Update shop timestamp
-			await client.query('UPDATE player_shops SET updated_at = CURRENT_TIMESTAMP WHERE id = $1', [shopId]);
-
-			await client.query('COMMIT');
-
+			shops.update((s: any) => s.id === shopId, { updated_at: new Date().toISOString() });
 			console.log(`[PlayerShopService] Item added to shop ${shopId}: ${request.item_id} x${request.quantity}`);
-
 			return { success: true };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[PlayerShopService] Failed to add item:', error);
 			return { success: false, error: 'Failed to add item' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Remove item from shop
-	 */
-	async removeItem(
-		shopId: number,
-		ownerId: string,
-		itemId: string,
-	): Promise<{ success: boolean; error?: string }> {
-		const client = await this.db.connect();
+	async removeItem(shopId: number, ownerId: string, itemId: string): Promise<{ success: boolean; error?: string }> {
 		try {
-			await client.query('BEGIN');
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop) return { success: false, error: 'Shop not found' };
+			if (shop.owner_id !== ownerId) return { success: false, error: 'Not authorized to modify this shop' };
 
-			// Verify ownership
-			const shop = await client.query('SELECT owner_id FROM player_shops WHERE id = $1', [shopId]);
-
-			if (shop.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Shop not found' };
-			}
-
-			if (shop.rows[0].owner_id !== ownerId) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Not authorized to modify this shop' };
-			}
-
-			// Delete item
-			await client.query('DELETE FROM player_shop_items WHERE shop_id = $1 AND item_id = $2', [
-				shopId,
-				itemId,
-			]);
-
-			// Update shop timestamp
-			await client.query('UPDATE player_shops SET updated_at = CURRENT_TIMESTAMP WHERE id = $1', [shopId]);
-
-			await client.query('COMMIT');
+			shopItems.delete((i: any) => i.shop_id === shopId && i.item_id === itemId);
+			shops.update((s: any) => s.id === shopId, { updated_at: new Date().toISOString() });
 
 			console.log(`[PlayerShopService] Item removed from shop ${shopId}: ${itemId}`);
-
 			return { success: true };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[PlayerShopService] Failed to remove item:', error);
 			return { success: false, error: 'Failed to remove item' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Update item price
-	 */
 	async updateItemPrice(
 		shopId: number,
 		ownerId: string,
 		itemId: string,
 		newPrice: number,
 	): Promise<{ success: boolean; error?: string }> {
-		if (newPrice <= 0) {
-			return { success: false, error: 'Price must be greater than 0' };
-		}
+		if (newPrice <= 0) return { success: false, error: 'Price must be greater than 0' };
 
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop) return { success: false, error: 'Shop not found' };
+			if (shop.owner_id !== ownerId) return { success: false, error: 'Not authorized to modify this shop' };
 
-			// Verify ownership
-			const shop = await client.query('SELECT owner_id FROM player_shops WHERE id = $1', [shopId]);
+			const item = shopItems.findOne((i: any) => i.shop_id === shopId && i.item_id === itemId);
+			if (!item) return { success: false, error: 'Item not found in shop' };
 
-			if (shop.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Shop not found' };
-			}
-
-			if (shop.rows[0].owner_id !== ownerId) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Not authorized to modify this shop' };
-			}
-
-			// Update price
-			const result = await client.query(
-				`UPDATE player_shop_items
-				SET price_per_unit = $1, updated_at = CURRENT_TIMESTAMP
-				WHERE shop_id = $2 AND item_id = $3`,
-				[newPrice, shopId, itemId],
-			);
-
-			if (result.rowCount === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Item not found in shop' };
-			}
-
-			// Update shop timestamp
-			await client.query('UPDATE player_shops SET updated_at = CURRENT_TIMESTAMP WHERE id = $1', [shopId]);
-
-			await client.query('COMMIT');
+			shopItems.update((i: any) => i.id === item.id, { price_per_unit: newPrice, updated_at: new Date().toISOString() });
+			shops.update((s: any) => s.id === shopId, { updated_at: new Date().toISOString() });
 
 			console.log(`[PlayerShopService] Item price updated in shop ${shopId}: ${itemId} -> ${newPrice}`);
-
 			return { success: true };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[PlayerShopService] Failed to update price:', error);
 			return { success: false, error: 'Failed to update price' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Purchase item from shop
-	 */
 	async purchaseItem(shopId: number, request: PurchaseRequest): Promise<PurchaseResult> {
-		if (request.quantity <= 0) {
-			return { success: false, error: 'Quantity must be greater than 0' };
-		}
+		if (request.quantity <= 0) return { success: false, error: 'Quantity must be greater than 0' };
 
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop) return { success: false, error: 'Shop not found' };
+			if (!shop.is_open) return { success: false, error: 'Shop is closed' };
+			if (shop.owner_id === request.buyer_id) return { success: false, error: 'Cannot buy from your own shop' };
 
-			// Get shop and item
-			const shop = await client.query('SELECT owner_id, is_open FROM player_shops WHERE id = $1', [shopId]);
+			const item = shopItems.findOne((i: any) => i.shop_id === shopId && i.item_id === request.item_id);
+			if (!item) return { success: false, error: 'Item not found in shop' };
 
-			if (shop.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Shop not found' };
+			if (item.quantity < request.quantity) {
+				return { success: false, error: `Not enough stock. Available: ${item.quantity}` };
 			}
 
-			if (!shop.rows[0].is_open) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Shop is closed' };
-			}
-
-			// Prevent buying from own shop
-			if (shop.rows[0].owner_id === request.buyer_id) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Cannot buy from your own shop' };
-			}
-
-			// Get item
-			const item = await client.query(
-				'SELECT quantity, price_per_unit FROM player_shop_items WHERE shop_id = $1 AND item_id = $2',
-				[shopId, request.item_id],
-			);
-
-			if (item.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Item not found in shop' };
-			}
-
-			const availableQuantity = item.rows[0].quantity;
-			const pricePerUnit = item.rows[0].price_per_unit;
-
-			if (availableQuantity < request.quantity) {
-				await client.query('ROLLBACK');
-				return {
-					success: false,
-					error: `Not enough stock. Available: ${availableQuantity}`,
-				};
-			}
-
-			const totalCost = pricePerUnit * request.quantity;
-
-			// Deduct item quantity
-			const newQuantity = availableQuantity - request.quantity;
+			const totalCost = item.price_per_unit * request.quantity;
+			const newQuantity = item.quantity - request.quantity;
 
 			if (newQuantity === 0) {
-				// Remove item if quantity reaches 0
-				await client.query('DELETE FROM player_shop_items WHERE shop_id = $1 AND item_id = $2', [
-					shopId,
-					request.item_id,
-				]);
+				shopItems.delete((i: any) => i.id === item.id);
 			} else {
-				// Update quantity
-				await client.query(
-					'UPDATE player_shop_items SET quantity = $1, updated_at = CURRENT_TIMESTAMP WHERE shop_id = $2 AND item_id = $3',
-					[newQuantity, shopId, request.item_id],
-				);
+				shopItems.update((i: any) => i.id === item.id, { quantity: newQuantity, updated_at: new Date().toISOString() });
 			}
 
-			// Log transaction
-			await client.query(
-				`INSERT INTO player_shop_transactions
-				(shop_id, buyer_id, buyer_name, item_id, quantity, price_per_unit, total_cost)
-				VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-				[shopId, request.buyer_id, request.buyer_name, request.item_id, request.quantity, pricePerUnit, totalCost],
-			);
+			shopTransactions.insert({
+				id: crypto.randomUUID(),
+				shop_id: shopId,
+				buyer_id: request.buyer_id,
+				buyer_name: request.buyer_name,
+				item_id: request.item_id,
+				quantity: request.quantity,
+				price_per_unit: item.price_per_unit,
+				total_cost: totalCost,
+				created_at: new Date().toISOString(),
+			});
 
-			// Update shop timestamp
-			await client.query('UPDATE player_shops SET updated_at = CURRENT_TIMESTAMP WHERE id = $1', [shopId]);
-
-			await client.query('COMMIT');
+			shops.update((s: any) => s.id === shopId, { updated_at: new Date().toISOString() });
 
 			console.log(
 				`[PlayerShopService] Purchase: ${request.buyer_name} bought ${request.item_id} x${request.quantity} from shop ${shopId} for ${totalCost}`,
 			);
 
-			return {
-				success: true,
-				totalCost,
-			};
+			return { success: true, totalCost };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[PlayerShopService] Failed to purchase item:', error);
 			return { success: false, error: 'Failed to purchase item' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Search shops
-	 */
 	async searchShops(search: SearchShopsRequest = {}): Promise<PlayerShop[]> {
 		try {
-			let query = 'SELECT * FROM player_shops WHERE 1=1';
-			const params: any[] = [];
-			let paramIndex = 1;
+			let result = shops.getAll();
 
-			if (search.zone_id) {
-				query += ` AND zone_id = $${paramIndex++}`;
-				params.push(search.zone_id);
-			}
-
-			if (search.owner_id) {
-				query += ` AND owner_id = $${paramIndex++}`;
-				params.push(search.owner_id);
-			}
-
+			if (search.zone_id) result = result.filter((s: any) => s.zone_id === search.zone_id);
+			if (search.owner_id) result = result.filter((s: any) => s.owner_id === search.owner_id);
 			if (search.search_name) {
-				query += ` AND shop_name ILIKE $${paramIndex++}`;
-				params.push(`%${search.search_name}%`);
+				const name = search.search_name.toLowerCase();
+				result = result.filter((s: any) => s.shop_name.toLowerCase().includes(name));
 			}
+			if (search.is_open !== undefined) result = result.filter((s: any) => s.is_open === search.is_open);
 
-			if (search.is_open !== undefined) {
-				query += ` AND is_open = $${paramIndex++}`;
-				params.push(search.is_open);
-			}
+			result.sort((a: any, b: any) => b.updated_at.localeCompare(a.updated_at));
 
-			query += ' ORDER BY updated_at DESC';
-
-			if (search.limit) {
-				query += ` LIMIT $${paramIndex++}`;
-				params.push(search.limit);
-			}
-
-			if (search.offset) {
-				query += ` OFFSET $${paramIndex++}`;
-				params.push(search.offset);
-			}
-
-			const result = await this.db.query(query, params);
-
-			// If searching for items, filter shops that have the item
 			if (search.item_id) {
-				const shopsWithItem = await this.db.query(
-					'SELECT DISTINCT shop_id FROM player_shop_items WHERE item_id = $1',
-					[search.item_id],
+				const shopIdsWithItem = new Set(
+					shopItems.find((i: any) => i.item_id === search.item_id).map((i: any) => i.shop_id),
 				);
-
-				const shopIds = new Set(shopsWithItem.rows.map((row) => row.shop_id));
-				return result.rows.filter((shop) => shopIds.has(shop.id));
+				result = result.filter((s: any) => shopIdsWithItem.has(s.id));
 			}
 
-			return result.rows;
+			const offset = search.offset || 0;
+			const limit = search.limit || result.length;
+			return result.slice(offset, offset + limit);
 		} catch (error) {
 			console.error('[PlayerShopService] Failed to search shops:', error);
 			return [];
 		}
 	}
 
-	/**
-	 * Get shop details with items
-	 */
 	async getShop(shopId: number): Promise<PlayerShop | null> {
 		try {
-			// Get shop
-			const shopResult = await this.db.query('SELECT * FROM player_shops WHERE id = $1', [shopId]);
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop) return null;
 
-			if (shopResult.rows.length === 0) {
-				return null;
-			}
+			const items = shopItems
+				.find((i: any) => i.shop_id === shopId)
+				.map((i: any) => ({ item_id: i.item_id, quantity: i.quantity, price_per_unit: i.price_per_unit }));
 
-			const shop = shopResult.rows[0];
-
-			// Get items
-			const itemsResult = await this.db.query(
-				'SELECT item_id, quantity, price_per_unit FROM player_shop_items WHERE shop_id = $1',
-				[shopId],
-			);
-
-			return {
-				...shop,
-				items: itemsResult.rows,
-			};
+			return { ...shop, items };
 		} catch (error) {
 			console.error('[PlayerShopService] Failed to get shop:', error);
 			return null;
 		}
 	}
 
-	/**
-	 * Get transaction history
-	 */
-	async getTransactionHistory(
-		shopId: number,
-		ownerId: string,
-		limit: number = 50,
-		offset: number = 0,
-	): Promise<any[]> {
+	async getTransactionHistory(shopId: number, ownerId: string, limit: number = 50, offset: number = 0): Promise<any[]> {
 		try {
-			// Verify ownership
-			const shop = await this.db.query('SELECT owner_id FROM player_shops WHERE id = $1', [shopId]);
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop || shop.owner_id !== ownerId) return [];
 
-			if (shop.rows.length === 0 || shop.rows[0].owner_id !== ownerId) {
-				return [];
-			}
+			const all = shopTransactions
+				.find((t: any) => t.shop_id === shopId)
+				.sort((a: any, b: any) => b.created_at.localeCompare(a.created_at));
 
-			const result = await this.db.query(
-				`SELECT * FROM player_shop_transactions
-				WHERE shop_id = $1
-				ORDER BY created_at DESC
-				LIMIT $2 OFFSET $3`,
-				[shopId, limit, offset],
-			);
-
-			return result.rows;
+			return all.slice(offset, offset + limit);
 		} catch (error) {
 			console.error('[PlayerShopService] Failed to get history:', error);
 			return [];
 		}
 	}
 
-	/**
-	 * Get shop statistics
-	 */
 	async getStatistics(
 		shopId: number,
 		ownerId: string,
 	): Promise<{ totalSales: number; totalRevenue: number; uniqueCustomers: number } | null> {
 		try {
-			// Verify ownership
-			const shop = await this.db.query('SELECT owner_id FROM player_shops WHERE id = $1', [shopId]);
+			const shop = shops.findOne((s: any) => s.id === shopId);
+			if (!shop || shop.owner_id !== ownerId) return null;
 
-			if (shop.rows.length === 0 || shop.rows[0].owner_id !== ownerId) {
-				return null;
-			}
-
-			const result = await this.db.query(
-				`SELECT
-					COUNT(*) as total_sales,
-					COALESCE(SUM(total_cost), 0) as total_revenue,
-					COUNT(DISTINCT buyer_id) as unique_customers
-				FROM player_shop_transactions
-				WHERE shop_id = $1`,
-				[shopId],
-			);
+			const transactions = shopTransactions.find((t: any) => t.shop_id === shopId);
+			const uniqueBuyers = new Set(transactions.map((t: any) => t.buyer_id));
 
 			return {
-				totalSales: parseInt(result.rows[0].total_sales),
-				totalRevenue: parseInt(result.rows[0].total_revenue),
-				uniqueCustomers: parseInt(result.rows[0].unique_customers),
+				totalSales: transactions.length,
+				totalRevenue: transactions.reduce((sum: number, t: any) => sum + t.total_cost, 0),
+				uniqueCustomers: uniqueBuyers.size,
 			};
 		} catch (error) {
 			console.error('[PlayerShopService] Failed to get statistics:', error);

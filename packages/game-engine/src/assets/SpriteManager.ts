@@ -4,7 +4,8 @@
  */
 
 import { Vector2 } from '../math/Vector2';
-import { TextureAtlas, SpriteSheet, SpriteFrame } from './TextureAtlas';
+import { TextureAtlas, SpriteSheet } from './TextureAtlas';
+import type { SpriteFrame } from './TextureAtlas';
 
 export interface SpriteOptions {
   rotation?: number;

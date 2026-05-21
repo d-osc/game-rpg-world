@@ -13,7 +13,7 @@ export interface CraftingMaterial {
 export interface CraftingRecipe {
 	id: string;
 	name: string;
-	category: 'weapon' | 'armor' | 'consumable' | 'material' | 'accessory';
+	category: string;
 	result_item_id: string;
 	result_quantity: number;
 	required_job: string | null;
@@ -200,6 +200,76 @@ export class CraftingManager extends EventEmitter<CraftingManagerEvents> {
 	}
 
 	/**
+	 * Craft an item immediately (synchronous crafting for simple usage)
+	 */
+	craft(recipeId: string): {
+		success: boolean;
+		itemName?: string;
+		error?: string;
+	} {
+		// Check if can craft
+		const check = this.canCraft(recipeId);
+		if (!check.canCraft) {
+			return { success: false, error: check.reason };
+		}
+
+		const recipe = this.recipes.get(recipeId);
+		if (!recipe) {
+			return { success: false, error: 'Recipe not found' };
+		}
+
+		// Check success (based on success rate) - roll BEFORE consuming materials
+		const roll = Math.random() * 100;
+		const success = roll <= recipe.success_rate;
+
+		if (success) {
+			// Consume materials only on success
+			if (this.consumeItemsCallback && !this.consumeItemsCallback(recipe.materials)) {
+				return { success: false, error: 'Failed to consume materials' };
+			}
+
+			// Consume currency only on success
+			if (recipe.currency_cost > 0) {
+				if (this.consumeCurrencyCallback && !this.consumeCurrencyCallback(recipe.currency_cost)) {
+					return { success: false, error: 'Failed to consume currency' };
+				}
+			}
+
+			// Add result item
+			if (this.addItemCallback) {
+				if (!this.addItemCallback(recipe.result_item_id, recipe.result_quantity)) {
+					console.warn('[CraftingManager] Failed to add crafted item to inventory');
+					return { success: false, error: 'Inventory full' };
+				}
+			}
+
+			// Add experience
+			if (recipe.required_job && this.addExperienceCallback) {
+				this.addExperienceCallback(recipe.required_job, recipe.experience_gained);
+			}
+
+			// Emit success
+			this.emit('craft-completed', {
+				success: true,
+				result_item_id: recipe.result_item_id,
+				result_quantity: recipe.result_quantity,
+				experience_gained: recipe.experience_gained,
+			});
+
+			return { success: true, itemName: recipe.name };
+		} else {
+			// Crafting failed - materials NOT consumed
+			this.emit('craft-failed', recipeId, 'Crafting failed');
+			this.emit('craft-completed', {
+				success: false,
+				error: 'Crafting failed',
+			});
+
+			return { success: false, itemName: recipe.name, error: 'Crafting failed' };
+		}
+	}
+
+	/**
 	 * Start crafting
 	 */
 	startCrafting(recipeId: string): { success: boolean; error?: string } {
@@ -300,7 +370,9 @@ export class CraftingManager extends EventEmitter<CraftingManagerEvents> {
 		if (success) {
 			// Add result item
 			if (this.addItemCallback) {
-				this.addItemCallback(recipe.result_item_id, recipe.result_quantity);
+				if (!this.addItemCallback(recipe.result_item_id, recipe.result_quantity)) {
+					console.warn('[CraftingManager] Inventory full, crafted item lost!');
+				}
 			}
 
 			// Add experience
@@ -412,8 +484,19 @@ export class CraftingManager extends EventEmitter<CraftingManagerEvents> {
 	 */
 	import(data: { currentCraft: CraftingProgress | null }): void {
 		if (data.currentCraft) {
-			this.currentCraft = data.currentCraft;
-			this.startCraftingTimer();
+			// Reset started_at to prevent instant completion on load
+			const elapsed = Date.now() - data.currentCraft.started_at;
+			const remaining = Math.max(0, data.currentCraft.duration - elapsed);
+			this.currentCraft = {
+				...data.currentCraft,
+				started_at: Date.now() - (data.currentCraft.duration - remaining),
+				progress: Math.min(data.currentCraft.progress, 1),
+			};
+			if (this.currentCraft.progress < 1) {
+				this.startCraftingTimer();
+			} else {
+				this.completeCrafting();
+			}
 		}
 	}
 
@@ -433,3 +516,6 @@ export class CraftingManager extends EventEmitter<CraftingManagerEvents> {
 		this.recipes.clear();
 	}
 }
+
+// Singleton instance
+export const craftingManager = new CraftingManager();

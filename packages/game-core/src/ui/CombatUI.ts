@@ -7,8 +7,8 @@ import type {
 	CombatManager,
 	CombatEntity,
 	CombatAction,
-	CombatActionType,
 } from '../combat/CombatManager';
+import { CombatActionType } from '../combat/CombatManager';
 
 export interface CombatUIConfig {
 	container: HTMLElement;
@@ -229,12 +229,12 @@ export class CombatUI {
 		card.appendChild(nameEl);
 
 		// HP bar
-		const hpPercent = (entity.stats.hp / entity.stats.maxHp) * 100;
+		const hpPercent = entity.stats.maxHp > 0 ? (entity.stats.hp / entity.stats.maxHp) * 100 : 0;
 		const hpBar = this.createBar('HP', entity.stats.hp, entity.stats.maxHp, '#e74c3c', hpPercent);
 		card.appendChild(hpBar);
 
 		// MP bar
-		const mpPercent = (entity.stats.mp / entity.stats.maxMp) * 100;
+		const mpPercent = entity.stats.maxMp > 0 ? (entity.stats.mp / entity.stats.maxMp) * 100 : 0;
 		const mpBar = this.createBar('MP', entity.stats.mp, entity.stats.maxMp, '#3498db', mpPercent);
 		card.appendChild(mpBar);
 
@@ -301,10 +301,10 @@ export class CombatUI {
 		if (!this.currentActor) return;
 
 		const actions: { label: string; type: CombatActionType }[] = [
-			{ label: 'Attack', type: 'ATTACK' },
-			{ label: 'Skills', type: 'SKILL' },
-			{ label: 'Items', type: 'ITEM' },
-			{ label: 'Flee', type: 'FLEE' },
+			{ label: 'Attack', type: CombatActionType.ATTACK },
+			{ label: 'Skills', type: CombatActionType.SKILL },
+			{ label: 'Items', type: CombatActionType.ITEM },
+			{ label: 'Flee', type: CombatActionType.FLEE },
 		];
 
 		actions.forEach(({ label, type }) => {
@@ -366,7 +366,7 @@ export class CombatUI {
 		if (enemies.length === 0) return;
 
 		// For now, target first enemy
-		const target = enemies[0];
+		const target = enemies[0]!;
 
 		const action: CombatAction = {
 			actorId: this.currentActor.id,

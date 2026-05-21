@@ -1,0 +1,211 @@
+{
+	"npcs": [
+		{
+			"id": "mayor",
+			"name": "Mayor Aldric",
+			"type": "quest_giver",
+			"position": { "x": 400, "y": 300 },
+			"sprite": "npc_mayor",
+			"dialogues": [
+				{
+					"id": "greeting",
+					"text": "Welcome to Riverside Town, traveler! We're a peaceful community, though monsters have been more active lately in the forest.",
+					"options": [
+						{ "text": "Tell me about the monsters", "next": "monsters" },
+						{ "text": "Do you have any work for me?", "next": "quest" },
+						{ "text": "Goodbye", "next": null }
+					]
+				},
+				{
+					"id": "monsters",
+					"text": "Slimes and Goblins have been spotted near the forest edge. Wolves roam deeper in. Be careful out there!",
+					"options": [
+						{ "text": "I'll be careful", "next": "greeting" }
+					]
+				},
+				{
+					"id": "quest",
+					"text": "Not at the moment, but check with the blacksmith. He might need materials.",
+					"options": [
+						{ "text": "Thanks", "next": "greeting" }
+					]
+				}
+			]
+		},
+		{
+			"id": "blacksmith",
+			"name": "Forge Master Durin",
+			"type": "trainer",
+			"position": { "x": 600, "y": 400 },
+			"sprite": "npc_blacksmith",
+			"jobTrainer": {
+				"jobId": "blacksmith",
+				"certificateItemId": "blacksmith_certificate"
+			},
+			"dialogues": [
+				{
+					"id": "greeting",
+					"text": "Ah, a warrior! Looking to learn the craft of smithing, or perhaps you need equipment?",
+					"options": [
+						{ "text": "I want to learn blacksmithing", "next": "learn_job" },
+						{ "text": "What can you tell me about smithing?", "next": "about_job" },
+						{ "text": "Do you sell equipment?", "next": "shop" },
+						{ "text": "Goodbye", "next": null }
+					]
+				},
+				{
+					"id": "about_job",
+					"text": "Blacksmithing is the art of forging weapons and armor. With the right materials and knowledge, you can craft powerful equipment. I can teach you, but you'll need a Blacksmith Certificate first.",
+					"options": [
+						{ "text": "How do I get a certificate?", "next": "certificate" },
+						{ "text": "I see", "next": "greeting" }
+					]
+				},
+				{
+					"id": "certificate",
+					"text": "Certificates are rare items. Sometimes monsters drop them, or you can find them in treasure chests. Bring me one and I'll teach you the trade.",
+					"options": [
+						{ "text": "I'll find one", "next": "greeting" }
+					]
+				},
+				{
+					"id": "learn_job",
+					"text": "Do you have a Blacksmith Certificate? I can't teach you without proof of your commitment.",
+					"options": [
+						{ "text": "Train me!", "action": "train_job" },
+						{ "text": "Not yet", "next": "greeting" }
+					]
+				},
+				{
+					"id": "shop",
+					"text": "I sell basic weapons and armor. Check my wares!",
+					"options": [
+						{ "text": "Show me", "action": "shop" },
+						{ "text": "Maybe later", "next": "greeting" }
+					]
+				}
+			],
+			"shop": {
+				"items": ["iron_sword", "iron_dagger", "leather_armor", "iron_ore"],
+				"buyPriceMultiplier": 1.0,
+				"sellPriceMultiplier": 0.5
+			}
+		},
+		{
+			"id": "merchant",
+			"name": "Trader Emma",
+			"type": "merchant",
+			"position": { "x": 500, "y": 250 },
+			"sprite": "npc_merchant",
+			"dialogues": [
+				{
+					"id": "greeting",
+					"text": "Welcome to my shop! I have potions, materials, and other useful items for adventurers.",
+					"options": [
+						{ "text": "Show me your wares", "action": "shop" },
+						{ "text": "I'll come back later", "next": null }
+					]
+				}
+			],
+			"shop": {
+				"items": ["health_potion", "mana_potion", "antidote", "herb", "wood", "thread"],
+				"buyPriceMultiplier": 1.0,
+				"sellPriceMultiplier": 0.5
+			}
+		},
+		{
+			"id": "mage_trainer",
+			"name": "Archmage Lyra",
+			"type": "trainer",
+			"position": { "x": 300, "y": 450 },
+			"sprite": "npc_mage",
+			"jobTrainer": {
+				"jobId": "mage",
+				"certificateItemId": "mage_certificate"
+			},
+			"dialogues": [
+				{
+					"id": "greeting",
+					"text": "The arcane arts await those with the wisdom to master them. Do you seek magical knowledge?",
+					"options": [
+						{ "text": "Teach me magic", "next": "learn_job" },
+						{ "text": "What is magic?", "next": "about_job" },
+						{ "text": "Not today", "next": null }
+					]
+				},
+				{
+					"id": "about_job",
+					"text": "Magic harnesses the elements and bends reality itself. Fire, ice, lightning - all can be commanded by a skilled mage. But such power requires proper training and a Mage Certificate.",
+					"options": [
+						{ "text": "How do I get a certificate?", "next": "certificate" },
+						{ "text": "Interesting", "next": "greeting" }
+					]
+				},
+				{
+					"id": "certificate",
+					"text": "Mage Certificates are found in the wild, usually guarded by magical creatures. Seek them in dungeons or defeat powerful monsters.",
+					"options": [
+						{ "text": "I'll search for one", "next": "greeting" }
+					]
+				},
+				{
+					"id": "learn_job",
+					"text": "To learn the ways of magic, you must present a Mage Certificate. Do you have one?",
+					"options": [
+						{ "text": "Train me!", "action": "train_job" },
+						{ "text": "Not yet", "next": "greeting" }
+					]
+				}
+			]
+		},
+		{
+			"id": "innkeeper",
+			"name": "Innkeeper Thomas",
+			"type": "merchant",
+			"position": { "x": 700, "y": 300 },
+			"sprite": "npc_innkeeper",
+			"dialogues": [
+				{
+					"id": "greeting",
+					"text": "Welcome to the Riverside Inn! Rest here to restore your HP and MP. Only 50 gold per night!",
+					"options": [
+						{ "text": "I'd like to rest (50 gold)", "action": "rest" },
+						{ "text": "Tell me about this town", "next": "town_info" },
+						{ "text": "Maybe later", "next": null }
+					]
+				},
+				{
+					"id": "town_info",
+					"text": "Riverside Town has been here for generations. We're known for our skilled blacksmith and our proximity to the Whispering Forest. Adventurers often stop here before heading into danger.",
+					"options": [
+						{ "text": "Thanks for the info", "next": "greeting" }
+					]
+				}
+			]
+		},
+		{
+			"id": "guard",
+			"name": "Guard Captain Roland",
+			"type": "villager",
+			"position": { "x": 450, "y": 500 },
+			"sprite": "npc_guard",
+			"dialogues": [
+				{
+					"id": "greeting",
+					"text": "Halt! State your business. Oh, an adventurer? Good, we need more brave souls around here.",
+					"options": [
+						{ "text": "What dangers are nearby?", "next": "dangers" },
+						{ "text": "Just passing through", "next": null }
+					]
+				},
+				{
+					"id": "dangers",
+					"text": "The Whispering Forest to the north is teeming with monsters - Slimes near the entrance, Goblins and Wolves deeper in. There's also rumors of caves to the east with Skeletons and Golems. Be prepared!",
+					"options": [
+						{ "text": "Thanks for the warning", "next": "greeting" }
+					]
+				}
+			]
+		}
+	]
+}

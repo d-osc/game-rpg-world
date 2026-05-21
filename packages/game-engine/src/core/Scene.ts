@@ -1,61 +1,85 @@
+import type * as THREE from 'three';
+
+export enum SceneType {
+	CANVAS_2D = 'canvas_2d',
+	THREE_3D = 'three_3d',
+	HTML_OVERLAY = 'html_overlay',
+}
+
 /**
  * Scene base class
  * Represents a game scene (e.g., MainMenu, GameWorld, Combat)
  */
-
 export abstract class Scene {
-  protected _isInitialized: boolean = false;
-  protected _isActive: boolean = false;
-  public name: string;
+	protected _isInitialized: boolean = false;
+	protected _isActive: boolean = false;
+	public name: string;
+	public sceneType: SceneType = SceneType.CANVAS_2D;
 
-  constructor(name: string) {
-    this.name = name;
-  }
+	constructor(name: string) {
+		this.name = name;
+	}
 
-  /**
-   * Load resources and initialize scene
-   * Called once when scene is first created
-   */
-  abstract load(): Promise<void>;
+	/**
+	 * Load resources and initialize scene
+	 * Called once when scene is first created
+	 */
+	abstract load(): Promise<void>;
 
-  /**
-   * Called when scene becomes active
-   */
-  onEnter(): void {
-    this._isActive = true;
-  }
+	/**
+	 * Called when scene becomes active
+	 */
+	onEnter(): void {
+		console.log(`[Scene.onEnter] ${this.name} setting isActive = true`);
+		this._isActive = true;
+	}
 
-  /**
-   * Called when scene becomes inactive
-   */
-  onExit(): void {
-    this._isActive = false;
-  }
+	/**
+	 * Called when scene becomes inactive
+	 */
+	onExit(): void {
+		console.log(`[Scene.onExit] ${this.name} setting isActive = false`);
+		this._isActive = false;
+	}
 
-  /**
-   * Update scene logic
-   * @param deltaTime - Time since last frame in seconds
-   */
-  abstract update(deltaTime: number): void;
+	/**
+	 * Update scene logic
+	 * @param deltaTime - Time since last frame in seconds
+	 */
+	abstract update(deltaTime: number): void;
 
-  /**
-   * Render scene
-   * @param ctx - Rendering context
-   */
-  abstract render(ctx: CanvasRenderingContext2D | WebGLRenderingContext): void;
+	/**
+	 * Render scene (Canvas2D)
+	 */
+	render(_ctx: CanvasRenderingContext2D): void {}
 
-  /**
-   * Clean up scene resources
-   */
-  abstract destroy(): void;
+	/**
+	 * Render scene (Three.js 3D)
+	 */
+	render3D?(scene: THREE.Scene, camera: THREE.Camera): void;
 
-  get isInitialized(): boolean {
-    return this._isInitialized;
-  }
+	/**
+	 * Render scene (HTML overlay) — returns DOM element
+	 */
+	renderHTML?(): HTMLElement;
 
-  get isActive(): boolean {
-    return this._isActive;
-  }
+	/**
+	 * Called when HTML overlay scene is mounted — for attaching event listeners
+	 */
+	onHTMLMounted?(el: HTMLElement): void {}
+
+	/**
+	 * Clean up scene resources
+	 */
+	abstract destroy(): void;
+
+	get isInitialized(): boolean {
+		return this._isInitialized;
+	}
+
+	get isActive(): boolean {
+		return this._isActive;
+	}
 }
 
 /**
@@ -120,24 +144,26 @@ export class SceneManager {
 
     this._isTransitioning = true;
 
-    // Exit current scene
-    if (this._currentScene) {
-      this._currentScene.onExit();
+    try {
+      // Exit current scene
+      if (this._currentScene) {
+        this._currentScene.onExit();
+      }
+
+      // Load next scene if not initialized
+      if (!nextScene.isInitialized) {
+        await nextScene.load();
+        nextScene['_isInitialized'] = true;
+      }
+
+      // Enter next scene
+      this._currentScene = nextScene;
+      this._currentScene.onEnter();
+
+      console.log(`Switched to scene: ${name}`);
+    } finally {
+      this._isTransitioning = false;
     }
-
-    // Load next scene if not initialized
-    if (!nextScene.isInitialized) {
-      await nextScene.load();
-      nextScene['_isInitialized'] = true;
-    }
-
-    // Enter next scene
-    this._currentScene = nextScene;
-    this._currentScene.onEnter();
-
-    this._isTransitioning = false;
-
-    console.log(`Switched to scene: ${name}`);
   }
 
   /**
@@ -152,7 +178,7 @@ export class SceneManager {
   /**
    * Render current scene
    */
-  render(ctx: CanvasRenderingContext2D | WebGLRenderingContext): void {
+  render(ctx: CanvasRenderingContext2D): void {
     if (this._currentScene && this._currentScene.isActive) {
       this._currentScene.render(ctx);
     }

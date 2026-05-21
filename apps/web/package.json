@@ -4,18 +4,20 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "elit dev",
+    "build": "elit build",
+    "preview": "elit preview"
   },
   "dependencies": {
     "@rpg/shared": "workspace:*",
     "@rpg/game-engine": "workspace:*",
     "@rpg/game-core": "workspace:*",
     "@rpg/networking": "workspace:*",
-    "elit": "^3.0.9"
+    "@rpg/data": "workspace:*",
+    "elit": "^3.6.7",
+    "three": "^0.184.0"
   },
   "devDependencies": {
-    "vite": "^5.0.0"
+    "@types/three": "^0.184.0"
   }
 }

@@ -130,7 +130,7 @@ export class ParticleSystem {
 
 		// Update particles
 		for (let i = this.particles.length - 1; i >= 0; i--) {
-			const particle = this.particles[i];
+			const particle = this.particles[i]!;
 
 			// Update physics
 			particle.velocity.x += particle.acceleration.x * deltaTime;
@@ -239,9 +239,9 @@ export class ParticleEmitter {
 
 		this.timeSinceLastEmit += deltaTime;
 
-		const emitInterval = 1 / this.config.rate;
+		const emitInterval = this.config.rate > 0 ? 1 / this.config.rate : Infinity;
 
-		while (this.timeSinceLastEmit >= emitInterval) {
+		while (emitInterval < Infinity && this.timeSinceLastEmit >= emitInterval) {
 			this.emitParticle();
 			this.timeSinceLastEmit -= emitInterval;
 		}
@@ -262,8 +262,8 @@ export class ParticleEmitter {
 		const angle = direction + (Math.random() - 0.5) * spread;
 
 		if (this.config.velocity) {
-			const speedMin = this.config.velocity.min.magnitude();
-			const speedMax = this.config.velocity.max.magnitude();
+			const speedMin = this.config.velocity.min.length();
+			const speedMax = this.config.velocity.max.length();
 			const speed = speedMin + Math.random() * (speedMax - speedMin);
 
 			particle.velocity.x = Math.cos(angle) * speed;
@@ -293,7 +293,7 @@ export class ParticleEmitter {
 
 		// Color
 		if (Array.isArray(this.config.color)) {
-			particle.color = this.config.color[Math.floor(Math.random() * this.config.color.length)];
+			particle.color = this.config.color[Math.floor(Math.random() * this.config.color.length)]!;
 		} else {
 			particle.color = this.config.color || '#ffffff';
 		}

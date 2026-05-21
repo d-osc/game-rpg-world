@@ -5,6 +5,8 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "dependencies": {
-    "@rpg/shared": "workspace:*"
+    "@rpg/shared": "workspace:*",
+    "@types/three": "^0.184.1",
+    "three": "^0.184.0"
   }
 }

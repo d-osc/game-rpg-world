@@ -35,6 +35,7 @@ export class SignalingClient {
 	private token: string;
 	private eventListeners: Map<keyof SignalingClientEvents, Set<Function>> = new Map();
 	private reconnectAttempts = 0;
+	private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 	private maxReconnectAttempts = 5;
 	private reconnectDelay = 1000; // Start with 1 second
 

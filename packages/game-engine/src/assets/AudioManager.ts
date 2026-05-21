@@ -48,12 +48,17 @@ export class AudioManager {
   private audioContext: AudioContext | null = null;
   private gainNode: GainNode | null = null;
 
+  // Fade interval tracking (prevent memory leaks)
+  private fadeIntervals: ReturnType<typeof setInterval>[] = [];
+
   private constructor() {
-    // Initialize Web Audio API if available
-    if (typeof AudioContext !== 'undefined' || typeof (window as any).webkitAudioContext !== 'undefined') {
-      this.audioContext = new (AudioContext || (window as any).webkitAudioContext)();
-      this.gainNode = this.audioContext.createGain();
-      this.gainNode.connect(this.audioContext.destination);
+    // Initialize Web Audio API if available (browser only)
+    if (typeof window !== 'undefined') {
+      if (typeof AudioContext !== 'undefined' || typeof (window as any).webkitAudioContext !== 'undefined') {
+        this.audioContext = new (AudioContext || (window as any).webkitAudioContext)();
+        this.gainNode = this.audioContext.createGain();
+        this.gainNode.connect(this.audioContext.destination);
+      }
     }
   }
 
@@ -228,6 +233,7 @@ export class AudioManager {
     const fadeInterval = setInterval(() => {
       if (!this.currentMusic || currentStep >= steps) {
         clearInterval(fadeInterval);
+        this.fadeIntervals = this.fadeIntervals.filter(i => i !== fadeInterval);
         if (this.currentMusic) {
           this.currentMusic.volume = targetVolume;
         }
@@ -237,6 +243,7 @@ export class AudioManager {
       currentStep++;
       this.currentMusic.volume = volumeStep * currentStep;
     }, timeStep);
+    this.fadeIntervals.push(fadeInterval);
   }
 
   /**
@@ -255,6 +262,7 @@ export class AudioManager {
     const fadeInterval = setInterval(() => {
       if (!this.currentMusic || currentStep >= steps) {
         clearInterval(fadeInterval);
+        this.fadeIntervals = this.fadeIntervals.filter(i => i !== fadeInterval);
         if (stopAfter && this.currentMusic) {
           this.stopMusic();
         }
@@ -264,6 +272,7 @@ export class AudioManager {
       currentStep++;
       this.currentMusic.volume = startVolume - volumeStep * currentStep;
     }, timeStep);
+    this.fadeIntervals.push(fadeInterval);
   }
 
   /**
@@ -272,9 +281,26 @@ export class AudioManager {
   crossfadeMusic(newKey: string, duration: number = 1000): void {
     const oldMusic = this.currentMusic;
 
-    // Fade out old music
+    // Fade out old music directly (avoid race with this.currentMusic changing)
     if (oldMusic) {
-      this.fadeOutMusic(duration, true);
+      const startVolume = oldMusic.volume;
+      const steps = 60;
+      const volumeStep = startVolume / steps;
+      const timeStep = duration / steps;
+      let currentStep = 0;
+
+      const fadeInterval = setInterval(() => {
+        if (currentStep >= steps) {
+          clearInterval(fadeInterval);
+          this.fadeIntervals = this.fadeIntervals.filter(i => i !== fadeInterval);
+          oldMusic.pause();
+          oldMusic.currentTime = 0;
+          return;
+        }
+        currentStep++;
+        oldMusic.volume = Math.max(0, startVolume - volumeStep * currentStep);
+      }, timeStep);
+      this.fadeIntervals.push(fadeInterval);
     }
 
     // Fade in new music after a short delay
@@ -417,12 +443,18 @@ export class AudioManager {
    * Clean up resources
    */
   destroy(): void {
+    // Clean up fade intervals
+    for (const interval of this.fadeIntervals) {
+      clearInterval(interval);
+    }
+    this.fadeIntervals = [];
+
     this.stopAllSounds();
     this.stopMusic();
     this.sounds.clear();
     this.music.clear();
 
-    if (this.audioContext) {
+    if (this.audioContext && this.audioContext.state !== 'closed') {
       this.audioContext.close();
     }
   }

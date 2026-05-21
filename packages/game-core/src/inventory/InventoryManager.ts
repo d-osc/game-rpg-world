@@ -70,6 +70,7 @@ export class InventoryManager extends EventEmitter<InventoryEvents> {
 	 */
 	addItem(item: Item, quantity: number = 1): boolean {
 		if (quantity <= 0) return false;
+		if (item.maxStack <= 0) return false;
 
 		// Check weight limit
 		const totalWeight = item.weight * quantity;
@@ -128,22 +129,29 @@ export class InventoryManager extends EventEmitter<InventoryEvents> {
 	removeItem(itemId: string, quantity: number = 1): boolean {
 		if (quantity <= 0) return false;
 
-		const slot = this.findItemSlot(itemId);
-		if (!slot || !slot.item) return false;
+		// Check total available quantity first
+		if (!this.hasItem(itemId, quantity)) return false;
 
-		const removeQuantity = Math.min(quantity, slot.quantity);
-		slot.quantity -= removeQuantity;
-		this.currentWeight -= slot.item.weight * removeQuantity;
+		let remaining = quantity;
+		while (remaining > 0) {
+			const slot = this.findItemSlot(itemId);
+			if (!slot || !slot.item) break;
 
-		this.emit('item-removed', slot.item, removeQuantity);
+			const removeQuantity = Math.min(remaining, slot.quantity);
+			slot.quantity -= removeQuantity;
+			remaining -= removeQuantity;
+			this.currentWeight = Math.max(0, this.currentWeight - slot.item.weight * removeQuantity);
 
-		// Clear slot if empty
-		if (slot.quantity <= 0) {
-			slot.item = null;
-			slot.quantity = 0;
+			this.emit('item-removed', slot.item, removeQuantity);
+
+			// Clear slot if empty
+			if (slot.quantity <= 0) {
+				slot.item = null;
+				slot.quantity = 0;
+			}
 		}
 
-		return true;
+		return remaining === 0;
 	}
 
 	/**
@@ -177,8 +185,8 @@ export class InventoryManager extends EventEmitter<InventoryEvents> {
 			return false;
 		}
 
-		const fromSlot = this.slots[fromIndex];
-		const toSlot = this.slots[toIndex];
+		const fromSlot = this.slots[fromIndex]!;
+		const toSlot = this.slots[toIndex]!;
 
 		if (!fromSlot.item) return false;
 
@@ -269,7 +277,7 @@ export class InventoryManager extends EventEmitter<InventoryEvents> {
 	 */
 	getSlot(index: number): InventorySlot | null {
 		if (index < 0 || index >= this.slots.length) return null;
-		return this.slots[index];
+		return this.slots[index] ?? null;
 	}
 
 	/**
@@ -361,8 +369,8 @@ export class InventoryManager extends EventEmitter<InventoryEvents> {
 		// Re-add sorted items
 		items.forEach((slot, index) => {
 			if (slot.item) {
-				this.slots[index].item = slot.item;
-				this.slots[index].quantity = slot.quantity;
+				this.slots[index]!.item = slot.item;
+				this.slots[index]!.quantity = slot.quantity;
 			}
 		});
 	}
@@ -415,6 +423,61 @@ export class InventoryManager extends EventEmitter<InventoryEvents> {
 	}
 
 	/**
+	 * Find item by ID (returns the item or null)
+	 */
+	findItem(itemId: string): Item | null {
+		const slot = this.findItemSlot(itemId);
+		return slot?.item ?? null;
+	}
+
+	/**
+	 * Get all items as array
+	 */
+	getItems(): Item[] {
+		return this.slots.filter(s => s.item !== null).map(s => s.item!);
+	}
+
+	/**
+	 * Get inventory statistics
+	 */
+	getStats(): { usedSlots: number; maxSlots: number; currentWeight: number; maxWeight: number } {
+		return {
+			usedSlots: this.getUsedSlots(),
+			maxSlots: this.getMaxSlots(),
+			currentWeight: this.getCurrentWeight(),
+			maxWeight: this.getMaxWeight(),
+		};
+	}
+
+	/**
+	 * Get inventory limits
+	 */
+	getLimits(): InventoryLimits {
+		return { ...this.limits };
+	}
+
+	/**
+	 * Get inventory stats (alias)
+	 */
+	getInventoryStats(): { usedSlots: number; maxSlots: number; currentWeight: number; maxWeight: number } {
+		return this.getStats();
+	}
+
+	/**
+	 * Filter items by type
+	 */
+	filterByType(type: string): InventorySlot[] {
+		return this.slots.filter(s => s.item !== null && s.item.type === type);
+	}
+
+	/**
+	 * Clear current filter (returns all items)
+	 */
+	clearFilter(): InventorySlot[] {
+		return this.getAllItems();
+	}
+
+	/**
 	 * Cleanup
 	 */
 	destroy(): void {
@@ -422,3 +485,6 @@ export class InventoryManager extends EventEmitter<InventoryEvents> {
 		this.removeAllListeners();
 	}
 }
+
+// Singleton instance
+export const inventoryManager = new InventoryManager({ maxSlots: 100, maxWeight: 500 });

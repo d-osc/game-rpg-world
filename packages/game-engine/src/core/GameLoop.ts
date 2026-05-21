@@ -4,7 +4,6 @@
  */
 
 import { time } from './Time';
-import { sceneManager } from './Scene';
 
 export type GameLoopCallback = (deltaTime: number) => void;
 
@@ -105,13 +104,13 @@ export class GameLoop {
     // Request next frame
     this._animationFrameId = requestAnimationFrame(this.loop);
 
-    // Update time
-    time.update();
-
-    // Skip update/render if paused
+    // Skip update/render if paused (don't update time either)
     if (this._isPaused) {
       return;
     }
+
+    // Update time (only when not paused)
+    time.update();
 
     const deltaTime = time.deltaTime;
 
@@ -129,9 +128,6 @@ export class GameLoop {
    * Update phase
    */
   private update(deltaTime: number): void {
-    // Update scene manager
-    sceneManager.update(deltaTime);
-
     // Call custom update callbacks
     for (const callback of this._updateCallbacks) {
       callback(deltaTime);

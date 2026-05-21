@@ -210,7 +210,7 @@ export class RemotePlayerRenderer {
 	 * Check if position is in viewport
 	 */
 	private isInViewport(x: number, y: number): boolean {
-		const bounds = this.camera.getBounds();
+		const bounds = this.camera.getViewport();
 		const margin = this.playerSize;
 
 		return (

@@ -35,3 +35,13 @@ export type {
 
 export { ZoneDiscovery } from './ZoneDiscovery';
 export type { ZonePlayerInfo, ZoneDiscoveryEvents } from './ZoneDiscovery';
+
+export { npcInteraction, NPCInteraction } from './NPCInteraction';
+export type {
+	NPCDialogue as NPCInteractionDialogue,
+	DialogueOption,
+	NPCData as NPCInteractionData,
+} from './NPCInteraction';
+
+export { monsterEncounter, MonsterEncounter } from './MonsterEncounter';
+export type { EncounterZone, EncounterResult } from './MonsterEncounter';

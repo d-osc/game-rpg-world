@@ -205,6 +205,14 @@ export class Keyboard {
   }
 
   /**
+   * Remove all listeners for all keys
+   */
+  offAll(): void {
+    this.onKeyDownListeners.clear();
+    this.onKeyUpListeners.clear();
+  }
+
+  /**
    * Reset all key states
    */
   resetAll(): void {

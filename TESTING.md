@@ -1,21 +1,686 @@
-# RPG Game - Testing Guide
+# 🧪 RPG Game - Testing Guide (MVP)
 
-**Version:** 1.0.0
+**Version:** MVP (Sprint 5 Complete)
 **Last Updated:** 2025-12-31
+**Progress:** 83% Complete (Sprints 1-5 Done)
+
+## 🎯 MVP Testing Focus
+
+This guide focuses on **manual testing** of the 8 implemented scenes for MVP validation. Automated tests (unit, integration, E2E) will be added in post-MVP phases.
 
 ## Table of Contents
-1. [Testing Strategy](#testing-strategy)
-2. [Unit Testing](#unit-testing)
-3. [Integration Testing](#integration-testing)
-4. [End-to-End Testing](#end-to-end-testing)
+1. [Quick Start Testing](#quick-start-testing)
+2. [Scene-by-Scene Testing](#scene-by-scene-testing)
+3. [Integration Testing Checklist](#integration-testing-checklist)
+4. [Known Issues & Bugs](#known-issues--bugs)
 5. [Performance Testing](#performance-testing)
-6. [Security Testing](#security-testing)
-7. [User Acceptance Testing](#user-acceptance-testing)
-8. [Test Coverage](#test-coverage)
+6. [User Acceptance Testing](#user-acceptance-testing)
+7. [Future Testing Plans](#future-testing-plans)
 
 ---
 
-## Testing Strategy
+## Quick Start Testing
+
+### 1. Run the Game
+```bash
+cd apps/web
+bun run dev
+```
+
+### 2. Access SceneTestScene
+Open [http://localhost:5173](http://localhost:5173) - The game should load directly into SceneTestScene.
+
+### 3. Navigate Through Scenes
+Use keyboard shortcuts to test each scene:
+- **1**: Main Menu
+- **2**: Character Creation
+- **3**: World Scene
+- **4**: Combat Scene
+- **5**: Inventory Scene
+- **6**: Job Scene
+- **7**: Crafting Scene
+- **8**: Pause Menu (overlay)
+- **9**: Pop overlay
+
+---
+
+## Scene-by-Scene Testing
+
+### 1️⃣ Main Menu Scene
+**Access**: Press `1` in SceneTestScene
+
+**Test Cases**:
+- [ ] Title "Epic Quest RPG" displays correctly
+- [ ] Four menu options visible: New Game, Continue, Settings, Exit
+- [ ] Arrow keys navigate menu (selection highlight changes)
+- [ ] Enter key selects menu item
+- [ ] "New Game" transitions to Character Creation
+- [ ] "Continue" shows message if no save exists
+- [ ] "Settings" shows placeholder message
+- [ ] "Exit" closes game (browser only)
+
+**Expected Behavior**:
+- Menu selection highlights in yellow
+- Smooth navigation with no lag
+- Clear visual feedback on selection
+
+---
+
+### 2️⃣ Character Creation Scene
+**Access**: Press `2` in SceneTestScene or "New Game" from Main Menu
+
+**Test Cases**:
+- [ ] Title "Create Your Character" displays
+- [ ] Input prompt for character name
+- [ ] Starting job selection (4 options: Warrior, Mage, Ranger, Artisan)
+- [ ] Job descriptions display correctly
+- [ ] Arrow keys navigate jobs
+- [ ] Enter confirms selection after name entered
+- [ ] Creates new player with selected job
+- [ ] Transitions to World Scene after creation
+
+**Test Input**:
+- Name: "TestHero"
+- Job: Try each of the 4 starting jobs
+
+**Expected Behavior**:
+- Name input accepts alphanumeric characters
+- Job descriptions show bonuses (e.g., Warrior: +5 STR)
+- Confirmation creates player with correct stats
+
+---
+
+### 3️⃣ World Scene
+**Access**: Press `3` in SceneTestScene
+
+**Test Cases**:
+- [ ] Map loads and displays (town/forest/cave)
+- [ ] Player sprite renders at starting position
+- [ ] Arrow keys/WASD move player
+- [ ] Camera follows player smoothly
+- [ ] Collision detection prevents walking through walls
+- [ ] Zone transitions work (walk to edge of map)
+- [ ] NPCs render on map
+- [ ] Monsters spawn in hunting zones
+- [ ] Interacting with NPC (walk up + Enter) shows dialogue
+- [ ] Encountering monster triggers Combat Scene
+- [ ] ESC opens Pause Menu overlay
+
+**Movement Test**:
+- Move in all 8 directions (N, NE, E, SE, S, SW, W, NW)
+- Try to walk through walls (should block)
+- Walk to map edge (should transition or block)
+
+**Expected Behavior**:
+- Smooth 60 FPS movement
+- No sprite tearing or flickering
+- Collision detection accurate to tile boundaries
+
+---
+
+### 4️⃣ Combat Scene
+**Access**: Press `4` in SceneTestScene or encounter monster in World Scene
+
+**Test Cases**:
+
+**Combat Initialization**:
+- [ ] Player and enemy sprites display
+- [ ] HP/MP bars render correctly
+- [ ] Combat log shows "Battle Start" message
+- [ ] Turn order determined by speed stat
+
+**Combat Actions**:
+- [ ] "Attack" button executes basic attack
+- [ ] "Skill" button opens skill selection menu
+- [ ] "Item" button opens usable items list
+- [ ] "Flee" button attempts escape (may fail)
+
+**Attack Test**:
+- [ ] Damage calculation displays in log
+- [ ] HP bars update visually
+- [ ] Critical hits show "Critical!" message
+- [ ] Enemy AI responds with attack
+
+**Skill Test**:
+- [ ] Skills list shows all learned skills
+- [ ] MP cost displays correctly
+- [ ] Cannot use skill if MP insufficient
+- [ ] Skill effects apply (damage/heal/buff/debuff)
+- [ ] Status effects display (poison, burn, etc.)
+
+**Item Test**:
+- [ ] Only consumables shown in item list
+- [ ] Using potion heals HP
+- [ ] Item removed from inventory after use
+
+**Victory/Defeat**:
+- [ ] Victory screen shows on enemy HP = 0
+- [ ] EXP and gold rewards display
+- [ ] Loot drops added to inventory
+- [ ] Level up message if threshold reached
+- [ ] Defeat screen shows on player HP = 0
+- [ ] Return to World Scene after combat
+
+**Test Combat**: Fight Slime (easiest), Goblin, Wolf, Skeleton
+
+**Expected Behavior**:
+- Turn-based combat flows smoothly
+- Damage calculations accurate
+- No infinite loops or freezes
+- Combat log scrolls properly
+
+---
+
+### 5️⃣ Inventory Scene
+**Access**: Press `5` in SceneTestScene or `I` from Pause Menu
+
+**Test Cases**:
+
+**View Modes**:
+- [ ] Tab switches between Inventory and Equipment views
+- [ ] Current view indicator updates
+
+**Inventory View**:
+- [ ] All items display with icons (placeholders)
+- [ ] Item names, quantities, weights shown
+- [ ] Rarity colors display (Common=white, Rare=blue, Epic=purple, Legendary=gold)
+- [ ] Filter buttons cycle types (All, Weapon, Armor, Consumable, Material)
+- [ ] Press F to cycle filters
+- [ ] Slots and weight tracking display (e.g., "50/100 slots, 125.5/500 kg")
+
+**Item Actions**:
+- [ ] Select consumable → "Use" option enabled
+- [ ] Using potion heals HP/MP and removes item
+- [ ] Select equipment → "Equip" option enabled
+- [ ] Equipping weapon/armor moves to Equipment view
+- [ ] "Drop" option removes item from inventory
+- [ ] Confirmation dialog for drop (future)
+
+**Equipment View**:
+- [ ] 6 equipment slots display: Weapon, Head, Body, Hands, Legs, Feet
+- [ ] Equipped items show in correct slots
+- [ ] Stat bonuses display (e.g., Iron Sword: +10 ATK)
+- [ ] "Unequip" option removes item to inventory
+- [ ] Stats recalculate on equip/unequip
+
+**Scrolling**:
+- [ ] Arrow keys navigate item list
+- [ ] List scrolls when >10 items
+- [ ] Scroll offset updates correctly
+
+**Test Items**: Add various items via DataLoader (potions, swords, armor, materials)
+
+**Expected Behavior**:
+- Inventory updates in real-time
+- No duplicate items
+- Weight calculations accurate
+- Stat bonuses apply immediately
+
+---
+
+### 6️⃣ Job Scene
+**Access**: Press `6` in SceneTestScene or `J` from Pause Menu
+
+**Test Cases**:
+
+**View Modes** (Tab to switch):
+- [ ] "Learned Jobs" view
+- [ ] "Skills" view (when job selected)
+- [ ] "Available Jobs" view
+
+**Learned Jobs View**:
+- [ ] All learned jobs display with levels
+- [ ] Current EXP and next level shown
+- [ ] Job bonuses listed (e.g., Warrior: +10 STR, +5 VIT)
+- [ ] Select job → view skills
+
+**Skills View**:
+- [ ] All skills for selected job display
+- [ ] Skill details: Name, Type, MP Cost, Description
+- [ ] Skill effects shown (e.g., "Deals 150% ATK damage")
+- [ ] Unlocked skills highlighted
+- [ ] Locked skills grayed out with level requirement
+
+**Available Jobs View**:
+- [ ] Jobs not yet learned display
+- [ ] Certificate requirement shown (e.g., "Requires: Blacksmith Certificate")
+- [ ] "Learn Job" option if certificate in inventory
+- [ ] Learning job consumes certificate
+- [ ] Job moves to Learned Jobs list
+- [ ] Stats recalculate with new bonuses
+
+**Test Jobs**:
+1. Start with Warrior
+2. Learn Blacksmith (add certificate via debug)
+3. View Blacksmith skills
+4. Learn Mage (add certificate)
+5. Check stat bonuses stack
+
+**Expected Behavior**:
+- Multi-job system works (can learn unlimited jobs)
+- Stats bonuses stack correctly
+- Skills from all jobs available in combat
+- No class restrictions
+
+---
+
+### 7️⃣ Crafting Scene
+**Access**: Press `7` in SceneTestScene or `C` from Pause Menu
+
+**Test Cases**:
+
+**Recipe Browsing**:
+- [ ] All recipes display with names
+- [ ] Craftable recipes highlighted in green
+- [ ] Non-craftable recipes grayed out
+- [ ] Filter by category (F key): All, Weapon, Armor, Consumable, Material
+- [ ] Recipe details show on selection
+
+**Recipe Details**:
+- [ ] Output item name and quantity
+- [ ] Required materials list with owned/needed counts
+- [ ] Job requirement shown (e.g., "Requires: Blacksmith Lv.5")
+- [ ] Crafting time displayed (e.g., "Time: 3s")
+
+**Crafting Process**:
+- [ ] "Craft" option enabled only if craftable
+- [ ] Crafting starts with progress bar
+- [ ] Progress bar animates from 0% to 100%
+- [ ] Crafting time matches recipe (wait 3 seconds)
+- [ ] Success message displays
+- [ ] Crafted item added to inventory
+- [ ] Materials consumed from inventory
+- [ ] Recipe list updates (may become non-craftable)
+
+**Test Recipes**:
+1. Iron Sword (Requires: Iron Ore x3, Wood x1, Blacksmith Lv.1)
+2. Health Potion (Requires: Herb x2, Water x1)
+3. Leather Armor (Requires: Leather x5, Thread x2, Artisan Lv.3)
+
+**Expected Behavior**:
+- Progress bar smooth animation
+- Crafting cannot be interrupted (future: add cancel)
+- Materials deducted correctly
+- Job level requirements enforced
+- Auto-save after crafting
+
+---
+
+### 8️⃣ Pause Menu Scene
+**Access**: Press `8` in SceneTestScene or `ESC` from World Scene
+
+**Test Cases**:
+
+**Overlay Behavior**:
+- [ ] Pause menu renders over current scene (semi-transparent background)
+- [ ] Current scene still visible but dimmed
+- [ ] Current scene paused (no updates)
+
+**Menu Options**:
+- [ ] "Resume" returns to game
+- [ ] "Inventory" switches to Inventory Scene
+- [ ] "Jobs" switches to Job Scene
+- [ ] "Crafting" switches to Crafting Scene
+- [ ] "Settings" shows placeholder
+- [ ] "Save Game" saves to localStorage
+- [ ] "Main Menu" returns to Main Menu (confirm dialog future)
+
+**Navigation**:
+- [ ] Arrow keys navigate menu
+- [ ] Enter selects option
+- [ ] ESC closes pause menu (Resume)
+
+**Expected Behavior**:
+- Pause menu is an overlay (not a scene switch)
+- Game state preserved when pausing
+- Transitions to other scenes work from pause menu
+
+---
+
+## Integration Testing Checklist
+
+### Complete Game Flow Test
+
+**Scenario: New Player Journey**
+
+1. **Main Menu** → New Game
+2. **Character Creation** → Create "TestHero" as Warrior
+3. **World Scene** → Explore town, talk to NPC
+4. **Combat** → Fight Slime, win, gain EXP + items
+5. **Pause Menu** → Open with ESC
+6. **Inventory** → Check loot, equip weapon
+7. **Jobs** → View Warrior skills
+8. **Crafting** → Craft Health Potion (if materials)
+9. **Save** → Save game from Pause Menu
+10. **Exit** → Close game
+11. **Continue** → Load saved game from Main Menu
+12. **Verify** → Character state restored
+
+**Expected Result**: ✅ All systems work together seamlessly
+
+---
+
+### Data Flow Test
+
+**Test Save/Load System**:
+
+1. Create character, gain 3 levels, collect 10 items
+2. Learn 2 jobs, equip 3 items, craft 1 item
+3. Save game
+4. Refresh browser (or close/reopen)
+5. Load game
+6. Verify:
+   - [ ] Character level = 3
+   - [ ] Inventory has 10 items
+   - [ ] 2 jobs learned
+   - [ ] 3 items equipped
+   - [ ] Crafted item exists
+
+---
+
+### Manager Integration Test
+
+**Test All Managers Work Together**:
+
+1. **InventoryManager + CombatManager**:
+   - Use consumable in combat → HP heals
+
+2. **JobManager + CombatManager**:
+   - Learn Mage → Use "Fireball" skill in combat
+
+3. **CraftingManager + InventoryManager**:
+   - Craft Iron Sword → Appears in inventory → Equip
+
+4. **WorldManager + CombatManager**:
+   - Spawn monster → Fight → Loot → Add to inventory
+
+**Expected Result**: ✅ No conflicts, data syncs correctly
+
+---
+
+## Known Issues & Bugs
+
+### 🐛 Current Bugs (To Be Fixed in Sprint 6)
+
+1. **Missing Sprites**: All graphics are placeholders (colored rectangles)
+2. **No Maps**: Tiled maps not created yet (town, forest, cave)
+3. **No NPCs**: NPC interaction system exists but no NPC data
+4. **No Monster Encounters**: Encounter system not wired to World Scene
+5. **Combat AI Simple**: AI only uses basic attack
+6. **No Sound**: No audio system implemented
+7. **No Animations**: Character sprites static (no walk/attack animations)
+8. **Save/Load UI**: No visual feedback on save success
+9. **No Tutorials**: No in-game help or tutorials
+10. **Balance Issues**: Monster stats, item prices, EXP curves not balanced
+
+### ⚠️ Known Limitations (MVP Scope)
+
+1. **Single-player only**: No multiplayer (WebRTC P2P in future)
+2. **localStorage only**: No server backend (future: PostgreSQL)
+3. **No Auction House**: UI exists but no backend
+4. **No Player Shops**: System framework only
+5. **No Quests**: Quest system not implemented
+6. **1 Continent**: Limited to single continent (future: expand)
+7. **Browser only**: Desktop/mobile apps not built yet
+
+## Performance Testing
+
+### FPS Monitoring
+
+**Test Scenarios**:
+
+1. **Idle Performance**:
+   - Stand still in World Scene
+   - Monitor FPS (should be 60 FPS)
+   - CPU usage should be <10%
+
+2. **Movement Performance**:
+   - Move continuously for 2 minutes
+   - FPS should remain stable at 60
+   - No memory leaks (check DevTools)
+
+3. **Combat Performance**:
+   - Fight 10 consecutive battles
+   - Monitor FPS during animations
+   - Check for slowdowns
+
+4. **Inventory Performance**:
+   - Add 100 items to inventory
+   - Open Inventory Scene
+   - Scrolling should be smooth
+   - Filter changes instant
+
+**Tools**:
+- Chrome DevTools → Performance tab
+- Firefox Developer Tools → Performance
+- FPS counter: `Ctrl+Shift+I` → Rendering → FPS meter
+
+**Benchmarks**:
+- **FPS**: 60 (stable)
+- **Frame time**: <16.67ms
+- **Memory**: <100MB
+- **Load time**: <2 seconds
+
+---
+
+### Memory Leak Testing
+
+**Test**: Run game for 30 minutes
+
+**Steps**:
+1. Open DevTools → Memory → Take snapshot
+2. Play game normally (explore, combat, craft)
+3. Take snapshot every 5 minutes (6 snapshots total)
+4. Compare snapshot sizes
+
+**Expected**: Memory should plateau, not continuously increase
+
+**Red Flags**:
+- Snapshot size increases by >20MB every 5 minutes
+- Detached DOM nodes accumulate
+- Event listeners not cleaned up
+
+---
+
+### Load Time Testing
+
+**Measure**:
+- Initial page load
+- Scene transitions
+- Data loading
+
+**Targets**:
+- Page load: <2 seconds
+- Scene switch: <500ms
+- Data load: <200ms
+
+---
+
+## User Acceptance Testing
+
+### MVP Acceptance Criteria
+
+**The game is ready for beta testing when**:
+
+#### ✅ Core Functionality
+- [ ] Can create new character
+- [ ] Can explore world (move, navigate)
+- [ ] Can engage in combat (turn-based)
+- [ ] Can manage inventory (add, remove, equip)
+- [ ] Can view and learn jobs
+- [ ] Can craft items
+- [ ] Can save and load game
+
+#### ✅ Game Flow
+- [ ] Main Menu → Character Creation → World → Combat works
+- [ ] Pause Menu accessible from World Scene
+- [ ] All UI scenes accessible (Inventory, Jobs, Crafting)
+- [ ] Scene transitions smooth (no crashes)
+- [ ] Return paths work (back to previous scene)
+
+#### ✅ Data Persistence
+- [ ] Save game stores character state
+- [ ] Load game restores character state
+- [ ] Inventory persists across sessions
+- [ ] Jobs and equipment persist
+- [ ] No data corruption
+
+#### ✅ Stability
+- [ ] No game-breaking bugs
+- [ ] No infinite loops or freezes
+- [ ] No crash on scene transitions
+- [ ] Consistent 60 FPS performance
+- [ ] Works in Chrome, Firefox, Safari
+
+#### ✅ User Experience
+- [ ] Controls are responsive
+- [ ] Navigation is intuitive
+- [ ] Visual feedback on actions
+- [ ] No confusing UI states
+- [ ] Error messages are helpful
+
+---
+
+### Beta Testing Plan
+
+**Phase 1: Internal Testing (1 week)**
+- Team plays through entire game flow
+- Document all bugs in GitHub Issues
+- Test on multiple browsers/OS
+- Performance profiling
+
+**Phase 2: Closed Beta (2 weeks)**
+- Invite 10-20 testers
+- Collect feedback via Google Forms
+- Monitor Discord for bug reports
+- Fix critical bugs
+
+**Phase 3: Open Beta (4 weeks)**
+- Public release
+- Gather analytics (play time, drop-off points)
+- Iterate based on feedback
+- Prepare for v1.0 launch
+
+---
+
+### User Feedback Form
+
+**Questions for Beta Testers**:
+
+1. **Overall Experience** (1-5 stars)
+2. **What did you enjoy most?** (open text)
+3. **What frustrated you?** (open text)
+4. **How intuitive were the controls?** (1-5 scale)
+5. **Did you encounter any bugs?** (yes/no + description)
+6. **How balanced did combat feel?** (too easy / just right / too hard)
+7. **Would you recommend this game to a friend?** (yes/no)
+8. **Any suggestions for improvement?** (open text)
+
+---
+
+## Future Testing Plans
+
+### Post-MVP Testing (To Be Implemented)
+
+These automated tests will be added after MVP launch:
+
+#### 1. Unit Testing
+- **Framework**: Vitest
+- **Target Coverage**: >80%
+- **Test Files**: `__tests__/` folders
+- **Focus**: Combat calculations, inventory logic, job system
+
+#### 2. Integration Testing
+- **Framework**: Vitest + Testing Library
+- **Focus**: Manager interactions, data flow
+- **API Tests**: Server endpoints (when backend added)
+
+#### 3. End-to-End Testing
+- **Framework**: Playwright
+- **Focus**: Complete user flows
+- **Scenarios**: Registration, gameplay, trading
+
+#### 4. Security Testing
+- **Tools**: OWASP ZAP, npm audit
+- **Focus**: XSS, SQL injection, authentication
+- **Required**: Before multiplayer launch
+
+#### 5. Load Testing
+- **Tools**: Artillery, Apache Bench
+- **Focus**: Server performance
+- **Required**: Before scaling to 100+ users
+
+---
+
+## Test Checklist (MVP Release)
+
+Before launching MVP beta:
+
+- [ ] All 8 scenes load without errors
+- [ ] Complete game flow tested (Main Menu → Combat → Save → Load)
+- [ ] Save/Load verified on 3 browsers (Chrome, Firefox, Safari)
+- [ ] Performance testing shows 60 FPS stable
+- [ ] No memory leaks detected (30-minute test)
+- [ ] All known bugs documented in GitHub Issues
+- [ ] Critical bugs fixed (P0 issues)
+- [ ] Scene navigation tested (all transitions work)
+- [ ] Inventory, Jobs, Crafting scenes functional
+- [ ] Combat system works (attack, skills, items, flee)
+- [ ] Data persistence verified (localStorage)
+- [ ] README.md updated with current status
+- [ ] STATUS.md reflects accurate progress
+- [ ] TESTING.md complete with all test cases
+
+---
+
+## Test Report Template
+
+Use this template to document test results:
+
+```markdown
+# Test Report - [Date]
+
+**Tester**: [Name]
+**Build Version**: MVP Sprint 5
+**Browser**: [Chrome/Firefox/Safari] [Version]
+**OS**: [Windows/Mac/Linux]
+
+## Test Results
+
+### Scene Navigation
+- Main Menu: ✅ Pass / ❌ Fail
+- Character Creation: ✅ Pass / ❌ Fail
+- World Scene: ✅ Pass / ❌ Fail
+- Combat Scene: ✅ Pass / ❌ Fail
+- Inventory Scene: ✅ Pass / ❌ Fail
+- Job Scene: ✅ Pass / ❌ Fail
+- Crafting Scene: ✅ Pass / ❌ Fail
+- Pause Menu: ✅ Pass / ❌ Fail
+
+### Performance
+- FPS: [Average] (Target: 60)
+- Load Time: [Seconds] (Target: <2s)
+- Memory: [MB] (Target: <100MB)
+
+### Bugs Found
+1. [Description] - Severity: [Critical/High/Medium/Low]
+2. [Description] - Severity: [Critical/High/Medium/Low]
+
+### Feedback
+[Open text feedback]
+
+### Recommendation
+- [ ] Ready for beta release
+- [ ] Needs fixes before release
+```
+
+---
+
+**For testing questions or bug reports, create an issue on GitHub.**
+
+---
+
+## Testing Strategy (Legacy - For Future Reference)
 
 ### Test Pyramid
 ```

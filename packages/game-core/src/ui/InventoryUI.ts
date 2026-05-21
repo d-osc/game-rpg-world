@@ -176,7 +176,6 @@ export class InventoryUI {
 		// Inventory manager events
 		this.inventoryManager.on('item-added', () => this.render());
 		this.inventoryManager.on('item-removed', () => this.render());
-		this.inventoryManager.on('item-moved', () => this.render());
 		this.inventoryManager.on('inventory-full', () => this.showNotification('Inventory is full!', 'error'));
 		this.inventoryManager.on('weight-exceeded', () => this.showNotification('Weight limit exceeded!', 'error'));
 
@@ -244,7 +243,7 @@ export class InventoryUI {
 		grid.innerHTML = '';
 
 		for (let i = 0; i < limits.maxSlots; i++) {
-			const slot = slots.find((s) => s.slotIndex === i);
+			const slot = slots[i];
 			const slotEl = this.createSlotElement(i, slot);
 			grid.appendChild(slotEl);
 		}
@@ -287,7 +286,7 @@ export class InventoryUI {
 			});
 
 			// Hover for tooltip
-			slotEl.addEventListener('mouseenter', (e) => {
+			slotEl.addEventListener('mouseenter', (e: MouseEvent) => {
 				this.showTooltip(item, e.clientX, e.clientY);
 			});
 
@@ -314,7 +313,7 @@ export class InventoryUI {
 				this.inventoryManager.moveItem(this.draggedSlot, index);
 			} else if (this.draggedEquipSlot !== null) {
 				// Unequip to inventory
-				const equipped = this.equipmentManager.getEquipment(this.draggedEquipSlot);
+				const equipped = this.equipmentManager.getEquipped(this.draggedEquipSlot);
 				if (equipped) {
 					this.equipmentManager.unequip(this.draggedEquipSlot);
 					// Item is already in inventory
@@ -334,10 +333,10 @@ export class InventoryUI {
 		const equipSlots: EquipSlot[] = ['weapon', 'head', 'body', 'legs', 'hands', 'feet', 'accessory1', 'accessory2'];
 
 		equipSlots.forEach((slot) => {
-			const slotEl = this.window?.querySelector(`[data-equip-slot="${slot}"]`);
+			const slotEl = this.window?.querySelector(`[data-equip-slot="${slot}"]`) as HTMLElement | null;
 			if (!slotEl) return;
 
-			const item = this.equipmentManager.getEquipment(slot);
+			const item = this.equipmentManager.getEquipped(slot);
 
 			if (item) {
 				slotEl.innerHTML = `
@@ -357,7 +356,7 @@ export class InventoryUI {
 				});
 
 				// Tooltip
-				slotEl.addEventListener('mouseenter', (e) => {
+				slotEl.addEventListener('mouseenter', (e: MouseEvent) => {
 					this.showTooltip(item, e.clientX, e.clientY);
 				});
 
@@ -472,7 +471,7 @@ export class InventoryUI {
 
 		menu.querySelectorAll('.menu-item').forEach((el, i) => {
 			el.addEventListener('click', () => {
-				actions[i].action();
+				actions[i]!.action();
 				menu.remove();
 			});
 		});

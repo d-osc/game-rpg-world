@@ -60,11 +60,6 @@ export class InventoryExample {
 			await this.validateWithServer('remove', item, quantity);
 		});
 
-		// When item is moved, sync with server
-		this.inventoryManager.on('item-moved', async (fromSlot, toSlot) => {
-			await this.syncMoveWithServer(fromSlot, toSlot);
-		});
-
 		// When item is equipped, validate with server
 		this.equipmentManager.on('item-equipped', async (slot, item) => {
 			const valid = await this.validateWithServer('equip', item, 1);
@@ -191,10 +186,11 @@ export class InventoryExample {
 			// Import server inventory
 			const inventoryData = {
 				slots: items.map((item: any) => ({
-					slotIndex: item.slot_index,
+					
 					item: this.parseServerItem(item),
 					quantity: item.quantity,
 				})),
+				weight: 0,
 			};
 
 			this.inventoryManager.import(inventoryData);

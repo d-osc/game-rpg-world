@@ -55,8 +55,23 @@ export class EquipmentManager extends EventEmitter<EquipmentEvents> {
 		luck: 0,
 	};
 
+	// Inventory sync callbacks (optional)
+	private removeItemCallback: ((itemId: string, quantity: number) => boolean) | null = null;
+	private addItemCallback: ((item: Item, quantity: number) => boolean) | null = null;
+
 	constructor() {
 		super();
+	}
+
+	/**
+	 * Set inventory sync callbacks for automatic inventory management
+	 */
+	setInventoryCallbacks(
+		removeItem: (itemId: string, quantity: number) => boolean,
+		addItem: (item: Item, quantity: number) => boolean,
+	): void {
+		this.removeItemCallback = removeItem;
+		this.addItemCallback = addItem;
 	}
 
 	/**
@@ -71,8 +86,28 @@ export class EquipmentManager extends EventEmitter<EquipmentEvents> {
 
 		const slot = item.equipSlot;
 
+		// Remove item from inventory if callback is set
+		if (this.removeItemCallback) {
+			if (!this.removeItemCallback(item.id, 1)) {
+				console.warn('[EquipmentManager] Failed to remove item from inventory');
+				return null;
+			}
+		}
+
 		// Get currently equipped item (to return to inventory)
 		const previousItem = this.equipment[slot];
+
+		// Return previous item to inventory if callback is set
+		if (previousItem && this.addItemCallback) {
+			if (!this.addItemCallback(previousItem, 1)) {
+				console.warn('[EquipmentManager] Failed to return previous item to inventory, rolling back');
+				// Rollback: return new item to inventory
+				if (this.addItemCallback) {
+					this.addItemCallback(item, 1);
+				}
+				return null;
+			}
+		}
 
 		// Equip new item
 		this.equipment[slot] = item;
@@ -93,7 +128,12 @@ export class EquipmentManager extends EventEmitter<EquipmentEvents> {
 		const item = this.equipment[slot];
 		if (!item) return null;
 
-		this.equipment[slot] = null;
+	this.equipment[slot] = null;
+
+		// Add item back to inventory if callback is set
+		if (this.addItemCallback) {
+			this.addItemCallback(item, 1);
+		}
 
 		// Recalculate stats
 		this.recalculateStats();
@@ -202,6 +242,20 @@ export class EquipmentManager extends EventEmitter<EquipmentEvents> {
 	}
 
 	/**
+	 * Check if an item is currently equipped
+	 */
+	isEquipped(itemId: string): boolean {
+		return Object.values(this.equipment).some(item => item !== null && item.id === itemId);
+	}
+
+	/**
+	 * Get all equipment as a record (alias for getAllEquipped)
+	 */
+	getEquipment(): Equipment {
+		return this.getAllEquipped();
+	}
+
+	/**
 	 * Cleanup
 	 */
 	destroy(): void {
@@ -209,3 +263,6 @@ export class EquipmentManager extends EventEmitter<EquipmentEvents> {
 		this.removeAllListeners();
 	}
 }
+
+// Singleton instance
+export const equipmentManager = new EquipmentManager();

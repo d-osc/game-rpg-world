@@ -405,7 +405,7 @@ export class TweenManager {
    */
   add<T>(config: TweenConfig<T>): Tween<T> {
     const tween = new Tween(config);
-    this.tweens.push(tween as Tween);
+    this.tweens.push(tween as unknown as Tween);
     tween.start();
     return tween;
   }

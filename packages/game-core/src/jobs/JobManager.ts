@@ -161,11 +161,12 @@ export class JobManager extends EventEmitter<JobManagerEvents> {
 
 		learnedJob.experience += exp;
 
-		// Check for level up (simple formula: 100 * level)
-		const expNeeded = this.getExpNeededForLevel(learnedJob.level + 1);
-		if (learnedJob.experience >= expNeeded) {
-			learnedJob.level++;
+		// Check for level up(s) - use while for multi-level-up
+		const MAX_JOB_LEVEL = 100;
+		while (learnedJob.level < MAX_JOB_LEVEL && learnedJob.experience >= this.getExpNeededForLevel(learnedJob.level + 1)) {
+			const expNeeded = this.getExpNeededForLevel(learnedJob.level + 1);
 			learnedJob.experience -= expNeeded;
+			learnedJob.level++;
 
 			// Unlock new skills
 			this.unlockSkillsForLevel(jobId, learnedJob.level);
@@ -179,7 +180,7 @@ export class JobManager extends EventEmitter<JobManagerEvents> {
 	 * Get experience needed for a level
 	 */
 	private getExpNeededForLevel(level: number): number {
-		return 100 * level;
+		return Math.max(100, 100 * level);
 	}
 
 	/**
@@ -484,3 +485,6 @@ export class JobManager extends EventEmitter<JobManagerEvents> {
 		this.playerLevel = 1;
 	}
 }
+
+// Singleton instance
+export const jobManager = new JobManager();

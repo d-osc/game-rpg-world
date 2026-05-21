@@ -269,7 +269,7 @@ export class PlayerShopExample {
 			return;
 		}
 
-		const shop = shops[0];
+		const shop = shops[0]!;
 		console.log(`Found shop: ${shop.shop_name}`);
 
 		// Get full shop details

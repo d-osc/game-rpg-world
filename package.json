@@ -27,7 +27,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "elit": "^3.0.9",
-    "bitecs": "^0.3.40"
+    "bitecs": "^0.3.40",
+    "elit": "^3.6.7"
   }
 }

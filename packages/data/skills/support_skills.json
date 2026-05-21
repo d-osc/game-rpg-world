@@ -4,7 +4,7 @@
 			"id": "heal",
 			"name": "Heal",
 			"description": "Restores HP to target ally.",
-			"type": "magic",
+			"type": "healing",
 			"element": "holy",
 			"mpCost": 10,
 			"power": 60,

@@ -275,8 +275,8 @@ export class SkillAnimation {
 		// Draw center glow
 		const glowSize = 40 * (1 - this.lifetime / this.maxLifetime);
 		const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, glowSize);
-		gradient.addColorStop(0, this.particles[0].color + 'aa');
-		gradient.addColorStop(1, this.particles[0].color + '00');
+		gradient.addColorStop(0, this.particles[0]!.color + 'aa');
+		gradient.addColorStop(1, this.particles[0]!.color + '00');
 		ctx.fillStyle = gradient;
 		ctx.fillRect(this.x - glowSize, this.y - glowSize, glowSize * 2, glowSize * 2);
 

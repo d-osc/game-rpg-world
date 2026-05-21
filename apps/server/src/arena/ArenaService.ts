@@ -1,9 +1,12 @@
 /**
  * ArenaService
- * Server-side PvP arena matchmaking and ranking system
+ * Server-side PvP arena matchmaking and ranking system using elit/database
  */
 
-import type { Pool } from 'pg';
+import { Collection } from '../database/config.ts';
+
+const arenaPlayers = new Collection<any>('arena_players');
+const arenaMatches = new Collection<any>('arena_matches');
 
 export interface ArenaPlayer {
 	player_id: string;
@@ -42,7 +45,7 @@ export interface ArenaMatch {
 export interface MatchResult {
 	winner_id: string;
 	loser_id: string;
-	duration: number; // seconds
+	duration: number;
 }
 
 export interface JoinQueueRequest {
@@ -61,100 +64,33 @@ export interface LeaderboardEntry {
 }
 
 export class ArenaService {
-	private db: Pool;
 	private queue: Map<string, QueueEntry> = new Map();
 	private activeMatches: Map<number, ArenaMatch> = new Map();
 	private matchmakingInterval: Timer | null = null;
+	private nextMatchId = 1;
 
-	// Configuration
 	private readonly INITIAL_RATING = 1500;
-	private readonly K_FACTOR = 32; // ELO K-factor
-	private readonly RATING_RANGE = 200; // Max rating difference for matching
-	private readonly QUEUE_TIMEOUT = 300000; // 5 minutes
-	private readonly MATCHMAKING_INTERVAL = 5000; // 5 seconds
+	private readonly K_FACTOR = 32;
+	private readonly RATING_RANGE = 200;
+	private readonly QUEUE_TIMEOUT = 300000;
+	private readonly MATCHMAKING_INTERVAL = 5000;
 	private readonly MIN_MATCHES_FOR_RANK = 10;
 
-	constructor(db: Pool) {
-		this.db = db;
-	}
-
-	/**
-	 * Initialize database tables
-	 */
 	async initialize(): Promise<void> {
-		const client = await this.db.connect();
-		try {
-			// Arena players table
-			await client.query(`
-				CREATE TABLE IF NOT EXISTS arena_players (
-					player_id VARCHAR(255) PRIMARY KEY,
-					player_name VARCHAR(255) NOT NULL,
-					rating INTEGER DEFAULT 1500,
-					wins INTEGER DEFAULT 0,
-					losses INTEGER DEFAULT 0,
-					current_streak INTEGER DEFAULT 0,
-					best_streak INTEGER DEFAULT 0,
-					last_match_at TIMESTAMP,
-					created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-					updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-				)
-			`);
-
-			// Arena matches table
-			await client.query(`
-				CREATE TABLE IF NOT EXISTS arena_matches (
-					id SERIAL PRIMARY KEY,
-					player1_id VARCHAR(255) NOT NULL,
-					player1_name VARCHAR(255) NOT NULL,
-					player1_rating INTEGER NOT NULL,
-					player2_id VARCHAR(255) NOT NULL,
-					player2_name VARCHAR(255) NOT NULL,
-					player2_rating INTEGER NOT NULL,
-					winner_id VARCHAR(255),
-					status VARCHAR(50) DEFAULT 'pending',
-					duration INTEGER,
-					started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-					completed_at TIMESTAMP
-				)
-			`);
-
-			// Indexes
-			await client.query('CREATE INDEX IF NOT EXISTS idx_arena_players_rating ON arena_players(rating DESC)');
-			await client.query('CREATE INDEX IF NOT EXISTS idx_arena_matches_status ON arena_matches(status)');
-			await client.query(
-				'CREATE INDEX IF NOT EXISTS idx_arena_matches_player1 ON arena_matches(player1_id)',
-			);
-			await client.query(
-				'CREATE INDEX IF NOT EXISTS idx_arena_matches_player2 ON arena_matches(player2_id)',
-			);
-
-			console.log('[ArenaService] Database tables initialized');
-
-			// Start matchmaking loop
-			this.startMatchmaking();
-		} finally {
-			client.release();
+		const all = arenaMatches.getAll();
+		if (all.length > 0) {
+			this.nextMatchId = Math.max(...all.map((m: any) => m.id)) + 1;
 		}
+		console.log('[ArenaService] Database ready');
+		this.startMatchmaking();
 	}
 
-	/**
-	 * Start matchmaking loop
-	 */
 	private startMatchmaking(): void {
-		if (this.matchmakingInterval) {
-			return;
-		}
-
-		this.matchmakingInterval = setInterval(() => {
-			this.processMatchmaking();
-		}, this.MATCHMAKING_INTERVAL);
-
+		if (this.matchmakingInterval) return;
+		this.matchmakingInterval = setInterval(() => { this.processMatchmaking(); }, this.MATCHMAKING_INTERVAL);
 		console.log('[ArenaService] Matchmaking loop started');
 	}
 
-	/**
-	 * Stop matchmaking loop
-	 */
 	stopMatchmaking(): void {
 		if (this.matchmakingInterval) {
 			clearInterval(this.matchmakingInterval);
@@ -163,103 +99,58 @@ export class ArenaService {
 		}
 	}
 
-	/**
-	 * Join arena queue
-	 */
 	async joinQueue(request: JoinQueueRequest): Promise<{ success: boolean; error?: string; queueSize?: number }> {
-		// Check if already in queue
-		if (this.queue.has(request.player_id)) {
-			return { success: false, error: 'Already in queue' };
-		}
+		if (this.queue.has(request.player_id)) return { success: false, error: 'Already in queue' };
 
-		// Check if in active match
 		const inMatch = Array.from(this.activeMatches.values()).some(
 			(match) =>
 				match.status === 'in_progress' &&
 				(match.player1_id === request.player_id || match.player2_id === request.player_id),
 		);
+		if (inMatch) return { success: false, error: 'Already in an active match' };
 
-		if (inMatch) {
-			return { success: false, error: 'Already in an active match' };
-		}
-
-		// Get or create player rating
 		const player = await this.getOrCreatePlayer(request.player_id, request.player_name);
 
-		// Add to queue
-		const entry: QueueEntry = {
+		this.queue.set(request.player_id, {
 			player_id: request.player_id,
 			player_name: request.player_name,
 			rating: player.rating,
 			queued_at: new Date().toISOString(),
-		};
-
-		this.queue.set(request.player_id, entry);
+		});
 
 		console.log(`[ArenaService] Player ${request.player_name} joined queue (${this.queue.size} in queue)`);
-
-		return {
-			success: true,
-			queueSize: this.queue.size,
-		};
+		return { success: true, queueSize: this.queue.size };
 	}
 
-	/**
-	 * Leave arena queue
-	 */
 	leaveQueue(playerId: string): { success: boolean } {
 		const removed = this.queue.delete(playerId);
-
-		if (removed) {
-			console.log(`[ArenaService] Player ${playerId} left queue (${this.queue.size} in queue)`);
-		}
-
+		if (removed) console.log(`[ArenaService] Player ${playerId} left queue (${this.queue.size} in queue)`);
 		return { success: removed };
 	}
 
-	/**
-	 * Process matchmaking
-	 */
 	private async processMatchmaking(): Promise<void> {
-		if (this.queue.size < 2) {
-			return;
-		}
+		if (this.queue.size < 2) return;
 
 		const now = Date.now();
 		const entries = Array.from(this.queue.values());
 
-		// Remove timed out entries
 		entries.forEach((entry) => {
-			const queuedAt = new Date(entry.queued_at).getTime();
-			if (now - queuedAt > this.QUEUE_TIMEOUT) {
+			if (now - new Date(entry.queued_at).getTime() > this.QUEUE_TIMEOUT) {
 				this.queue.delete(entry.player_id);
 				console.log(`[ArenaService] Player ${entry.player_name} removed from queue (timeout)`);
 			}
 		});
 
-		// Sort by rating
 		const validEntries = Array.from(this.queue.values()).sort((a, b) => a.rating - b.rating);
-
-		// Try to match players
 		const matched: Set<string> = new Set();
 
 		for (let i = 0; i < validEntries.length - 1; i++) {
-			if (matched.has(validEntries[i].player_id)) {
-				continue;
-			}
-
+			if (matched.has(validEntries[i]!.player_id)) continue;
 			for (let j = i + 1; j < validEntries.length; j++) {
-				if (matched.has(validEntries[j].player_id)) {
-					continue;
-				}
-
-				const player1 = validEntries[i];
-				const player2 = validEntries[j];
-				const ratingDiff = Math.abs(player1.rating - player2.rating);
-
-				// Check if ratings are close enough
-				if (ratingDiff <= this.RATING_RANGE) {
-					// Create match
+				if (matched.has(validEntries[j]!.player_id)) continue;
+				const player1 = validEntries[i]!;
+				const player2 = validEntries[j]!;
+				if (Math.abs(player1.rating - player2.rating) <= this.RATING_RANGE) {
 					await this.createMatch(player1, player2);
 					matched.add(player1.player_id);
 					matched.add(player2.player_id);
@@ -271,117 +162,72 @@ export class ArenaService {
 		}
 	}
 
-	/**
-	 * Create a match
-	 */
 	private async createMatch(player1: QueueEntry, player2: QueueEntry): Promise<ArenaMatch | null> {
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
+			const matchId = this.nextMatchId++;
+			const now = new Date().toISOString();
+			const match: ArenaMatch = {
+				id: matchId,
+				player1_id: player1.player_id,
+				player1_name: player1.player_name,
+				player1_rating: player1.rating,
+				player2_id: player2.player_id,
+				player2_name: player2.player_name,
+				player2_rating: player2.rating,
+				winner_id: null,
+				status: 'pending',
+				started_at: now,
+				completed_at: null,
+			};
 
-			const result = await client.query(
-				`INSERT INTO arena_matches
-				(player1_id, player1_name, player1_rating, player2_id, player2_name, player2_rating, status)
-				VALUES ($1, $2, $3, $4, $5, $6, 'pending')
-				RETURNING *`,
-				[player1.player_id, player1.player_name, player1.rating, player2.player_id, player2.player_name, player2.rating],
-			);
+			arenaMatches.insert({ ...match });
 
-			await client.query('COMMIT');
-
-			const match: ArenaMatch = result.rows[0];
-			this.activeMatches.set(match.id, match);
-
+			this.activeMatches.set(matchId, match);
 			console.log(
 				`[ArenaService] Match created: ${player1.player_name} (${player1.rating}) vs ${player2.player_name} (${player2.rating})`,
 			);
-
 			return match;
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[ArenaService] Failed to create match:', error);
 			return null;
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Start match
-	 */
 	async startMatch(matchId: number): Promise<{ success: boolean; error?: string }> {
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
+			const match = arenaMatches.findOne((m: any) => m.id === matchId && m.status === 'pending');
+			if (!match) return { success: false, error: 'Match not found or already started' };
 
-			const result = await client.query(
-				`UPDATE arena_matches
-				SET status = 'in_progress'
-				WHERE id = $1 AND status = 'pending'
-				RETURNING *`,
-				[matchId],
-			);
-
-			if (result.rows.length === 0) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Match not found or already started' };
-			}
-
-			await client.query('COMMIT');
-
-			const match = result.rows[0];
-			this.activeMatches.set(match.id, match);
+			arenaMatches.update((m: any) => m.id === matchId, { status: 'in_progress' });
+			match.status = 'in_progress';
+			this.activeMatches.set(matchId, match);
 
 			console.log(`[ArenaService] Match ${matchId} started`);
-
 			return { success: true };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[ArenaService] Failed to start match:', error);
 			return { success: false, error: 'Failed to start match' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Complete match with result
-	 */
 	async completeMatch(
 		matchId: number,
 		result: MatchResult,
 	): Promise<{ success: boolean; error?: string; ratingChanges?: { winner: number; loser: number } }> {
 		const match = this.activeMatches.get(matchId);
+		if (!match) return { success: false, error: 'Match not found' };
 
-		if (!match) {
-			return { success: false, error: 'Match not found' };
-		}
-
-		// Validate winner is one of the players
 		if (result.winner_id !== match.player1_id && result.winner_id !== match.player2_id) {
 			return { success: false, error: 'Invalid winner' };
 		}
-
-		// Validate loser is the other player
 		const expectedLoserId = result.winner_id === match.player1_id ? match.player2_id : match.player1_id;
-		if (result.loser_id !== expectedLoserId) {
-			return { success: false, error: 'Invalid loser' };
-		}
+		if (result.loser_id !== expectedLoserId) return { success: false, error: 'Invalid loser' };
 
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
-
-			// Get current ratings
 			const winner = await this.getPlayer(result.winner_id);
 			const loser = await this.getPlayer(result.loser_id);
+			if (!winner || !loser) return { success: false, error: 'Player not found' };
 
-			if (!winner || !loser) {
-				await client.query('ROLLBACK');
-				return { success: false, error: 'Player not found' };
-			}
-
-			// Calculate new ratings using ELO
 			const expectedWinner = 1 / (1 + Math.pow(10, (loser.rating - winner.rating) / 400));
 			const expectedLoser = 1 - expectedWinner;
 
@@ -391,43 +237,31 @@ export class ArenaService {
 			const winnerRatingChange = newWinnerRating - winner.rating;
 			const loserRatingChange = newLoserRating - loser.rating;
 
-			// Update winner
-			await client.query(
-				`UPDATE arena_players
-				SET rating = $1,
-					wins = wins + 1,
-					current_streak = current_streak + 1,
-					best_streak = GREATEST(best_streak, current_streak + 1),
-					last_match_at = CURRENT_TIMESTAMP,
-					updated_at = CURRENT_TIMESTAMP
-				WHERE player_id = $2`,
-				[newWinnerRating, result.winner_id],
-			);
+			const now = new Date().toISOString();
 
-			// Update loser
-			await client.query(
-				`UPDATE arena_players
-				SET rating = $1,
-					losses = losses + 1,
-					current_streak = 0,
-					last_match_at = CURRENT_TIMESTAMP,
-					updated_at = CURRENT_TIMESTAMP
-				WHERE player_id = $2`,
-				[newLoserRating, result.loser_id],
-			);
+			arenaPlayers.update((p: any) => p.player_id === result.winner_id, {
+				rating: newWinnerRating,
+				wins: winner.wins + 1,
+				current_streak: winner.current_streak + 1,
+				best_streak: Math.max(winner.best_streak, winner.current_streak + 1),
+				last_match_at: now,
+				updated_at: now,
+			});
 
-			// Update match
-			await client.query(
-				`UPDATE arena_matches
-				SET winner_id = $1,
-					status = 'completed',
-					duration = $2,
-					completed_at = CURRENT_TIMESTAMP
-				WHERE id = $3`,
-				[result.winner_id, result.duration, matchId],
-			);
+			arenaPlayers.update((p: any) => p.player_id === result.loser_id, {
+				rating: newLoserRating,
+				losses: loser.losses + 1,
+				current_streak: 0,
+				last_match_at: now,
+				updated_at: now,
+			});
 
-			await client.query('COMMIT');
+			arenaMatches.update((m: any) => m.id === matchId, {
+				winner_id: result.winner_id,
+				status: 'completed',
+				duration: result.duration,
+				completed_at: now,
+			});
 
 			this.activeMatches.delete(matchId);
 
@@ -435,227 +269,139 @@ export class ArenaService {
 				`[ArenaService] Match ${matchId} completed: ${winner.player_name} wins (+${winnerRatingChange} rating)`,
 			);
 
-			return {
-				success: true,
-				ratingChanges: {
-					winner: winnerRatingChange,
-					loser: loserRatingChange,
-				},
-			};
+			return { success: true, ratingChanges: { winner: winnerRatingChange, loser: loserRatingChange } };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[ArenaService] Failed to complete match:', error);
 			return { success: false, error: 'Failed to complete match' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Cancel match
-	 */
 	async cancelMatch(matchId: number): Promise<{ success: boolean; error?: string }> {
-		const client = await this.db.connect();
 		try {
-			await client.query('BEGIN');
-
-			await client.query(
-				`UPDATE arena_matches
-				SET status = 'cancelled',
-					completed_at = CURRENT_TIMESTAMP
-				WHERE id = $1`,
-				[matchId],
-			);
-
-			await client.query('COMMIT');
-
+			arenaMatches.update((m: any) => m.id === matchId, {
+				status: 'cancelled',
+				completed_at: new Date().toISOString(),
+			});
 			this.activeMatches.delete(matchId);
-
 			console.log(`[ArenaService] Match ${matchId} cancelled`);
-
 			return { success: true };
 		} catch (error) {
-			await client.query('ROLLBACK');
 			console.error('[ArenaService] Failed to cancel match:', error);
 			return { success: false, error: 'Failed to cancel match' };
-		} finally {
-			client.release();
 		}
 	}
 
-	/**
-	 * Get or create player
-	 */
 	private async getOrCreatePlayer(playerId: string, playerName: string): Promise<ArenaPlayer> {
 		let player = await this.getPlayer(playerId);
-
 		if (!player) {
-			const client = await this.db.connect();
-			try {
-				const result = await client.query(
-					`INSERT INTO arena_players (player_id, player_name, rating)
-					VALUES ($1, $2, $3)
-					ON CONFLICT (player_id) DO UPDATE SET player_name = $2
-					RETURNING *`,
-					[playerId, playerName, this.INITIAL_RATING],
-				);
-
-				player = this.rowToPlayer(result.rows[0]);
-				console.log(`[ArenaService] Created arena player: ${playerName}`);
-			} finally {
-				client.release();
-			}
+			const now = new Date().toISOString();
+			arenaPlayers.insert({
+				player_id: playerId,
+				player_name: playerName,
+				rating: this.INITIAL_RATING,
+				wins: 0,
+				losses: 0,
+				current_streak: 0,
+				best_streak: 0,
+				last_match_at: null,
+				created_at: now,
+				updated_at: now,
+			});
+			player = await this.getPlayer(playerId);
+			console.log(`[ArenaService] Created arena player: ${playerName}`);
+		} else {
+			arenaPlayers.update((p: any) => p.player_id === playerId, { player_name: playerName });
 		}
-
 		return player!;
 	}
 
-	/**
-	 * Get player
-	 */
 	private async getPlayer(playerId: string): Promise<ArenaPlayer | null> {
 		try {
-			const result = await this.db.query('SELECT * FROM arena_players WHERE player_id = $1', [playerId]);
-
-			if (result.rows.length === 0) {
-				return null;
-			}
-
-			return this.rowToPlayer(result.rows[0]);
+			const row = arenaPlayers.findOne((p: any) => p.player_id === playerId);
+			if (!row) return null;
+			return this.rowToPlayer(row);
 		} catch (error) {
 			console.error('[ArenaService] Failed to get player:', error);
 			return null;
 		}
 	}
 
-	/**
-	 * Get player stats
-	 */
 	async getPlayerStats(playerId: string): Promise<ArenaPlayer | null> {
 		return this.getPlayer(playerId);
 	}
 
-	/**
-	 * Get leaderboard
-	 */
 	async getLeaderboard(limit: number = 100, offset: number = 0): Promise<LeaderboardEntry[]> {
 		try {
-			const result = await this.db.query(
-				`SELECT
-					ROW_NUMBER() OVER (ORDER BY rating DESC) as rank,
-					player_id,
-					player_name,
-					rating,
-					wins,
-					losses,
-					CASE
-						WHEN (wins + losses) > 0 THEN ROUND((wins::numeric / (wins + losses)) * 100, 2)
-						ELSE 0
-					END as win_rate
-				FROM arena_players
-				WHERE (wins + losses) >= $3
-				ORDER BY rating DESC
-				LIMIT $1 OFFSET $2`,
-				[limit, offset, this.MIN_MATCHES_FOR_RANK],
-			);
+			const all = arenaPlayers.getAll();
+			const eligible = all.filter((p: any) => (p.wins + p.losses) >= this.MIN_MATCHES_FOR_RANK);
+			eligible.sort((a: any, b: any) => b.rating - a.rating);
 
-			return result.rows;
+			return eligible.slice(offset, offset + limit).map((p: any, idx: number) => {
+				const totalMatches = p.wins + p.losses;
+				return {
+					rank: offset + idx + 1,
+					player_id: p.player_id,
+					player_name: p.player_name,
+					rating: p.rating,
+					wins: p.wins,
+					losses: p.losses,
+					win_rate: totalMatches > 0 ? Math.round((p.wins / totalMatches) * 10000) / 100 : 0,
+				};
+			});
 		} catch (error) {
 			console.error('[ArenaService] Failed to get leaderboard:', error);
 			return [];
 		}
 	}
 
-	/**
-	 * Get player rank
-	 */
 	async getPlayerRank(playerId: string): Promise<number | null> {
 		try {
-			const result = await this.db.query(
-				`SELECT rank FROM (
-					SELECT
-						player_id,
-						ROW_NUMBER() OVER (ORDER BY rating DESC) as rank
-					FROM arena_players
-					WHERE (wins + losses) >= $1
-				) ranked
-				WHERE player_id = $2`,
-				[this.MIN_MATCHES_FOR_RANK, playerId],
-			);
-
-			if (result.rows.length === 0) {
-				return null;
-			}
-
-			return parseInt(result.rows[0].rank);
+			const all = arenaPlayers.getAll();
+			const eligible = all.filter((p: any) => (p.wins + p.losses) >= this.MIN_MATCHES_FOR_RANK);
+			eligible.sort((a: any, b: any) => b.rating - a.rating);
+			const idx = eligible.findIndex((p: any) => p.player_id === playerId);
+			return idx >= 0 ? idx + 1 : null;
 		} catch (error) {
 			console.error('[ArenaService] Failed to get player rank:', error);
 			return null;
 		}
 	}
 
-	/**
-	 * Get match history
-	 */
 	async getMatchHistory(playerId: string, limit: number = 20, offset: number = 0): Promise<ArenaMatch[]> {
 		try {
-			const result = await this.db.query(
-				`SELECT * FROM arena_matches
-				WHERE (player1_id = $1 OR player2_id = $1)
-				AND status = 'completed'
-				ORDER BY completed_at DESC
-				LIMIT $2 OFFSET $3`,
-				[playerId, limit, offset],
-			);
-
-			return result.rows;
+			const all = arenaMatches
+				.find((m: any) => (m.player1_id === playerId || m.player2_id === playerId) && m.status === 'completed')
+				.sort((a: any, b: any) => (b.completed_at || '').localeCompare(a.completed_at || ''));
+			return all.slice(offset, offset + limit);
 		} catch (error) {
 			console.error('[ArenaService] Failed to get match history:', error);
 			return [];
 		}
 	}
 
-	/**
-	 * Get queue status
-	 */
 	getQueueStatus(): { queueSize: number; averageRating: number; activeMatches: number } {
 		const entries = Array.from(this.queue.values());
 		const averageRating =
 			entries.length > 0 ? Math.round(entries.reduce((sum, e) => sum + e.rating, 0) / entries.length) : 0;
-
-		return {
-			queueSize: this.queue.size,
-			averageRating,
-			activeMatches: this.activeMatches.size,
-		};
+		return { queueSize: this.queue.size, averageRating, activeMatches: this.activeMatches.size };
 	}
 
-	/**
-	 * Get active match for player
-	 */
 	getActiveMatch(playerId: string): ArenaMatch | null {
 		for (const match of this.activeMatches.values()) {
-			if (
-				match.status === 'in_progress' &&
-				(match.player1_id === playerId || match.player2_id === playerId)
-			) {
+			if (match.status === 'in_progress' && (match.player1_id === playerId || match.player2_id === playerId)) {
 				return match;
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * Convert database row to ArenaPlayer
-	 */
 	private rowToPlayer(row: any): ArenaPlayer {
 		const totalMatches = row.wins + row.losses;
 		const winRate = totalMatches > 0 ? (row.wins / totalMatches) * 100 : 0;
-
 		return {
 			player_id: row.player_id,
 			player_name: row.player_name,
-			rank: 0, // Will be calculated when needed
+			rank: 0,
 			rating: row.rating,
 			wins: row.wins,
 			losses: row.losses,
@@ -666,9 +412,6 @@ export class ArenaService {
 		};
 	}
 
-	/**
-	 * Cleanup
-	 */
 	destroy(): void {
 		this.stopMatchmaking();
 		this.queue.clear();

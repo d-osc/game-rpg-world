@@ -45,7 +45,7 @@ export class MonsterSpawner extends EventEmitter<MonsterSpawnerEvents> {
 	 * Create spawn points for a zone
 	 */
 	createSpawnPoints(zone: Zone): void {
-		if (!zone.spawn_points || !zone.monsters) return;
+		if (!zone.spawn_points || !zone.monsters || zone.monsters.length === 0) return;
 
 		const numSpawnPoints = zone.spawn_points;
 		const monstersPerPoint = Math.ceil(zone.monsters.length / numSpawnPoints);
@@ -62,7 +62,7 @@ export class MonsterSpawner extends EventEmitter<MonsterSpawnerEvents> {
 			const monsterTypes = zone.monsters.slice(startIdx, startIdx + monstersPerPoint);
 
 			if (monsterTypes.length === 0) {
-				monsterTypes.push(zone.monsters[0]);
+				monsterTypes.push(zone.monsters[0]!);
 			}
 
 			const spawnPoint: SpawnPoint = {
@@ -117,7 +117,7 @@ export class MonsterSpawner extends EventEmitter<MonsterSpawnerEvents> {
 		for (let i = 0; i < toSpawn; i++) {
 			// Random monster type from spawn point
 			const monsterType =
-				spawnPoint.monsterTypes[Math.floor(Math.random() * spawnPoint.monsterTypes.length)];
+				spawnPoint.monsterTypes[Math.floor(Math.random() * spawnPoint.monsterTypes.length)]!;
 
 			// Random position within spawn point radius
 			const angle = Math.random() * Math.PI * 2;

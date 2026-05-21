@@ -20,8 +20,8 @@ export class Camera {
   // Camera bounds (optional - restricts camera movement)
   bounds: Rectangle | null = null;
 
-  // Follow target
-  private _followTarget: Vector2 | null = null;
+  // Follow target (any object with x,y properties to avoid stale references)
+  private _followTarget: { x: number; y: number } | null = null;
   private _followSmoothing: number = 0.1; // 0 = instant, 1 = no follow
 
   // Shake effect
@@ -41,7 +41,7 @@ export class Camera {
   update(deltaTime: number): void {
     // Follow target
     if (this._followTarget) {
-      this.updateFollow();
+      this.updateFollow(deltaTime);
     }
 
     // Update shake
@@ -58,15 +58,16 @@ export class Camera {
   /**
    * Update follow target
    */
-  private updateFollow(): void {
+  private updateFollow(deltaTime: number): void {
     if (!this._followTarget) return;
 
-    // Smooth follow
+    // Smooth follow (frame-rate independent)
     const targetX = this._followTarget.x;
     const targetY = this._followTarget.y;
+    const factor = 1 - Math.pow(this._followSmoothing, deltaTime * 60);
 
-    this.position.x += (targetX - this.position.x) * (1 - this._followSmoothing);
-    this.position.y += (targetY - this.position.y) * (1 - this._followSmoothing);
+    this.position.x += (targetX - this.position.x) * factor;
+    this.position.y += (targetY - this.position.y) * factor;
   }
 
   /**
@@ -113,8 +114,10 @@ export class Camera {
 
   /**
    * Set follow target
+   * Accepts any object with x,y properties (e.g., Vector2, { x, y })
+   * Stores the reference so it tracks position changes on the same object
    */
-  follow(target: Vector2 | null, smoothing: number = 0.1): void {
+  follow(target: { x: number; y: number } | null, smoothing: number = 0.1): void {
     this._followTarget = target;
     this._followSmoothing = Math.max(0, Math.min(1, smoothing));
   }

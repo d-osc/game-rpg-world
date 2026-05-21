@@ -21,12 +21,13 @@ export type PeerManagerEvents = {
 	'peer-disconnected': (playerId: string) => void;
 	'peer-data': (playerId: string, data: any) => void;
 	'connection-state-change': (playerId: string, state: RTCPeerConnectionState) => void;
+	'ice-candidate': (data: { peerId: string; candidate: RTCIceCandidateInit }) => void;
 };
 
 export class PeerManager {
 	private peers: Map<string, PeerConnection> = new Map();
 	private localPlayerId: string;
-	private eventListeners: Map<keyof PeerManagerEvents, Set<Function>> = new Map();
+	private eventListeners: Map<keyof PeerManagerEvents, Set<(...args: any[]) => void>> = new Map();
 
 	// ICE server configuration (STUN/TURN)
 	private iceServers: RTCIceServer[] = [
@@ -278,7 +279,7 @@ export class PeerManager {
 	 */
 	isPeerConnected(peerId: string): boolean {
 		const peer = this.peers.get(peerId);
-		return peer?.dataChannel?.readyState === 'open' ?? false;
+		return peer?.dataChannel?.readyState === 'open' ? true : false;
 	}
 
 	/**

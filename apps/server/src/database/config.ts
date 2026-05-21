@@ -1,100 +1,111 @@
 /**
  * Database Configuration
- * PostgreSQL connection setup
+ * Elit file-based database with collection helpers
  */
 
-import pg from 'pg';
+import { Database } from 'elit/database';
 
-const { Pool } = pg;
+const DB_DIR = process.env.DB_DIR || './data/db';
 
-export interface DatabaseConfig {
-	host: string;
-	port: number;
-	database: string;
-	user: string;
-	password: string;
-	max?: number;
-	idleTimeoutMillis?: number;
-	connectionTimeoutMillis?: number;
+export const db = new Database({ dir: DB_DIR, language: 'ts' });
+
+/**
+ * Collection helper — manages an array of records in a database file
+ */
+export class Collection<T extends Record<string, any>> {
+	constructor(private name: string) {
+		this.ensure();
+	}
+
+	/** Ensure the collection file exists */
+	private ensure(): void {
+		try {
+			db.read(this.name);
+		} catch {
+			db.create(this.name, `export const ${this.name}: any[] = [];`);
+		}
+	}
+
+	/** Read all records */
+	getAll(): T[] {
+		try {
+			const code = db.read(this.name);
+			const match = code.match(/export\s+const\s+\w+\s*[:=]\s*(\[[\s\S]*\])/);
+			if (!match) return [];
+			return JSON.parse(match[1]!);
+		} catch {
+			return [];
+		}
+	}
+
+	/** Save all records */
+	private saveAll(records: T[]): void {
+		db.save(this.name, `export const ${this.name}: any[] = ${JSON.stringify(records, null, 2)};`);
+	}
+
+	/** Find records matching a predicate */
+	find(predicate: (record: T) => boolean): T[] {
+		return this.getAll().filter(predicate);
+	}
+
+	/** Find one record */
+	findOne(predicate: (record: T) => boolean): T | undefined {
+		return this.getAll().find(predicate);
+	}
+
+	/** Insert a record */
+	insert(record: T): T {
+		const records = this.getAll();
+		records.push(record);
+		this.saveAll(records);
+		return record;
+	}
+
+	/** Update records matching predicate */
+	update(predicate: (record: T) => boolean, changes: Partial<T>): number {
+		const records = this.getAll();
+		let count = 0;
+		for (let i = 0; i < records.length; i++) {
+			if (predicate(records[i]!)) {
+				records[i] = { ...records[i]!, ...changes };
+				count++;
+			}
+		}
+		if (count > 0) this.saveAll(records);
+		return count;
+	}
+
+	/** Delete records matching predicate */
+	delete(predicate: (record: T) => boolean): number {
+		const records = this.getAll();
+		const before = records.length;
+		const filtered = records.filter((r) => !predicate(r));
+		this.saveAll(filtered);
+		return before - filtered.length;
+	}
 }
 
-// Load from environment variables with defaults
-const config: DatabaseConfig = {
-	host: process.env.DB_HOST || 'localhost',
-	port: parseInt(process.env.DB_PORT || '5432', 10),
-	database: process.env.DB_NAME || 'rpg_game',
-	user: process.env.DB_USER || 'postgres',
-	password: process.env.DB_PASSWORD || 'postgres',
-	max: 20, // Maximum number of clients in the pool
-	idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-	connectionTimeoutMillis: 2000, // Return error after 2 seconds if connection cannot be established
-};
-
-// Create the connection pool
-export const pool = new Pool(config);
-
-// Error handler
-pool.on('error', (err) => {
-	console.error('[Database] Unexpected error on idle client', err);
-	process.exit(-1);
-});
+// Shared collections
+export const players = new Collection<any>('players');
+export const sessions = new Collection<any>('sessions');
+export const profiles = new Collection<any>('profiles');
+export const saves = new Collection<any>('saves');
+export const jobs = new Collection<any>('player_jobs');
+export const inventory = new Collection<any>('player_inventory');
+export const skills = new Collection<any>('player_skills');
 
 // Connection test
 export async function testConnection(): Promise<boolean> {
 	try {
-		const client = await pool.connect();
-		const result = await client.query('SELECT NOW()');
-		client.release();
-		console.log('[Database] ✓ Connection successful');
-		console.log(`[Database] Server time: ${result.rows[0].now}`);
+		db.read('players');
+		console.log('[Database] Elit database ready');
 		return true;
-	} catch (error) {
-		console.error('[Database] ✗ Connection failed:', error);
-		return false;
+	} catch {
+		console.log('[Database] Initializing new database');
+		return true;
 	}
 }
 
-// Graceful shutdown
 export async function closePool(): Promise<void> {
-	await pool.end();
-	console.log('[Database] Connection pool closed');
-}
-
-// Query helper with error handling
-export async function query<T = any>(
-	text: string,
-	params?: any[],
-): Promise<pg.QueryResult<T>> {
-	const start = Date.now();
-	try {
-		const result = await pool.query<T>(text, params);
-		const duration = Date.now() - start;
-		console.log('[Database] Query executed:', {
-			text,
-			duration: `${duration}ms`,
-			rows: result.rowCount,
-		});
-		return result;
-	} catch (error) {
-		console.error('[Database] Query error:', { text, error });
-		throw error;
-	}
-}
-
-// Transaction helper
-export async function transaction<T>(
-	callback: (client: pg.PoolClient) => Promise<T>,
-): Promise<T> {
-	const client = await pool.connect();
-	try {
-		await client.query('BEGIN');
-		const result = await callback(client);
-		await client.query('COMMIT');
-		return result;
-	} catch (error) {
-		await client.query('ROLLBACK');
-		throw error;
-	} finally {
-		client.release();
-	}
+	console.log('[Database] Closed');
 }

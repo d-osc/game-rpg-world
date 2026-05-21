@@ -86,7 +86,7 @@ export class NetworkManager {
 			this.signalingClient.sendAnswer(from, answer);
 
 			// Setup ICE candidate forwarding for this peer
-			this.peerManager.on('ice-candidate', ({ peerId, candidate }) => {
+			this.peerManager.on('ice-candidate', ({ peerId, candidate }: { peerId: string; candidate: RTCIceCandidateInit }) => {
 				if (peerId === from) {
 					this.signalingClient.sendIceCandidate(peerId, candidate);
 				}
@@ -185,7 +185,7 @@ export class NetworkManager {
 			this.signalingClient.sendOffer(peerId, offer);
 
 			// Setup ICE candidate forwarding
-			this.peerManager.on('ice-candidate', ({ peerId: candidatePeerId, candidate }) => {
+			this.peerManager.on('ice-candidate', ({ peerId: candidatePeerId, candidate }: { peerId: string; candidate: RTCIceCandidateInit }) => {
 				if (candidatePeerId === peerId) {
 					this.signalingClient.sendIceCandidate(peerId, candidate);
 				}

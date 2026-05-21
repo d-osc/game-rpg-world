@@ -1,8 +1,6 @@
 /**
  * Database Module
- * Exports all database functionality
+ * Exports elit database functionality
  */
 
-export { pool, testConnection, closePool, query, transaction } from './config.ts';
-export type { DatabaseConfig } from './config.ts';
-export { initializeDatabase } from './init.ts';
+export { db, Collection, testConnection, closePool, players, sessions, profiles, saves, jobs, inventory, skills } from './config.ts';

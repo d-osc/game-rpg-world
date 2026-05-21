@@ -50,7 +50,7 @@ export class SignalingServer {
 		this.connections.set(playerId, connection);
 
 		// Setup message handler
-		ws.addEventListener('message', (event) => {
+		ws.on('message', (event: any) => {
 			try {
 				const message: SignalingMessage = JSON.parse(event.data as string);
 				this.handleMessage(playerId, message);
@@ -60,11 +60,11 @@ export class SignalingServer {
 		});
 
 		// Handle disconnect
-		ws.addEventListener('close', () => {
+		ws.on('close', () => {
 			this.handleDisconnect(playerId);
 		});
 
-		ws.addEventListener('error', (error) => {
+		ws.on('error', (error: any) => {
 			console.error(`[Signaling] WebSocket error for ${playerId}:`, error);
 		});
 

@@ -3,7 +3,7 @@
  * Chat interface component
  */
 
-import type { ChatManager, ChatMessage } from '@rpg/networking';
+import type { ChatManager, ChatMessage } from '../../../networking/src/chat/ChatManager.ts';
 
 export interface ChatUIConfig {
 	container: HTMLElement;
@@ -161,11 +161,11 @@ export class ChatUI {
 		});
 
 		// Listen for new messages
-		this.chatManager.on('message-received', (message) => {
+		this.chatManager.on('message-received', (message: ChatMessage) => {
 			this.addMessage(message);
 		});
 
-		this.chatManager.on('message-sent', (message) => {
+		this.chatManager.on('message-sent', (message: ChatMessage) => {
 			this.addMessage(message, true);
 		});
 	}
@@ -219,7 +219,7 @@ export class ChatUI {
 		// Limit messages
 		const messages = this.messagesContainer.children;
 		if (messages.length > this.config.maxMessages!) {
-			this.messagesContainer.removeChild(messages[0]);
+			this.messagesContainer.removeChild(messages[0]!);
 		}
 	}
 
@@ -228,7 +228,7 @@ export class ChatUI {
 	 */
 	private loadHistory(): void {
 		const history = this.chatManager.getRecentMessages(20);
-		history.forEach((message) => {
+		history.forEach((message: ChatMessage) => {
 			const isSelf = message.senderId === this.chatManager['localPlayerId'];
 			this.addMessage(message, isSelf);
 		});
